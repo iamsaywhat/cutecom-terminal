@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>953</width>
+    <height>623</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>30</y>
+      <width>431</width>
+      <height>451</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="ConsoleLayout">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetMaximumSize</enum>
+     </property>
+     <item row="3" column="0">
+      <widget class="QPushButton" name="SendButton">
+       <property name="text">
+        <string>Send</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QPushButton" name="ClearButton">
+       <property name="text">
+        <string>Clear</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QLineEdit" name="message"/>
+     </item>
+     <item row="0" column="0" colspan="3">
+      <widget class="QPlainTextEdit" name="workspace"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QTableWidget" name="tableWidget">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>240</y>
+      <width>431</width>
+      <height>141</height>
+     </rect>
+    </property>
+    <row>
+     <property name="text">
+      <string>Новая строка</string>
+     </property>
+    </row>
+    <column>
+     <property name="text">
+      <string>Новый столбец</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Новый столбец</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Новый столбец</string>
+     </property>
+    </column>
+    <item row="0" column="0">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="textAlignment">
+      <set>AlignJustify|AlignBottom</set>
+     </property>
+    </item>
+    <item row="0" column="2">
+     <property name="text">
+      <string>афауапуцауцауцауца\nуцауцауцауцауцауц</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QListWidget" name="listWidget">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>40</y>
+      <width>101</width>
+      <height>192</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>Новый элемент rgtrggtgtgtgtgtgtgtgtgtgtgtgtgtgt</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Новый элемент</string>
+     </property>
+    </item>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>953</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Настройки</string>
+    </property>
+    <addaction name="PortSettings"/>
+   </widget>
+   <addaction name="menu"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <action name="PortSettings">
+   <property name="text">
+    <string>Порты</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
