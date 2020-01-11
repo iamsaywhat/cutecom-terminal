@@ -37,6 +37,9 @@ public:
     int firsrVisibleRow (void);
     /* Узнать номер нижней отображаемой строки */
     int lastVisibleRow (void);
+    /* Преобразование строки с HEX кодами разделенными пробелами
+     *  в байтовый массив */
+    QByteArray convertAsciiToHex(QString source);
 
 private:
     QTableView*         table;       /* Таблица */
@@ -66,6 +69,7 @@ signals:
 
 private slots:
     void tableResizeSlot(void);
+    void textCheck(void);
 
 public slots:
     void clearAll(void);

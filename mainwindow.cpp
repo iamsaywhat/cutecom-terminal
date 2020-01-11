@@ -1,23 +1,18 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-
-
-
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include <QDebug>
-
 
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-    // Создаём окно настроек COM
+    /* Создаём окно настроек COM */
     settingsWindow = new SettingsDialog(this);
-
-    // Выполняем связку класса работы с портом окном настроек
+    /* Выполняем связку класса работы с портом окном настроек */
     serialsettings = new SerialSettings(settingsWindow->Ports,                // ComboBox c доступными Com портами
                                         settingsWindow->Baudrate,             // ComboBox с настройками скорости
                                         settingsWindow->Parity,               // ComboBox с настройками паритета
@@ -25,17 +20,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
                                         settingsWindow->Stopbits,             // ComboBox с настройками стоп-бит
                                         settingsWindow->Flowcontrol,          // ComboBox с настройками контроля
                                         settingsWindow->ConnectDisconnect);   // Кнопка подключения/отключения
-
-    // Выполняем связку класса работы с консолью с формами
-    console = new ConsoleWindow(serialsettings, ui->workspace, ui->message, ui->SendButton, ui->ClearButton);
-
+    /* Выполняем связку класса работы с консолью с формами */
+    console = new ConsoleWindow(serialsettings,       /* Указатель на SerialSettings экземпляр */
+                                ui->workspace,        /* Указатель на QPlainTextEdit форму*/
+                                ui->message,          /* Указатель на QLineEdit форму */
+                                ui->SendButton,       /* Указатель на QPushButton форму*/
+                                ui->ClearButton);     /* Указатель на QPushButton форму*/
+    /* Создаём и связываем табличную консоль с формой */
     tableConsole = new TableConsole(this,
-                                    ui->tableView,
-                                    ui->tableMessage,
-                                    ui->tableSendButton,
-                                    ui->tableClearButton);
+                                    ui->tableView,           /* Указатель на QTableView форму */
+                                    ui->tableMessage,        /* Указатель на QLineEdit форму */
+                                    ui->tableSendButton,     /* Указатель на QPushButton форму*/
+                                    ui->tableClearButton);   /* Указатель на QPushButton форму*/
 
-    ui->tableView->setShowGrid(false);
+
+    /* Включаем сетку на таблице */
+    ui->tableView->setShowGrid(true);
 
     // Делает во все окно
 //   setCentralWidget(ui->tableView);

@@ -71,6 +71,9 @@ TableConsole::TableConsole(QObject *parent,
     /* Клик по send-кнопке будет инициировать отправку и отображение введенного сообщения */
     connect(sendPushbutton, &QPushButton::clicked, this, &TableConsole::sendMessage);
 
+    /*  */
+    connect(field, &QLineEdit::textChanged, this, &TableConsole::textCheck);
+
     QRegExp hexMatcher("[0-9A-Fa-f ]+");
     field->setValidator(new QRegExpValidator(hexMatcher, this));
 }
@@ -266,72 +269,59 @@ void TableConsole::clearAll(void)
     model->removeRows(0, model->rowCount());
 }
 
-QByteArray convertAscii(QString source);
+
 void TableConsole::sendMessage (void)
 {
-//    /* Берём текст с поля ввода */
-//    QString message(field->text());
-
-//    /* Если в поле ввода пусто, или порт не открыт, ничего не делаем */
-//    if(message == "" || !Serial->getStatus())
-//        return;
-
-//    Serial->write(message.toLocal8Bit());
-//    Serial->waitForBytesWritten(100);
-//    field->clear();
-
-//    appendData(TableConsole::INCOMING, &message);
-
-//    QString test = "000102030405060708090A0BFF HH";
-//    QByteArray test2 = QByteArray::fromHex(test.toLatin1());
-//    qDebug() << test.toLatin1() << test2;
-
-//    Serial->write(test2);
-
-
-
     /* Берём текст с поля ввода */
     QString message(field->text());
-    qDebug()<< "message len = " << message.count();
-    QString temp;
-    for(uint i = 0; i < sizeof (message)-1; i+=2)
-    {
-        temp = message[i];
-        temp.append(message[i+1]);
-        //temp = temp.to
-        //qDebug() << temp.toInt();
-    }
-    QByteArray s;
-    s = convertAscii(message);
-    qDebug() << "s=" << s;
-
-    int num = message.toInt(nullptr,16);
-//    qDebug() << "num=" << num;
-//    qDebug() << "message" << message;
-//    qDebug() << message[0].toLatin1();
+    QByteArray buffer;
+    buffer = convertAsciiToHex(message);
 }
 
-
-
-QByteArray convertAscii(QString source)
+void TableConsole::textCheck(void)
 {
-    QString temp;
+    QString result;
+    /* Берём текст с поля ввода */
+    QString message(field->text());
+    /* Будем перебирать по байту и группировать символы
+     * по два разделяя их пробелом в новой строке и
+     * пропуская лишние пробелы. */
+    for(int count = 0; count < message.count(); count++)
+    {
+        if(count%3 != 2 && message[count] != ' ')
+            result.append(message[count]);
+        else if (count%3 == 2)
+        {
+            if(message[count] == ' ')
+                result.append(message[count]);
+            else
+                result.append(" " + message[count]);
+        }
+    }
+    /* В поле просто выбрасываем уже сгруппированную строку */
+    field->setText(result);
+}
+
+QByteArray TableConsole::convertAsciiToHex(QString source)
+{
+    QString clearSource;
     QByteArray result;
 
-    int j = 0;
-
-    /* Будем перебирать байт за байтом исходной строки */
+    /* Удалим все разделители и дополним */
     for(int i = 0; i < source.count(); i++)
     {
-        /* Если встретили пробел, то пропускаем текущий байт */
-        if(source[i] == ' ')
-            continue;
-        /* Берем */
-        temp = source[i];
-        temp.append(source[i+1]);
-        i++;
+        if(source[i] != ' ')
+            clearSource.append(source[i]);
+    }
+    if(clearSource.count()%2 != 0)
+        clearSource.insert(clearSource.count()-1, '0');
+
+    /* Будем брать по два байта из очищенной строки и преобразовывать */
+    for(int i = 0, j = 0; i < clearSource.count(); i+=2, j++)
+    {
+        QString temp(clearSource[i]);
+        temp.append(clearSource[i+1]);
         result.insert(j, static_cast<char>(temp.toInt(nullptr, 16)));
-        j++;
     }
 
     return result;
