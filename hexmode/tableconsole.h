@@ -42,6 +42,8 @@ public:
     /* Преобразование строки с HEX кодами разделенными пробелами
      *  в байтовый массив */
     QByteArray convertAsciiToHex(QString source);
+    /* Преобразование байтового массива в строку с HEXкодами разделенными пробелами */
+    QString convertHexToAscii(QByteArray source);
 
 private:
     SerialForGUI*       serial;
@@ -76,7 +78,8 @@ private slots:
 
 public slots:
     void clear(void);
-    void send (void);
+    void send(void);
+    void receive(void);
 };
 
 #endif // TABLECONSOLE_H

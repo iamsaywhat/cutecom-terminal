@@ -31,7 +31,7 @@ ConsoleWindow::ConsoleWindow(SerialForGUI*   Serial,
     //
     connect(SendButton,  &QPushButton::clicked,   this, &ConsoleWindow::sendMessage);
     connect(ClearButton, &QPushButton::clicked,   this, &ConsoleWindow::clearWorkspace);
-    connect(Serial,      &QSerialPort::readyRead, this, &ConsoleWindow::readMessage);
+    //connect(Serial,      &QSerialPort::readyRead, this, &ConsoleWindow::readMessage);
 }
 
 

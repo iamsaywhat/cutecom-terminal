@@ -26,12 +26,12 @@ private:
     QPushButton*    ClearButton;
 
 public slots:
-   void readMessage (void);
+//   void readMessage (void);
 
 private slots:
     void sendMessage (void);
     void clearWorkspace (void);
-    //void readMessage (void);
+    void readMessage (void);
 
 };
 

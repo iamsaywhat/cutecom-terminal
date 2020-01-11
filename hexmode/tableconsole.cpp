@@ -49,7 +49,7 @@ TableConsole::TableConsole(QObject*           parent,
     table->setTextElideMode(Qt::ElideNone);                         /* Настройки выравнивания */
     table->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
 
-
+    /* Выполняем необходимые функциональные подключения слотов и сигналов */
     connect(table->verticalScrollBar(), &QScrollBar::valueChanged,      /* Изменение в скроллбаре генерирует сигнал на */
             this, &TableConsole::slotAutoresize);                       /* перерисовку видимой части таблицы */
     connect(table->horizontalHeader(),  &QHeaderView::sectionResized,   /* Изменение геометрии хидера таблицы генерирует */
@@ -60,6 +60,8 @@ TableConsole::TableConsole(QObject*           parent,
             this, &TableConsole::send);                                 /* и отображение введенного сообщения */
     connect(field, &QLineEdit::textChanged,                             /* Каждый введенный символ запускает автоустановщик */
             this, &TableConsole::slotTextDelimiter);                    /* разделителей между байтами */
+    connect(serial, &QSerialPort::readyRead,                            /* QSerialPort будет уведомлять о принятых данных */
+            this, &TableConsole::receive);                              /* и вызывать slot обработки входящих данных */
 }
 
 
@@ -280,6 +282,17 @@ void TableConsole::send(void)
     appendData(TableConsole::INCOMING, &message);
 }
 
+void TableConsole::receive(void)
+{
+    /* По рекомендациям втыкаем ожидание перед считыванием */
+    serial->waitForReadyRead(1);
+    /* Принимаем данные и сразу преобразуем в строку */
+    QString message = convertHexToAscii(serial->readAll());
+    /* Добавляем нлвые данные в таблицу */
+    appendData(TableConsole::OUTGOING, &message);
+    qDebug() << message;
+}
+
 void TableConsole::slotTextDelimiter(void)
 {
     QString result;
@@ -328,5 +341,19 @@ QByteArray TableConsole::convertAsciiToHex(QString source)
         result.insert(j, static_cast<char>(temp.toInt(nullptr, 16)));
     }
 
+    return result;
+}
+
+
+QString TableConsole::convertHexToAscii(QByteArray source)
+{
+    QString result = "";
+    for(int i = 0; i < source.count(); i++)
+    {
+        result+=QString::number(static_cast<unsigned char>(source[i]),16).rightJustified(2, '0');
+        if(i < source.count()-1)
+            result.append(" ");
+    }
+    result = result.toUpper();
     return result;
 }
