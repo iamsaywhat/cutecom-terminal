@@ -55,68 +55,37 @@
      </item>
     </layout>
    </widget>
-   <widget class="QTableWidget" name="tableWidget">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>240</y>
-      <width>431</width>
-      <height>141</height>
+      <x>519</x>
+      <y>30</y>
+      <width>297</width>
+      <height>223</height>
      </rect>
     </property>
-    <row>
-     <property name="text">
-      <string>Новая строка</string>
-     </property>
-    </row>
-    <column>
-     <property name="text">
-      <string>Новый столбец</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>Новый столбец</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>Новый столбец</string>
-     </property>
-    </column>
-    <item row="0" column="0">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="textAlignment">
-      <set>AlignJustify|AlignBottom</set>
-     </property>
-    </item>
-    <item row="0" column="2">
-     <property name="text">
-      <string>афауапуцауцауцауца\nуцауцауцауцауцауц</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QListWidget" name="listWidget">
-    <property name="geometry">
-     <rect>
-      <x>560</x>
-      <y>40</y>
-      <width>101</width>
-      <height>192</height>
-     </rect>
-    </property>
-    <item>
-     <property name="text">
-      <string>Новый элемент rgtrggtgtgtgtgtgtgtgtgtgtgtgtgtgt</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Новый элемент</string>
-     </property>
-    </item>
+    <layout class="QGridLayout" name="tebleLayout">
+     <item row="1" column="0">
+      <widget class="QPushButton" name="tableSendButton">
+       <property name="text">
+        <string>Send</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLineEdit" name="tableMessage"/>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="tableClearButton">
+       <property name="text">
+        <string>Clear</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="3">
+      <widget class="QTableView" name="tableView"/>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -125,7 +94,7 @@
      <x>0</x>
      <y>0</y>
      <width>953</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

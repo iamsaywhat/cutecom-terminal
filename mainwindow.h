@@ -3,7 +3,8 @@
 
 #include <QMainWindow>
 #include <QSerialPort>
-#include "ConsoleWindow.h"
+#include "consolemode/ConsoleWindow.h"
+#include "hexmode/tableconsole.h"
 #include "serialsettings.h"
 #include "settingsdialog.h"
 
@@ -28,5 +29,6 @@ private:
     SettingsDialog       *settingsWindow;
     SerialSettings       *serialsettings;
     ConsoleWindow        *console;
+    TableConsole         *tableConsole;
 };
 #endif // MAINWINDOW_H

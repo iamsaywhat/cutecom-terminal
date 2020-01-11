@@ -29,19 +29,38 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     // Выполняем связку класса работы с консолью с формами
     console = new ConsoleWindow(serialsettings, ui->workspace, ui->message, ui->SendButton, ui->ClearButton);
 
+    tableConsole = new TableConsole(this,
+                                    ui->tableView,
+                                    ui->tableMessage,
+                                    ui->tableSendButton,
+                                    ui->tableClearButton);
+
+    ui->tableView->setShowGrid(false);
+
+    // Делает во все окно
+//   setCentralWidget(ui->tableView);
+//    // Заголовок окна
+//    setWindowTitle("Text Edit Delegate");
+//    // Изменяет размер самого окна
+//    //setGeometry(100, 250, 170, 500);
+
+
+    QString str = "00 01 02 03 04 05 06 07 08 09 00 01 02 03 04 05 06 07 08 09 00 01 02 03 04 05 06 07 08 09";
+
+    tableConsole->appendData(TableConsole::OUTGOING, &str);
+    QByteArray arr = str.toLatin1();
+    //tableConsole->appendData(&arr);
+    str+=str;
+    for(int i=0; i < 1000; i++)
+    tableConsole->appendData(TableConsole::INCOMING, &str);
+
+
+    //ui->tableView->set
+            //->item(1,1)->setTextAlignment(Qt::AlignRight);
+
+
     // При запуске будем предлагать подключение
     settingsWindow->show();
-
-    ui->tableWidget->setShowGrid(false);
-    ui->tableWidget->setRowCount(3);
-    ui->tableWidget->setColumnCount(3);
-    ui->tableWidget->setWordWrap(true);
-    //ui->tableWidget->item(1,3)->setTextAlignment(Qt::TextWordWrap);
-//    connect( this->ui->tableWidget, SIGNAL(cellChanged(int,int)),
-//                this->ui->tableWidget, SLOT(resizeRowsToContents()) );
-//       connect( this->ui->tableWidget->horizontalHeader(), SIGNAL(sectionResized(int,int,int)),
-//                this->ui->tableWidget, SLOT(resizeRowsToContents()) );
-
 }
 
 MainWindow::~MainWindow()
