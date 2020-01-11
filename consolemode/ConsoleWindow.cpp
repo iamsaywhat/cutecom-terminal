@@ -5,7 +5,7 @@
 #include <QtDebug>
 #include <QTime>
 
-ConsoleWindow::ConsoleWindow(SerialSettings* Serial,
+ConsoleWindow::ConsoleWindow(SerialForGUI*   Serial,
                              QPlainTextEdit* Workspace,
                              QLineEdit *     Message,
                              QPushButton*    SendButton,
@@ -39,7 +39,7 @@ void ConsoleWindow::sendMessage (void)
 {
     QString Msg(Message->text());
     // Если в поле ввода пусто, или порт не открыт, ничего не делаем
-    if(Msg == "" || !Serial->getStatus())
+    if(Msg == "" || Serial->getConnectionStatus() == CLOSED)
         return;
 
     qDebug() << "Send: " << Msg;
@@ -52,14 +52,6 @@ void ConsoleWindow::sendMessage (void)
     Workspace->textCursor().insertText(">> ");
     Workspace->textCursor().insertText(Msg);
     Workspace->textCursor().insertText("\n");
-
-    QString test = "000102030405060708090A0BFF HH";
-    QByteArray test2 = QByteArray::fromHex(test.toLatin1());
-    qDebug() << test.toLatin1() << test2;
-
-    Serial->write(test2);
-
-
 }
 
 void ConsoleWindow::clearWorkspace (void)

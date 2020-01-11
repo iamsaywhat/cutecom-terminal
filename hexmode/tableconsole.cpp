@@ -4,79 +4,64 @@
 #include <QDebug>
 #include <QScrollBar>
 
-TableConsole::TableConsole(QObject *parent,
-                           QTableView*  tableView,
-                           QLineEdit*   lineEdit,
-                           QPushButton* sendPushbutton,
-                           QPushButton* clearPushbutton)  : QObject(parent)
+TableConsole::TableConsole(QObject*           parent,
+                           SerialForGUI*      serial,
+                           QTableView*        tableView,
+                           QLineEdit*         lineEdit,
+                           QPushButton*       sendButton,
+                           QPushButton*       clearButton)  : QObject(parent)
 {
-    /* Берем указатели на элементы gui */
-    table       = tableView;
-    field       = lineEdit;
-    sendbutton  = sendPushbutton;
-    clearbutton = clearPushbutton;
+    /* Берем указатели на элементы gui и рабочий serialport */
+    TableConsole::serial      = serial;           /* Указатель на внешний экземпляр com-порта */
+    TableConsole::table       = tableView;        /* Указатель на QTableView форму GUI */
+    TableConsole::field       = lineEdit;         /* Указатель на QLineEdit форму GUI */
+    TableConsole::sendButton  = sendButton;       /* Указатель на QPushButton форму GUI */
+    TableConsole::clearButton = clearButton;      /* Указатель на QPushButton форму GUI */
 
-    /* Настройка элементов gui */
-    sendbutton->setText("Send");
-    clearbutton->setText("Clear");
+    /* Добавляем текст на кнопки */
+    sendButton->setText("Send");
+    clearButton->setText("Clear");
 
-    /* Создаём модель и пока только декларируем 4 столбца */
-    model = new QStandardItemModel(0,4);
+    /* Назначаем HEX валидатор на поле ввода */
+    QRegularExpression hexMatcher("[0-9A-Fa-f ]+");
+    field->setValidator(new QRegularExpressionValidator(hexMatcher, this));
 
-    /* Задаём заголовки столбцов */
-    QStringList horizontalHeaders;
+    /* Настройки QTableView */
+    model = new QStandardItemModel(0,4);                            /* Создаём модель и пока только декларируем 4 столбца */
+    QStringList horizontalHeaders;                                  /* Задаём заголовки столбцов */
     horizontalHeaders << "#"
                       << "Timestamp"
                       << "Direction"
                       << "Message";
     model->setHorizontalHeaderLabels(horizontalHeaders);
-
-    /* Создаём делегата отвечающего отрисовку содержимого таблицы */
-    delegate = new TextEditDelegate(this);
-
-    /* Помещаем модель в таблицу */
-    table->setModel(model);
-
-    /* Назначаем делегат */
-    for(int i = 0; i < 4; i++)
+    delegate = new TextEditDelegate(this);                          /* Создаём делегата отвечающего отрисовку содержимого таблицы */
+    table->setModel(model);                                         /* Помещаем модель в таблицу */
+    for(int i = 0; i < 4; i++)                                      /* Назначаем делегат */
     {
         table->setItemDelegateForColumn(i, delegate);
     }
-
-    /* Действия инициирующие редактирование элемента запрещены */
-    table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-    /* Выбирать можно только один элемент */
-    table->setSelectionMode(QAbstractItemView::SingleSelection);
-    /* За один элемент выделения считается строка целиком */
-    table->setSelectionBehavior(QAbstractItemView::SelectRows);
-    /* Нулевой столбец будет изменён размером под своё содержимое */
-    table->resizeColumnToContents(0);
-    /* Слобцы будут занимать все место таблицы */
-    table->horizontalHeader()->setStretchLastSection(true);
-    /* Скрываем вертикальный хидер */
-    table->verticalHeader()->hide();
-    /* Настройки выравнивания */
-    table->setTextElideMode(Qt::ElideNone);
+    table->setEditTriggers(QAbstractItemView::NoEditTriggers);      /* Действия инициирующие редактирование элемента запрещены */
+    table->setSelectionMode(QAbstractItemView::SingleSelection);    /* Выбирать можно только один элемент */
+    table->setSelectionBehavior(QAbstractItemView::SelectRows);     /* За один элемент выделения считается строка целиком */
+    table->resizeColumnToContents(0);                               /* Нулевой столбец будет изменён размером под своё содержимое */
+    table->horizontalHeader()->setStretchLastSection(true);         /* Слобцы будут занимать все место таблицы */
+    table->verticalHeader()->hide();                                /* Скрываем вертикальный хидер */
+    table->setTextElideMode(Qt::ElideNone);                         /* Настройки выравнивания */
     table->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
 
-    /* Изменение в скроллбаре генерирует сигнал на перерисовку видимой части таблицы */
-    connect(table->verticalScrollBar(), &QScrollBar::valueChanged, this, &TableConsole::tableResizeSlot);
-    /* Изменение геометрии хидера таблицы генерирует сигнал на перерисовку видимой части таблицы */
-    connect(table->horizontalHeader(), &QHeaderView::sectionResized, this, &TableConsole::tableResizeSlot);
 
-    /* Клик по clear-кнопке будет инициировать стирание */
-    connect(clearPushbutton, &QPushButton::clicked, this, &TableConsole::clearAll);
-
-    /* Клик по send-кнопке будет инициировать отправку и отображение введенного сообщения */
-    connect(sendPushbutton, &QPushButton::clicked, this, &TableConsole::sendMessage);
-
-    /*  */
-    connect(field, &QLineEdit::textChanged, this, &TableConsole::textCheck);
-
-    QRegExp hexMatcher("[0-9A-Fa-f ]+");
-    field->setValidator(new QRegExpValidator(hexMatcher, this));
+    connect(table->verticalScrollBar(), &QScrollBar::valueChanged,      /* Изменение в скроллбаре генерирует сигнал на */
+            this, &TableConsole::slotAutoresize);                       /* перерисовку видимой части таблицы */
+    connect(table->horizontalHeader(),  &QHeaderView::sectionResized,   /* Изменение геометрии хидера таблицы генерирует */
+            this, &TableConsole::slotAutoresize);                       /* сигнал на перерисовку видимой части таблицы */
+    connect(clearButton, &QPushButton::clicked,                         /* Клик по clear-кнопке будет инициировать стирание */
+            this, &TableConsole::clear);
+    connect(sendButton, &QPushButton::clicked,                          /* Клик по send-кнопке будет инициировать отправку */
+            this, &TableConsole::send);                                 /* и отображение введенного сообщения */
+    connect(field, &QLineEdit::textChanged,                             /* Каждый введенный символ запускает автоустановщик */
+            this, &TableConsole::slotTextDelimiter);                    /* разделителей между байтами */
 }
+
 
 TableConsole::~TableConsole()
 {
@@ -84,83 +69,91 @@ TableConsole::~TableConsole()
     delete model;
 }
 
+
 void TableConsole::appendData(DirectionType direction, QString* data)
 {
-    QTime systemTime = QTime::currentTime();
+    QTime systemTime = QTime::currentTime();                                /* Получаем системное время */
 
-    /* Добавляем строку данных */
-    model->setRowCount(model->rowCount()+1);
-    //model->insertRow(model->rowCount());
-
-    /* Номер сообщения */
-    model->setData(model->index(model->rowCount()-1, indexNumberColumn), model->rowCount()-1);
-    /* Метка времени */
-    model->setData(model->index(model->rowCount()-1, indexTimestampColumn), systemTime.toString("hh:mm:ss:ms"));
-    /* Направление передачи */
-    switch (direction)
+    /* Добавляем новую строку и заполняем ее содержимое */
+    model->setRowCount(model->rowCount()+1);                                /* Добавляем пустую строку данных */
+    model->setData(model->index(model->rowCount()-1, indexNumberColumn),    /* Номер сообщения */
+                   model->rowCount()-1);
+    model->setData(model->index(model->rowCount()-1, indexTimestampColumn), /* Метка времени */
+                   systemTime.toString("hh:mm:ss:ms"));
+    switch (direction)                                                      /* Направление передачи */
     {
         case INCOMING:
-            model->setData(model->index(model->rowCount()-1, indexDirectionColumn), "Incoming");
+            model->setData(model->index(model->rowCount()-1, indexDirectionColumn),
+                           "Incoming");
             break;
         case OUTGOING:
-            model->setData(model->index(model->rowCount()-1, indexDirectionColumn), "Outgoing");
+            model->setData(model->index(model->rowCount()-1, indexDirectionColumn),
+                           "Outgoing");
             break;
     }
-    /* Сообщение */
-    model->setData(model->index(model->rowCount()-1, indexMessageColumn), *data);
-    /* Настройки выравниваия */
+    model->setData(model->index(model->rowCount()-1, indexMessageColumn),   /* Сообщение */
+                   *data);
+    /* Настройки выравниваия для новой строки */
     model->setData(model->index(model->rowCount()-1,indexNumberColumn),    Qt::AlignTop, Qt::TextAlignmentRole);
     model->setData(model->index(model->rowCount()-1,indexTimestampColumn), Qt::AlignTop, Qt::TextAlignmentRole);
     model->setData(model->index(model->rowCount()-1,indexDirectionColumn), Qt::AlignTop, Qt::TextAlignmentRole);
     model->setData(model->index(model->rowCount()-1,indexMessageColumn),   Qt::AlignTop, Qt::TextAlignmentRole);
 
+    /* Испускаем сигнал и сообщаем, что только что были добавлены новые данные */
     emit dataWasAppend();
 }
+
 
 void TableConsole::appendData(DirectionType direction, QByteArray* data)
 {
-    QTime systemTime = QTime::currentTime();
+    QTime systemTime = QTime::currentTime();                                /* Получаем системное время */
 
-    /* Добавляем строку данных */
-    model->setRowCount(model->rowCount()+1);
-    //model->insertRow(model->rowCount());
-
-    /* Номер сообщения */
-    model->setData(model->index(model->rowCount()-1, indexNumberColumn), model->rowCount()-1);
-    /* Метка времени */
-    model->setData(model->index(model->rowCount()-1, indexTimestampColumn), systemTime.toString("hh:mm:ss:ms"));
-    /* Направление передачи */
-    switch (direction)
+    /* Добавляем новую строку и заполняем ее содержимое */
+    model->setRowCount(model->rowCount()+1);                                /* Добавляем пустую строку данных */
+    model->setData(model->index(model->rowCount()-1, indexNumberColumn),    /* Номер сообщения */
+                   model->rowCount()-1);
+    model->setData(model->index(model->rowCount()-1, indexTimestampColumn), /* Метка времени */
+                   systemTime.toString("hh:mm:ss:ms"));
+    switch (direction)                                                      /* Направление передачи */
     {
         case INCOMING:
-            model->setData(model->index(model->rowCount()-1, indexDirectionColumn), "Incoming");
+            model->setData(model->index(model->rowCount()-1, indexDirectionColumn),
+                           "Incoming");
             break;
         case OUTGOING:
-            model->setData(model->index(model->rowCount()-1, indexDirectionColumn), "Outgoing");
+            model->setData(model->index(model->rowCount()-1, indexDirectionColumn),
+                           "Outgoing");
             break;
     }
-    /* Сообщение */
-    model->setData(model->index(model->rowCount()-1, indexMessageColumn), *data);
-    /* Настройки выравниваия */
+    model->setData(model->index(model->rowCount()-1, indexMessageColumn),   /* Сообщение */
+                   *data);
+    /* Настройки выравниваия для новой строки */
     model->setData(model->index(model->rowCount()-1,indexNumberColumn),    Qt::AlignTop, Qt::TextAlignmentRole);
     model->setData(model->index(model->rowCount()-1,indexTimestampColumn), Qt::AlignTop, Qt::TextAlignmentRole);
     model->setData(model->index(model->rowCount()-1,indexDirectionColumn), Qt::AlignTop, Qt::TextAlignmentRole);
     model->setData(model->index(model->rowCount()-1,indexMessageColumn),   Qt::AlignTop, Qt::TextAlignmentRole);
 
+    /* Испускаем сигнал и сообщаем, что только что были добавлены новые данные */
     emit dataWasAppend();
 }
+
+
 
 int TableConsole::firsrVisibleRow (void)
 {
     return _firstVisibleRow;
 }
 
+
+
 int TableConsole::lastVisibleRow (void)
 {
     return _lastVisibleRow;
 }
 
-void TableConsole::updateVisibleRow (void)
+
+
+void TableConsole::updateVisibleRows (void)
 {
     int viewportHeight = 0;             /* Высота viewport */
     int viewportWidth = 0;              /* Ширина viewport */
@@ -210,12 +203,13 @@ void TableConsole::updateVisibleRow (void)
     qDebug() << "firsrVisibleRow" << firsrVisibleRow() << "lastVisibleRow" << lastVisibleRow();
 }
 
-void TableConsole::autoResizeRowsRange (int firstRow, int lastRow)
+
+
+void TableConsole::enableAutoresizeVisibleRows (int firstRow, int lastRow)
 {
-    static int _firstRow = -1;    /* Предыдущее положение видимой части: начало */
+    static int _firstRow = -1;     /* Предыдущее положение видимой части: начало */
     static int _lastRow = -1;      /* Предыдущее положение видимой части: конец */
     int i;
-
     /* Если строк нет, то ничего делать и не надо */
     if(model->rowCount() == 0)
         return;
@@ -245,15 +239,15 @@ void TableConsole::autoResizeRowsRange (int firstRow, int lastRow)
     }
 }
 
-void TableConsole::tableResizeSlot(void)
+void TableConsole::slotAutoresize(void)
 {
     /* Сначала узнаем видимую часть */
-    updateVisibleRow();
+    updateVisibleRows();
     /* Видимой части разрешаем авторесайз */
-    autoResizeRowsRange(_firstVisibleRow, _lastVisibleRow);
+    enableAutoresizeVisibleRows(_firstVisibleRow, _lastVisibleRow);
 }
 
-void TableConsole::clearAll(void)
+void TableConsole::clear(void)
 {
     /* Если мы удалим все содержимое, индексы отображаемой части
      * нужно сделать невалидными */
@@ -264,21 +258,29 @@ void TableConsole::clearAll(void)
      * сбросим внутри static-переменные, иначе после удаления
      * функция попробует отключить свойство у уже несуществующих
      * строк и мы поймаем вылет */
-    autoResizeRowsRange(_firstVisibleRow, _lastVisibleRow);
+    enableAutoresizeVisibleRows(_firstVisibleRow, _lastVisibleRow);
     /* Теперь можем удалить все существующие строки */
     model->removeRows(0, model->rowCount());
 }
 
 
-void TableConsole::sendMessage (void)
+void TableConsole::send(void)
 {
     /* Берём текст с поля ввода */
     QString message(field->text());
-    QByteArray buffer;
-    buffer = convertAsciiToHex(message);
+    /* Если в поле ввода пусто, или порт не открыт, ничего не делаем */
+    if(message == "" || serial->getConnectionStatus() == CLOSED)
+        return;
+
+    QByteArray buffer = convertAsciiToHex(message);
+    qDebug() << "Send: " << message;
+    serial->write(buffer);
+    serial->waitForBytesWritten(100);
+    field->clear();
+    appendData(TableConsole::INCOMING, &message);
 }
 
-void TableConsole::textCheck(void)
+void TableConsole::slotTextDelimiter(void)
 {
     QString result;
     /* Берём текст с поля ввода */
@@ -302,9 +304,11 @@ void TableConsole::textCheck(void)
     field->setText(result);
 }
 
+
+
 QByteArray TableConsole::convertAsciiToHex(QString source)
 {
-    QString clearSource;
+    QString    clearSource;
     QByteArray result;
 
     /* Удалим все разделители и дополним */

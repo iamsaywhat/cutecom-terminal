@@ -10,17 +10,19 @@
 #include <QByteArray>
 
 #include "delegate.h"
+#include "SerialForGUI.h"
 
 class TableConsole : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit TableConsole(QObject*     parent,
-                          QTableView*  tableView,
-                          QLineEdit*   lineEdit,
-                          QPushButton* sendPushbutton,
-                          QPushButton* clearPushbutton);
+    explicit TableConsole(QObject*           parent,
+                          SerialForGUI*      serial,
+                          QTableView*        tableView,
+                          QLineEdit*         lineEdit,
+                          QPushButton*       sendButton,
+                          QPushButton*       clearButton);
     ~TableConsole();
 
     /* Типы сообщения */
@@ -42,12 +44,13 @@ public:
     QByteArray convertAsciiToHex(QString source);
 
 private:
+    SerialForGUI*       serial;
     QTableView*         table;       /* Таблица */
     TextEditDelegate*   delegate;    /* Делегат для особого отображения содержимого */
     QStandardItemModel* model;       /* Модель данных для таблицы */
     QLineEdit*          field;       /* Поле ввода исходящего сообщения */
-    QPushButton*        sendbutton;  /* Кнопка отправки нового сообщения */
-    QPushButton*        clearbutton; /* Кнопка очистки содержимого */
+    QPushButton*        sendButton;  /* Кнопка отправки нового сообщения */
+    QPushButton*        clearButton; /* Кнопка очистки содержимого */
 
     /* Здесь храним индексы видимых строк таблицы */
     int _firstVisibleRow = 0; /* Индекс верхней отображаемой строки */
@@ -60,20 +63,20 @@ private:
     const uint8_t indexMessageColumn   = 3;
 
     /* Обновить индексы видимой части таблицы */
-    void updateVisibleRow ();
+    void updateVisibleRows ();
     /* Назначить авторесайз части таблицы между firstRow и lastRow строками */
-    void autoResizeRowsRange (int firstRow, int lastRow);
+    void enableAutoresizeVisibleRows (int firstRow, int lastRow);
 
 signals:
     void dataWasAppend(void);
 
 private slots:
-    void tableResizeSlot(void);
-    void textCheck(void);
+    void slotAutoresize(void);
+    void slotTextDelimiter(void);
 
 public slots:
-    void clearAll(void);
-    void sendMessage (void);
+    void clear(void);
+    void send (void);
 };
 
 #endif // TABLECONSOLE_H

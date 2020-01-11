@@ -58,10 +58,10 @@
    <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>519</x>
+      <x>469</x>
       <y>30</y>
-      <width>297</width>
-      <height>223</height>
+      <width>461</width>
+      <height>451</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="tebleLayout">

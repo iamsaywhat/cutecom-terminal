@@ -1,4 +1,4 @@
-#include "serialsettings.h"
+#include "SerialForGUI.h"
 
 #include <QString>
 #include <QtDebug>
@@ -6,13 +6,13 @@
 #include <QLineEdit>
 #include <QMessageBox>
 
-SerialSettings::SerialSettings(QComboBox*   _Ports,              // ComboBox c доступными Com портами
-                               QComboBox*   _Baudrate,           // ComboBox с настройками скорости
-                               QComboBox*   _Parity,             // ComboBox с настройками паритета
-                               QComboBox*   _Databits,           // ComboBox с настройками бит данных
-                               QComboBox*   _Stopbits,           // ComboBox с настройками стоп-бит
-                               QComboBox*   _Flowcontrol,        // ComboBox с настройками контроля
-                               QPushButton* _ConnectDisconnect)  // Кнопка подключения/отключения
+SerialForGUI::SerialForGUI(QComboBox*   _Ports,              // ComboBox c доступными Com портами
+                           QComboBox*   _Baudrate,           // ComboBox с настройками скорости
+                           QComboBox*   _Parity,             // ComboBox с настройками паритета
+                           QComboBox*   _Databits,           // ComboBox с настройками бит данных
+                           QComboBox*   _Stopbits,           // ComboBox с настройками стоп-бит
+                           QComboBox*   _Flowcontrol,        // ComboBox с настройками контроля
+                           QPushButton* _ConnectDisconnect)  // Кнопка подключения/отключения
 {
     // Создаём валидатор данных пользовательского бодрейта
     Baudrate_Validator = (new QIntValidator(0, 4000000, this));
@@ -81,13 +81,13 @@ SerialSettings::SerialSettings(QComboBox*   _Ports,              // ComboBox c �
     Baudrate->setInsertPolicy(QComboBox::NoInsert);
 
     // Подключаем сигнал при изменении селектора бодрейта на слот работы с custom значением
-    connect(Baudrate, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SerialSettings::setCustomBaudrate);
+    connect(Baudrate, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SerialForGUI::setCustomBaudrate);
 
     // Подключаем клик по кнопке ConnectDisconnect на слот OpenOrClose
-    connect(ConnectDisconnect, &QPushButton::clicked, this, &SerialSettings::OpenOrClose);
+    connect(ConnectDisconnect, &QPushButton::clicked, this, &SerialForGUI::slotConnection);
 }
 
-SerialSettings::~SerialSettings ()
+SerialForGUI::~SerialForGUI ()
 {
     delete Baudrate_Validator;
 }
@@ -95,15 +95,15 @@ SerialSettings::~SerialSettings ()
 /*********************************************************************************
  * getStatus - Получить статус подключения
 *********************************************************************************/
-bool SerialSettings::getStatus ()
+ConnectionStatusType SerialForGUI::getConnectionStatus (void)
 {
-    return Status;
+    return connectionStatus;
 }
 
 /*********************************************************************************
  * openPort - Подключение к порту
 *********************************************************************************/
-void SerialSettings::openPort()
+void SerialForGUI::openPort(void)
 {
     // Устанавливаем настройки - Выбор порта
     setPortName(Ports->currentText());
@@ -131,7 +131,7 @@ void SerialSettings::openPort()
         ConnectDisconnect->setChecked(false);
         qDebug() << "\nError: COM is not available!";
         // Сбросим флаг статуса открытия порта
-        Status = false;
+        connectionStatus = CLOSED;
         QMessageBox::warning(nullptr, "Warning", "Selected COM is not availalable!");
     }
     else
@@ -146,7 +146,7 @@ void SerialSettings::openPort()
                  << "\nStop bits:"    << stopBits()
                  << "\nFlow control:" << flowControl();
         // Установим флаг статуса открытия порта
-        Status = true;
+        connectionStatus = OPEN;
 
         // Блокируем ComboBoxes
         Ports->setEnabled(false);
@@ -161,7 +161,7 @@ void SerialSettings::openPort()
 /*********************************************************************************
  * closePort - Отключение порта
 **********************************************************************************/
-void SerialSettings::closePort()
+void SerialForGUI::closePort(void)
 {
     // Заменяем текст на кнопке
     ConnectDisconnect->setText("Connect");
@@ -170,7 +170,7 @@ void SerialSettings::closePort()
     // Выведем сообщение в дебагер
     qDebug() << "\nDisconnected from:" << QSerialPort::portName();
     // Сбросим флаг статуса открытия порта
-    Status = false;
+    connectionStatus = CLOSED;
 
     // Разблокируем ComboBoxes
     Ports->setEnabled(true);
@@ -185,7 +185,7 @@ void SerialSettings::closePort()
 /*********************************************************************************
 * OpenOrClose - Слот обслуживания кнопки Connect
 *********************************************************************************/
-void SerialSettings::OpenOrClose()
+void SerialForGUI::slotConnection(void)
 {
     // Если Checked не установлен, значит выполняем подключение
     if(ConnectDisconnect->isChecked())
@@ -198,7 +198,7 @@ void SerialSettings::OpenOrClose()
 /*********************************************************************************
  * setCustomBaudrate - Слот обслуживания custom baudrate
 *********************************************************************************/
-void SerialSettings::setCustomBaudrate()
+void SerialForGUI::setCustomBaudrate(void)
 {
     // Если выбран Custom
     if (Baudrate->currentIndex() == BaudrateCustom_indx)

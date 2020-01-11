@@ -13,21 +13,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     /* Создаём окно настроек COM */
     settingsWindow = new SettingsDialog(this);
     /* Выполняем связку класса работы с портом окном настроек */
-    serialsettings = new SerialSettings(settingsWindow->Ports,                // ComboBox c доступными Com портами
-                                        settingsWindow->Baudrate,             // ComboBox с настройками скорости
-                                        settingsWindow->Parity,               // ComboBox с настройками паритета
-                                        settingsWindow->Databits,             // ComboBox с настройками бит данных
-                                        settingsWindow->Stopbits,             // ComboBox с настройками стоп-бит
-                                        settingsWindow->Flowcontrol,          // ComboBox с настройками контроля
-                                        settingsWindow->ConnectDisconnect);   // Кнопка подключения/отключения
+    serial = new SerialForGUI(settingsWindow->Ports,                // ComboBox c доступными Com портами
+                              settingsWindow->Baudrate,             // ComboBox с настройками скорости
+                              settingsWindow->Parity,               // ComboBox с настройками паритета
+                              settingsWindow->Databits,             // ComboBox с настройками бит данных
+                              settingsWindow->Stopbits,             // ComboBox с настройками стоп-бит
+                              settingsWindow->Flowcontrol,          // ComboBox с настройками контроля
+                              settingsWindow->ConnectDisconnect);   // Кнопка подключения/отключения
     /* Выполняем связку класса работы с консолью с формами */
-    console = new ConsoleWindow(serialsettings,       /* Указатель на SerialSettings экземпляр */
+    console = new ConsoleWindow(serial,               /* Указатель на SerialSettings экземпляр */
                                 ui->workspace,        /* Указатель на QPlainTextEdit форму*/
                                 ui->message,          /* Указатель на QLineEdit форму */
                                 ui->SendButton,       /* Указатель на QPushButton форму*/
                                 ui->ClearButton);     /* Указатель на QPushButton форму*/
     /* Создаём и связываем табличную консоль с формой */
     tableConsole = new TableConsole(this,
+                                    serial,                  /* Указатель на SerialSettings экземпляр */
                                     ui->tableView,           /* Указатель на QTableView форму */
                                     ui->tableMessage,        /* Указатель на QLineEdit форму */
                                     ui->tableSendButton,     /* Указатель на QPushButton форму*/
@@ -66,7 +67,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 MainWindow::~MainWindow()
 {
     delete console;
-    delete serialsettings;
+    delete serial;
     delete settingsWindow;
     delete ui;
 }

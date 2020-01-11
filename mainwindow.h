@@ -5,7 +5,7 @@
 #include <QSerialPort>
 #include "consolemode/ConsoleWindow.h"
 #include "hexmode/tableconsole.h"
-#include "serialsettings.h"
+#include "SerialForGUI.h"
 #include "settingsdialog.h"
 
 QT_BEGIN_NAMESPACE
@@ -27,7 +27,7 @@ private slots:
 private:
     Ui::MainWindow       *ui;
     SettingsDialog       *settingsWindow;
-    SerialSettings       *serialsettings;
+    SerialForGUI         *serial;
     ConsoleWindow        *console;
     TableConsole         *tableConsole;
 };

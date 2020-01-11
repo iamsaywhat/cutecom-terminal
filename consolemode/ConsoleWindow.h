@@ -6,20 +6,20 @@
 #include <QLineEdit>
 #include <QPushButton>
 
-#include "serialsettings.h"
+#include "SerialForGUI.h"
 
 class ConsoleWindow : public QPlainTextEdit
 {
     Q_OBJECT
 
 public:
-    explicit ConsoleWindow(SerialSettings*    Serial,
+    explicit ConsoleWindow(SerialForGUI*   Serial,
                            QPlainTextEdit* Workspace,
                            QLineEdit *     Message,
                            QPushButton*    SendButton,
                            QPushButton*    ClearButton);
 private:
-    SerialSettings* Serial;
+    SerialForGUI*   Serial;
     QPlainTextEdit* Workspace;
     QLineEdit *     Message;
     QPushButton*    SendButton;
