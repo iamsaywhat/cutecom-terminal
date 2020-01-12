@@ -176,7 +176,7 @@ void TableConsole::updateVisibleRows (void)
     _lastVisibleRow = table->rowAt(0);
 
     /* Берем общее число строк */
-    rowCount = model->rowCount()-1;
+    rowCount = model->rowCount();
     /* Начинаем искать последнюю отображаемую строку
      * От первой видимой будем последовательно вниз
      * (в сторону увеличения номера) перебирать
@@ -205,7 +205,7 @@ void TableConsole::updateVisibleRows (void)
          * видим всю таблицу
          * */
         else if (i == rowCount - 1)
-            _lastVisibleRow = rowCount;
+            _lastVisibleRow = i;
     }
     qDebug() << "firsrVisibleRow" << firsrVisibleRow() << "lastVisibleRow" << lastVisibleRow();
 }
