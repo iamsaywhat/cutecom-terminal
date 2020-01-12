@@ -47,14 +47,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 //    //setGeometry(100, 250, 170, 500);
 
 
-    QString str = "00 01 02 03 04 05 06 07 08 09 00 01 02 03 04 05 06 07 08 09 00 01 02 03 04 05 06 07 08 09";
+//    QString str = "00 01 02 03 04 05 06 07 08 09 00 01 02 03 04 05 06 07 08 09 00 01 02 03 04 05 06 07 08 09";
 
-    tableConsole->appendData(TableConsole::OUTGOING, &str);
-    QByteArray arr = str.toLatin1();
-    //tableConsole->appendData(&arr);
-    str+=str;
-    for(int i=0; i < 1000; i++)
-    tableConsole->appendData(TableConsole::INCOMING, &str);
+//    tableConsole->appendData(TableConsole::OUTGOING, &str);
+//    QByteArray arr = str.toLatin1();
+//    //tableConsole->appendData(&arr);
+//    str+=str;
+//    for(int i=0; i < 1000; i++)
+//    tableConsole->appendData(TableConsole::INCOMING, &str);
 
 
     //ui->tableView->set

@@ -101,6 +101,9 @@ void TableConsole::appendData(DirectionType direction, QString* data)
     model->setData(model->index(model->rowCount()-1,indexDirectionColumn), Qt::AlignTop, Qt::TextAlignmentRole);
     model->setData(model->index(model->rowCount()-1,indexMessageColumn),   Qt::AlignTop, Qt::TextAlignmentRole);
 
+
+    slotAutoresize();
+    table->scrollToBottom();
     /* Испускаем сигнал и сообщаем, что только что были добавлены новые данные */
     emit dataWasAppend();
 }
@@ -135,6 +138,8 @@ void TableConsole::appendData(DirectionType direction, QByteArray* data)
     model->setData(model->index(model->rowCount()-1,indexDirectionColumn), Qt::AlignTop, Qt::TextAlignmentRole);
     model->setData(model->index(model->rowCount()-1,indexMessageColumn),   Qt::AlignTop, Qt::TextAlignmentRole);
 
+    slotAutoresize();
+    table->scrollToBottom();
     /* Испускаем сигнал и сообщаем, что только что были добавлены новые данные */
     emit dataWasAppend();
 }
