@@ -41,7 +41,7 @@ public:
 
     /* Узнать состояние подключения */
     ConnectionStatusType getConnectionStatus (void);
-
+    QByteArray getData(void);
 
 
 private:
@@ -54,27 +54,31 @@ private:
     QPushButton*    ConnectDisconnect;     // Указатель на Кнопка подключения/отключения
     QIntValidator*  Baudrate_Validator;    // Валидатор вводимых данных в поле Custom Baudrate;
 
+    QByteArray      receiveBuffer;         /*  Буфер под хранение последних принятых данных */
 
     const char  BaudrateCustom_indx = 8;             /* Индекс элемента пользовательского Baudrate (Custom) */
     ConnectionStatusType connectionStatus = CLOSED;  /* Статус подключения */
 
     /* Подключение к порту */
     void openPort (void);
-
     /* Отключение от порта */
     void closePort (void);
-
     /* Переношу методы родителя в приватную секцию,
     чтобы пользователь мог подключаться только посредством кнопки*/
     using QSerialPort::open;
     using QSerialPort::close;
 
 private slots:
-
     /* Слот обслуживания custom baudrate */
     void setCustomBaudrate (void);
     /* Слот обслуживания кнопки Connect */
     void slotConnection (void);
+    /* Cлот приёма данных */
+    void receiveData(void);
+
+signals:
+    /* Сигнал о получении новых данных */
+    void receivedNewData(void);
 };
 
 #endif // SERIAL_FOR_GUI_H

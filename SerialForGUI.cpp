@@ -85,6 +85,8 @@ SerialForGUI::SerialForGUI(QComboBox*   _Ports,              // ComboBox c до�
 
     // Подключаем клик по кнопке ConnectDisconnect на слот OpenOrClose
     connect(ConnectDisconnect, &QPushButton::clicked, this, &SerialForGUI::slotConnection);
+    /* */
+    connect(this, &QSerialPort::readyRead, this, &SerialForGUI::receiveData);
 }
 
 SerialForGUI::~SerialForGUI ()
@@ -214,4 +216,20 @@ void SerialForGUI::setCustomBaudrate(void)
     // Если выбран любой другой пункт
     else
         Baudrate->setEditable(false);
+}
+
+
+void SerialForGUI::receiveData(void)
+{
+    /* По рекомендациям втыкаем ожидание перед считыванием */
+    waitForReadyRead(1);
+    /* Принимаем данные и сразу преобразуем в строку */
+    receiveBuffer = readAll();
+    /* Испускаем сигнал о наличии новых данных */
+    emit receivedNewData();
+}
+
+QByteArray SerialForGUI::getData(void)
+{
+    return receiveBuffer;
 }

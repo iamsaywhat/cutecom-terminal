@@ -8,16 +8,18 @@
 
 #include "SerialForGUI.h"
 
-class ConsoleWindow : public QPlainTextEdit
+class ConsoleWindow : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit ConsoleWindow(SerialForGUI*   Serial,
+    explicit ConsoleWindow(QObject*        parent,
+                           SerialForGUI*   Serial,
                            QPlainTextEdit* Workspace,
                            QLineEdit *     Message,
                            QPushButton*    SendButton,
                            QPushButton*    ClearButton);
+    ~ConsoleWindow();
 private:
     SerialForGUI*   Serial;
     QPlainTextEdit* Workspace;
@@ -26,13 +28,11 @@ private:
     QPushButton*    ClearButton;
 
 public slots:
-//   void readMessage (void);
 
 private slots:
-    void sendMessage (void);
-    void clearWorkspace (void);
-    void readMessage (void);
-
+    void send(void);
+    void clear(void);
+    void receive(void);
 };
 
 #endif // CONSOLEWINDOW_H

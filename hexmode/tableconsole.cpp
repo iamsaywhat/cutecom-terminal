@@ -60,7 +60,7 @@ TableConsole::TableConsole(QObject*           parent,
             this, &TableConsole::send);                                 /* и отображение введенного сообщения */
     connect(field, &QLineEdit::textChanged,                             /* Каждый введенный символ запускает автоустановщик */
             this, &TableConsole::slotTextDelimiter);                    /* разделителей между байтами */
-    connect(serial, &QSerialPort::readyRead,                            /* QSerialPort будет уведомлять о принятых данных */
+    connect(serial, &SerialForGUI::receivedNewData,                            /* QSerialPort будет уведомлять о принятых данных */
             this, &TableConsole::receive);                              /* и вызывать slot обработки входящих данных */
 }
 
@@ -284,10 +284,8 @@ void TableConsole::send(void)
 
 void TableConsole::receive(void)
 {
-    /* По рекомендациям втыкаем ожидание перед считыванием */
-    serial->waitForReadyRead(1);
     /* Принимаем данные и сразу преобразуем в строку */
-    QString message = convertHexToAscii(serial->readAll());
+    QString message = convertHexToAscii(serial->getData());
     /* Добавляем нлвые данные в таблицу */
     appendData(TableConsole::OUTGOING, &message);
     qDebug() << message;

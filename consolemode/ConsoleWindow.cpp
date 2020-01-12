@@ -5,72 +5,69 @@
 #include <QtDebug>
 #include <QTime>
 
-ConsoleWindow::ConsoleWindow(SerialForGUI*   Serial,
+ConsoleWindow::ConsoleWindow(QObject*        parent,
+                             SerialForGUI*   Serial,
                              QPlainTextEdit* Workspace,
                              QLineEdit *     Message,
                              QPushButton*    SendButton,
-                             QPushButton*    ClearButton)
+                             QPushButton*    ClearButton) : QObject(parent)
 {
+    /* Сохраняем указатели на формы и прочие классы внутри */
     ConsoleWindow::Serial      = Serial;
     ConsoleWindow::Workspace   = Workspace;
     ConsoleWindow::Message     = Message;
     ConsoleWindow::SendButton  = SendButton;
     ConsoleWindow::ClearButton = ClearButton;
 
-    // Настраиваем свойства и внешний вид рабочих областей
-    // Запрещаем пользователю редактировать консоль
-    Workspace->setReadOnly(true);
-    // Внешний вид
-    Workspace->setFont(QFont("System", 8, QFont::Normal));
-    Workspace->setStyleSheet("QPlainTextEdit{color: #aaaaaa; background-color: #000000;"
-                              " selection-background-color: #606060; selection-color: #ffffff;}");
+    /* Настраиваем свойства и внешний вид рабочих областей */
+    Workspace->setReadOnly(true);                            /* Запрещаем пользователю редактировать консоль */
+    Workspace->setFont(QFont("System", 8, QFont::Normal));   /* Устанавливаем шрифт */
+    Workspace->setStyleSheet(                                /* Выбор палитры */
+                "QPlainTextEdit{color: #aaaaaa;"
+                               "background-color: #000000;"
+                               "selection-background-color: #606060;"
+                                "selection-color: #ffffff;}");
 
-    // Привязываем кнопки клавиатуры к кнопкам UI
+    /* Привязываем кнопки клавиатуры к кнопкам UI */
     SendButton->setShortcut(Qt::Key_Return);
 
-    //
-    connect(SendButton,  &QPushButton::clicked,   this, &ConsoleWindow::sendMessage);
-    connect(ClearButton, &QPushButton::clicked,   this, &ConsoleWindow::clearWorkspace);
-    //connect(Serial,      &QSerialPort::readyRead, this, &ConsoleWindow::readMessage);
+    /* Выполняем функциональные подключения */
+    connect(SendButton,  &QPushButton::clicked,            /* Нажатие кнопки Send  */
+            this,        &ConsoleWindow::send);            /* инициирует отправку данных */
+    connect(ClearButton, &QPushButton::clicked,            /* Нажатие кнопки Clear */
+            this,        &ConsoleWindow::clear);           /* инициирует очистку окна терминала */
+    connect(Serial,      &SerialForGUI::receivedNewData,   /* Наличие новых данных в com-порт */
+            this,        &ConsoleWindow::receive);         /* инициирует его чтение и отображение принятого */
 }
 
+ConsoleWindow::~ConsoleWindow()
+{
+}
 
-void ConsoleWindow::sendMessage (void)
+void ConsoleWindow::send (void)
 {
     QString Msg(Message->text());
-    // Если в поле ввода пусто, или порт не открыт, ничего не делаем
-    if(Msg == "" || Serial->getConnectionStatus() == CLOSED)
-        return;
+    if(Msg == "" || Serial->getConnectionStatus() == CLOSED)   /* Если в поле ввода пусто,  */
+        return;                                                /* или порт закрыт, ничего не делаем */
 
-    qDebug() << "Send: " << Msg;
-    Serial->write(Msg.toLocal8Bit());
-    Serial->waitForBytesWritten(100);
-    Message->clear();
-
-    // Смещаем курсор текста гарантированно в конец
-    Workspace->moveCursor(QTextCursor::End);
+    Serial->write(Msg.toLocal8Bit());            /* Отправляем данные преобразованные в QByteArray */
+    Serial->waitForBytesWritten(100);            /* Ждем 100 мс */
+    Message->clear();                            /* Поле ввода очищаем */
+    Workspace->moveCursor(QTextCursor::End);     /* Смещаем курсор текста гарантированно в конец */
     Workspace->textCursor().insertText(">> ");
     Workspace->textCursor().insertText(Msg);
     Workspace->textCursor().insertText("\n");
 }
 
-void ConsoleWindow::clearWorkspace (void)
+void ConsoleWindow::clear (void)
 {
-    Workspace->clear();
+    Workspace->clear();   /* Очищаем окно терминала */
 }
 
-void ConsoleWindow::readMessage(void)
+void ConsoleWindow::receive(void)
 {
-    // По рекомендациям втыкаем ожидание перед считыванием
-    //Serial->waitForReadyRead(1);
-    // Принимаем данные и сразу преобразуем в строку
-    QString message = QString::fromLocal8Bit(Serial->readAll());
-    // Смещаем курсор текста гарантированно в конец
-    Workspace->moveCursor(QTextCursor::End);
-    // Печатаем то, что пришло
-    Workspace->textCursor().insertText(message);
-    // Переведем курсор на следующую строку
-    Workspace->textCursor().insertText("\n");
-    // Выведем пришедшее сообщение
-    qDebug() << "Comming data:" << message;
+    QString message = QString::fromLocal8Bit(Serial->getData());  /* Принимаем данные и сразу преобразуем в строку */
+    Workspace->moveCursor(QTextCursor::End);                      /* Смещаем курсор текста гарантированно в конец */
+    Workspace->textCursor().insertText(message);                  /* Печатаем то, что пришло */
+    Workspace->textCursor().insertText("\n");                     /* Переведем курсор на следующую строку */
 }
