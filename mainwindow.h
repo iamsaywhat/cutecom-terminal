@@ -22,7 +22,6 @@ public:
 
 private slots:
 
-    void on_PortSettings_triggered();
 
 private:
     Ui::MainWindow       *ui;

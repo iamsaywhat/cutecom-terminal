@@ -4,6 +4,8 @@
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include <QDebug>
+#include <QGraphicsDropShadowEffect>
+#include <QWidget>
 
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -23,46 +25,70 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     /* Выполняем связку класса работы с консолью с формами */
     console = new ConsoleWindow(this,
                                 serial,               /* Указатель на SerialSettings экземпляр */
-                                ui->workspace,        /* Указатель на QPlainTextEdit форму*/
-                                ui->message,          /* Указатель на QLineEdit форму */
-                                ui->SendButton,       /* Указатель на QPushButton форму*/
-                                ui->ClearButton);     /* Указатель на QPushButton форму*/
+                                ui->consoleField,        /* Указатель на QPlainTextEdit форму*/
+                                ui->inputConsoleField,          /* Указатель на QLineEdit форму */
+                                ui->sendConsoleButton,       /* Указатель на QPushButton форму*/
+                                ui->clearConsoleButton);     /* Указатель на QPushButton форму*/
     /* Создаём и связываем табличную консоль с формой */
     tableConsole = new TableConsole(this,
                                     serial,                  /* Указатель на SerialSettings экземпляр */
-                                    ui->tableView,           /* Указатель на QTableView форму */
-                                    ui->tableMessage,        /* Указатель на QLineEdit форму */
-                                    ui->tableSendButton,     /* Указатель на QPushButton форму*/
-                                    ui->tableClearButton);   /* Указатель на QPushButton форму*/
+                                    ui->tableField,           /* Указатель на QTableView форму */
+                                    ui->inputTableField,        /* Указатель на QLineEdit форму */
+                                    ui->sendTableButton,     /* Указатель на QPushButton форму*/
+                                    ui->clearTableButton);   /* Указатель на QPushButton форму*/
 
 
     /* Включаем сетку на таблице */
-    ui->tableView->setShowGrid(true);
-
-    // Делает во все окно
-//   setCentralWidget(ui->tableView);
-//    // Заголовок окна
-//    setWindowTitle("Text Edit Delegate");
-//    // Изменяет размер самого окна
-//    //setGeometry(100, 250, 170, 500);
+    ui->tableField->setShowGrid(true);
 
 
-//    QString str = "00 01 02 03 04 05 06 07 08 09 00 01 02 03 04 05 06 07 08 09 00 01 02 03 04 05 06 07 08 09";
 
-//    tableConsole->appendData(TableConsole::OUTGOING, &str);
-//    QByteArray arr = str.toLatin1();
-//    //tableConsole->appendData(&arr);
-//    str+=str;
-//    for(int i=0; i < 1000; i++)
-//    tableConsole->appendData(TableConsole::INCOMING, &str);
+    setWindowFlags(Qt::FramelessWindowHint);               /* Отключаем оформление окна */
+    setAttribute(Qt::WA_TranslucentBackground);            /* Делаем фон главного окна прозрачным */
+    ui->interfaceWidget->setAutoFillBackground(true);      /* По-умолчанию фон нашего интефейсного виджета прозрачен, поэтому разрешаем его заполнить автоматически */
+    ui->interfaceWidget->layout()->setMargin(0);           /* Задаём размер полей */
+    ui->interfaceWidget->layout()->setSpacing(0);          /* Задаём размер пространства между элементами в размещении виджета */
+    QGraphicsDropShadowEffect *shadowEffect =
+            new QGraphicsDropShadowEffect(this);           /* Создаем графиеский эффект - тень */
+    shadowEffect->setBlurRadius(9);                        /* Задаём радиус размытия тени */
+    shadowEffect->setOffset(0);                            /* Задаём смещение тени */
+    ui->interfaceWidget->setGraphicsEffect(shadowEffect);  /* Применяем эффект тени на окно */
+
+    /* Подключение кнопок закрыть, свернуть, развернуть окно, так как стандартные скрыты */
+    connect(ui->closeButton,    &QToolButton::clicked, this, &QWidget::close);
+    connect(ui->minimizeButton, &QToolButton::clicked, this, &QWidget::showMinimized);
+    connect(ui->maximazeButton, &QToolButton::clicked, [this](){
+        // При нажатии на кнопку максимизации/нормализации окна
+        // Делаем проверку на то, в каком состоянии находится окно и переключаем его режим
+        if (!this->isMaximized())
+        {
+            //ui->maximazeButton->setStyleSheet(StyleHelper::getRestoreStyleSheet());
+
+            /* Здесь важный нюанс: при разворачивании окна - необходимо поля centralwidget
+             * (на уровень выше interfaceWidget) убрать, чтобы окно полноценно развернулось
+             * в полный экран, однако, при этом исчезает тень, которую в полноэкранном режиме
+             * и не должно быть видно, но при минимизации окна нужно вернуть */
+            ui->centralwidget->layout()->setMargin(0);
+            this->showMaximized();
+        }
+        else
+        {
+            // Заметьте, каждый раз устанавливаем новый стиль в эту кнопку
+            //ui->maximazeButton->setStyleSheet(StyleHelper::getMaximizeStyleSheet());
+            /* Здесь при минимизации возвращаем поля в исходный вид,
+             * чтобы тень отобразилась */
+            ui->centralwidget->layout()->setMargin(9);
+            this->showNormal();
+        }
+    });
 
 
-    //ui->tableView->set
-            //->item(1,1)->setTextAlignment(Qt::AlignRight);
+    /* Дополнительные функциональные кнопки */
+    connect(ui->connectionButton, &QToolButton::clicked, settingsWindow, &SettingsDialog::show);
 
 
     // При запуске будем предлагать подключение
-    settingsWindow->show();
+    //settingsWindow->show();
 }
 
 MainWindow::~MainWindow()
@@ -73,7 +99,3 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_PortSettings_triggered()
-{
-    settingsWindow->show();
-}
