@@ -20,8 +20,17 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-private slots:
+public slots:
+    void setPreviousPosition(QPoint previousPosition);
 
+signals:
+    void previousPositionChanged(QPoint previousPosition);
+
+
+protected:
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
 
 private:
     Ui::MainWindow       *ui;
@@ -29,5 +38,18 @@ private:
     SerialForGUI         *serial;
     ConsoleWindow        *console;
     TableConsole         *tableConsole;
+
+    enum ClickType {
+         None,
+         Top,
+         Bottom,
+         Left,
+         Right,
+         Move
+     };
+    /* Переменная, от которой будем отталкиваться при работе с перемещением и изменением размера окна */
+    ClickType m_leftMouseButtonPressed;
+    QPoint m_previousPosition;
+    ClickType checkResizableField(QMouseEvent *event);
 };
 #endif // MAINWINDOW_H
