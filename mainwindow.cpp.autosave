@@ -217,7 +217,6 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
     static quint64 count = 0;
                 qDebug()<<count++<<event->source();
-                event->accept();
     /* При перемещении мыши, проверяем статус нажатия левой кнопки мыши */
     switch (m_leftMouseButtonPressed)
     {
