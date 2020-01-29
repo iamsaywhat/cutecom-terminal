@@ -21,6 +21,8 @@ public:
     explicit FramelessWindow(QWidget *parent = nullptr);
     ~FramelessWindow();
     void setCentralWidget(QWidget *widget);
+    const int recomendedMargin = 10;
+    const int recomendedBorder = 10;
 
 private:
     SizeController *sizeControl = nullptr;
@@ -29,8 +31,8 @@ signals:
 
 public slots:
     void closeFramelessWindow(void);
-    void maximazeFramelessWindow (void);
-    void minimazeFramelessWindow (void);
+    void maximizeFramelessWindow (void);
+    void minimizeFramelessWindow (void);
 };
 
 
@@ -55,7 +57,7 @@ public:
     Q_ENUM(Edge)                    /* Регистирируем перечисление в MOC */
     Q_DECLARE_FLAGS(Edges, Edge)    /* Объявляем соотвествующие флаги из перечисления QFlags */
 
-    SizeController(QWidget *target);
+    SizeController(FramelessWindow *target);
 
     void setBorderWidth(int w) {
         _borderWidth = w;
@@ -76,7 +78,7 @@ protected:
     void calculateCursorPosition(const QPoint &, const QRect &, Edges &);
 
 private:
-    QWidget *_target  = nullptr;          /* Указатель на виджет */
+    FramelessWindow *_target  = nullptr;          /* Указатель на виджет */
     bool     _cursorchanged;                 /* Был ли изменем внешний вид курсора */
     bool     _leftButtonPressed;             /* Нажата ли левая кнопка мыши */
     Edges    _mousePress = Edge::None;      /* Тип (зона) клика */

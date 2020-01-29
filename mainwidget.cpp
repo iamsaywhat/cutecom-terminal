@@ -68,7 +68,7 @@ MainWidget::MainWidget(QWidget *parent)
             //ui->maximazeButton->setStyleSheet(StyleHelper::getMaximizeStyleSheet());
             /* Здесь при минимизации возвращаем поля в исходный вид,
              * чтобы тень отобразилась */
-            parent->layout()->setMargin(9);
+            parent->layout()->setMargin(10);
             parent->showNormal();
         }
     });

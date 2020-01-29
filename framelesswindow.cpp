@@ -1,6 +1,6 @@
 #include "framelesswindow.h"
 #include <QGraphicsDropShadowEffect>
-
+#include <QtDebug>
 
 
 FramelessWindow::FramelessWindow(QWidget *parent) : QWidget(parent) {
@@ -29,7 +29,7 @@ FramelessWindow::~FramelessWindow() {
 void FramelessWindow::closeFramelessWindow(void) {
     this->close();
 }
-void FramelessWindow::maximazeFramelessWindow (void) {
+void FramelessWindow::maximizeFramelessWindow (void) {
     // При нажатии на кнопку максимизации/нормализации окна
     // Делаем проверку на то, в каком состоянии находится окно и переключаем его режим
     if (!this->isMaximized())
@@ -49,11 +49,13 @@ void FramelessWindow::maximazeFramelessWindow (void) {
         //ui->maximazeButton->setStyleSheet(StyleHelper::getMaximizeStyleSheet());
         /* Здесь при минимизации возвращаем поля в исходный вид,
          * чтобы тень отобразилась */
-        this->layout()->setMargin(9);
+        this->layout()->setMargin(recomendedMargin);
         this->showNormal();
     }
 }
-void FramelessWindow::minimazeFramelessWindow (void) {
+
+
+void FramelessWindow::minimizeFramelessWindow (void) {
     this->showMinimized();
 }
 
@@ -64,15 +66,13 @@ void FramelessWindow::minimazeFramelessWindow (void) {
 
 
 
-
-
-SizeController::SizeController(QWidget *target) :
-    _target(target),
-    _cursorchanged(false),
-    _leftButtonPressed(false),
-    _borderWidth(10),
-    _dragPos(QPoint())
+SizeController::SizeController(FramelessWindow *target) :
+    _target(target)
 {
+    _cursorchanged = false;
+    _leftButtonPressed = false;
+    _borderWidth = _target->recomendedBorder;
+    _dragPos = QPoint();
     _target->setMouseTracking(true);                        /* Разрешаем отслеживания положения курсоса при отпущеных кнопках мыши */
     _target->setWindowFlags(Qt::FramelessWindowHint);       /* Отключаем стандартное обрамление */
     _target->setAttribute(Qt::WA_Hover);                    /* Разрешаем генерацию событий по наведению мыши */
@@ -81,17 +81,6 @@ SizeController::SizeController(QWidget *target) :
     _target->setAttribute(Qt::WA_TranslucentBackground);
     _target->layout()->setMargin(10);
 
-//    QHBoxLayout *layout = new QHBoxLayout(_substrate);
-//    _substrate->setLayout(layout);
-//    _substrate->layout()->addWidget(mainWidget);
-
-//    QGraphicsDropShadowEffect *shadowEffect = new QGraphicsDropShadowEffect(this);
-//    shadowEffect->setBlurRadius(10); // Устанавливаем радиус размытия
-//    shadowEffect->setOffset(0);     // Устанавливаем смещение тени
-//    _target->setGraphicsEffect(shadowEffect);   // Устанавливаем эффект тени на окно
-//    _target->layout()->setMargin(0);            // Устанавливаем размер полей
-//    _target->layout()->setSpacing(0);
-//    _target->setAutoFillBackground(true);
 }
 
 /* Фильтр событий */
@@ -164,6 +153,15 @@ void SizeController::mouseRelease(QMouseEvent *event) {
 void SizeController::mouseMove(QMouseEvent *event) {
     if (_leftButtonPressed) {                        /* Курсор двигается и левая кнопка мыши нажата */
         if (_dragStart) {                            /* И был выставлен флаг режима перемещения окна */
+            if (_target->isFullScreen() || _target->isMaximized()) {
+                 auto part = event->screenPos().x() / _target->width();    /* Это вариант, когда положение курсора */
+                 _target->maximizeFramelessWindow();                       /* на нормализованном виджете определяется */
+                 int offsetX = static_cast<int>(_target->width() * part);  /* по пропорции */
+//                 _target->maximizeFramelessWindow();                      /* Это вариант, когда курсор всегда */
+//                 int offsetX = _target->width()/2;                        /* будет по центру x оси виджета */
+                 _target->move(static_cast<int>(event->screenPos().x()) - offsetX, 0);
+                 _dragPos = QPoint(offsetX, event->y());
+            }
             _target->move(_target->frameGeometry().topLeft() + (event->pos() - _dragPos));
         }
 
