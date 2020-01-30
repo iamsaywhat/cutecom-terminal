@@ -18,6 +18,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     SerialForGUI.cpp \
     consolemode/ConsoleWindow.cpp \
+    decorator.cpp \
     framelesswindow.cpp \
     hexmode/delegate.cpp \
     hexmode/tableconsole.cpp \
@@ -29,6 +30,7 @@ HEADERS += \
     ConsoleWindow.h \
     SerialForGUI.h \
     consolemode/ConsoleWindow.h \
+    decorator.h \
     framelesswindow.h \
     hexmode/delegate.h \
     hexmode/tableconsole.h \
@@ -37,7 +39,6 @@ HEADERS += \
 
 FORMS += \
     mainwidget.ui \
-    mainwindow.ui \
     settingsdialog.ui
 
 # Default rules for deployment.

@@ -7,6 +7,8 @@
 #include <QGraphicsDropShadowEffect>
 #include <QWidget>
 
+#include "decorator.h"
+
 MainWidget::MainWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MainWidget)
@@ -42,8 +44,15 @@ MainWidget::MainWidget(QWidget *parent)
     /* Включаем сетку на таблице */
     ui->tableField->setShowGrid(true);
 
-
-
+    /* Внешний вид приложения */
+    this->setStyleSheet(Decorator::getMainWidgetStyleSheet());
+    ui->closeButton->setStyleSheet(Decorator::getCloseButtonStyleSheet());
+    ui->minimizeButton->setStyleSheet(Decorator::getMinimizeButtonStyleSheet());
+    ui->maximazeButton->setStyleSheet(Decorator::getMaximizeButtonStyleSheet());
+    ui->connectionButton->setStyleSheet(Decorator::getConnectionButtonStyleSheet());
+    ui->consoleField->setStyleSheet(Decorator::getConsoleStyleSheet());
+    //ui->consoleField->setStyleSheet( "background-color: #FFAA00;" );
+    //ui->consolePage->setStyleSheet( "background-color: #FFAA00;" );
 
     /* Подключение кнопок закрыть, свернуть, развернуть окно, так как стандартные скрыты */
     connect(ui->closeButton,    &QToolButton::clicked, parent, &QWidget::close);

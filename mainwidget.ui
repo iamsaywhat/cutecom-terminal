@@ -13,7 +13,88 @@
   <property name="windowTitle">
    <string>Terminal</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="0">
+    <widget class="QStackedWidget" name="workspaceWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="consolePage">
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="1" column="0">
+        <layout class="QVBoxLayout" name="consoleUnion">
+         <item>
+          <layout class="QHBoxLayout" name="consoleActionPanel">
+           <item>
+            <widget class="QLineEdit" name="inputConsoleField"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="sendConsoleButton">
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="clearConsoleButton">
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item row="0" column="0">
+        <widget class="QPlainTextEdit" name="consoleField">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="plainText">
+          <string>кеоооо</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tablePage">
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
+        <layout class="QVBoxLayout" name="tableUnion">
+         <item>
+          <widget class="QTableView" name="tableField"/>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="tableActionPanel">
+           <item>
+            <widget class="QLineEdit" name="inputTableField"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="sendTableButton">
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="clearTableButton">
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
    <item row="0" column="0">
     <layout class="QHBoxLayout" name="topPanel">
      <item>
@@ -65,77 +146,6 @@
       </widget>
      </item>
     </layout>
-   </item>
-   <item row="1" column="0">
-    <widget class="QStackedWidget" name="workspaceWidget">
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <widget class="QWidget" name="consolePage">
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="0">
-        <layout class="QVBoxLayout" name="consoleUnion">
-         <item>
-          <widget class="QPlainTextEdit" name="consoleField"/>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="consoleActionPanel">
-           <item>
-            <widget class="QLineEdit" name="inputConsoleField"/>
-           </item>
-           <item>
-            <widget class="QPushButton" name="sendConsoleButton">
-             <property name="text">
-              <string>PushButton</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="clearConsoleButton">
-             <property name="text">
-              <string>PushButton</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tablePage">
-      <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="0">
-        <layout class="QVBoxLayout" name="tableUnion">
-         <item>
-          <widget class="QTableView" name="tableField"/>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="tableActionPanel">
-           <item>
-            <widget class="QLineEdit" name="inputTableField"/>
-           </item>
-           <item>
-            <widget class="QPushButton" name="sendTableButton">
-             <property name="text">
-              <string>PushButton</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="clearTableButton">
-             <property name="text">
-              <string>PushButton</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
-    </widget>
    </item>
   </layout>
  </widget>
