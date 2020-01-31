@@ -50,9 +50,8 @@ MainWidget::MainWidget(QWidget *parent)
     ui->minimizeButton->setStyleSheet(Decorator::getMinimizeButtonStyleSheet());
     ui->maximazeButton->setStyleSheet(Decorator::getMaximizeButtonStyleSheet());
     ui->connectionButton->setStyleSheet(Decorator::getConnectionButtonStyleSheet());
+    ui->settingsButton->setStyleSheet(Decorator::getSettingsButtonStyleSheet());
     ui->consoleField->setStyleSheet(Decorator::getConsoleStyleSheet());
-    //ui->consoleField->setStyleSheet( "background-color: #FFAA00;" );
-    //ui->consolePage->setStyleSheet( "background-color: #FFAA00;" );
 
     /* Подключение кнопок закрыть, свернуть, развернуть окно, так как стандартные скрыты */
     connect(ui->closeButton,    &QToolButton::clicked, parent, &QWidget::close);

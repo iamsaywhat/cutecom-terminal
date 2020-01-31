@@ -14,6 +14,7 @@ public:
     static QString getRestoreButtonStyleSheet();
     static QString getMinimizeButtonStyleSheet();
     static QString getConnectionButtonStyleSheet();
+    static QString getSettingsButtonStyleSheet();
     static QString getConsoleStyleSheet();
 };
 

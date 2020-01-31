@@ -94,8 +94,28 @@ QString Decorator::getMinimizeButtonStyleSheet() {
            "}";
 }
 
-
 QString Decorator::getConnectionButtonStyleSheet() {
+    return "QToolButton { "
+                "image: url(:/buttons/window-minimize-gray.png);"
+                "background-color: #292929;"
+                "icon-size: 12px;"
+                "padding-left: 10px;"
+                "padding-right: 10px;"
+                "padding-top: 5px;"
+                "padding-bottom: 5px;"
+                "border: 1px solid #292929; "
+           "}"
+           "QToolButton:hover { "
+                "image: url(:/buttons/window-minimize.png); "
+           "}"
+           "QToolButton:pressed { "
+                "image: url(:/buttons/window-minimize.png);"
+                "background-color: #de8e37; "
+           "}";
+}
+
+
+QString Decorator::getSettingsButtonStyleSheet() {
     return "QToolButton { "
                 "image: url(:/buttons/window-minimize-gray.png);"
                 "background-color: #292929;"
