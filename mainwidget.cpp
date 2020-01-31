@@ -26,7 +26,7 @@ MainWidget::MainWidget(QWidget *parent)
                               settingsWindow->Flowcontrol,          // ComboBox с настройками контроля
                               settingsWindow->ConnectDisconnect);   // Кнопка подключения/отключения
     /* Выполняем связку класса работы с консолью с формами */
-    console = new ConsoleWindow(this,
+    console = new ConsoleWidget(this,
                                 serial,               /* Указатель на SerialSettings экземпляр */
                                 ui->consoleField,        /* Указатель на QPlainTextEdit форму*/
                                 ui->inputConsoleField,          /* Указатель на QLineEdit форму */

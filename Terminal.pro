@@ -17,7 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     SerialForGUI.cpp \
-    consolemode/ConsoleWindow.cpp \
+    consolemode/consolewidget.cpp \
     decorator.cpp \
     framelesswindow.cpp \
     hexmode/delegate.cpp \
@@ -29,7 +29,7 @@ SOURCES += \
 HEADERS += \
     ConsoleWindow.h \
     SerialForGUI.h \
-    consolemode/ConsoleWindow.h \
+    consolemode/consolewidget.h \
     decorator.h \
     framelesswindow.h \
     hexmode/delegate.h \

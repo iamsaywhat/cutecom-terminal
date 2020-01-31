@@ -1,11 +1,11 @@
-#include "ConsoleWindow.h"
+#include "consolewidget.h"
 
 #include <QString>
 #include <QByteArray>
 #include <QtDebug>
 #include <QTime>
 
-ConsoleWindow::ConsoleWindow(QObject*        parent,
+ConsoleWidget::ConsoleWidget(QObject*        parent,
                              SerialForGUI*   Serial,
                              QPlainTextEdit* Workspace,
                              QLineEdit *     Message,
@@ -13,11 +13,11 @@ ConsoleWindow::ConsoleWindow(QObject*        parent,
                              QPushButton*    ClearButton) : QObject(parent)
 {
     /* Сохраняем указатели на формы и прочие классы внутри */
-    ConsoleWindow::Serial      = Serial;
-    ConsoleWindow::Workspace   = Workspace;
-    ConsoleWindow::Message     = Message;
-    ConsoleWindow::SendButton  = SendButton;
-    ConsoleWindow::ClearButton = ClearButton;
+    ConsoleWidget::Serial      = Serial;
+    ConsoleWidget::Workspace   = Workspace;
+    ConsoleWidget::Message     = Message;
+    ConsoleWidget::SendButton  = SendButton;
+    ConsoleWidget::ClearButton = ClearButton;
 
     /* Настраиваем свойства и внешний вид рабочих областей */
     Workspace->setReadOnly(true);                            /* Запрещаем пользователю редактировать консоль */
@@ -33,18 +33,18 @@ ConsoleWindow::ConsoleWindow(QObject*        parent,
 
     /* Выполняем функциональные подключения */
     connect(SendButton,  &QPushButton::clicked,            /* Нажатие кнопки Send  */
-            this,        &ConsoleWindow::send);            /* инициирует отправку данных */
+            this,        &ConsoleWidget::send);            /* инициирует отправку данных */
     connect(ClearButton, &QPushButton::clicked,            /* Нажатие кнопки Clear */
-            this,        &ConsoleWindow::clear);           /* инициирует очистку окна терминала */
+            this,        &ConsoleWidget::clear);           /* инициирует очистку окна терминала */
     connect(Serial,      &SerialForGUI::receivedNewData,   /* Наличие новых данных в com-порт */
-            this,        &ConsoleWindow::receive);         /* инициирует его чтение и отображение принятого */
+            this,        &ConsoleWidget::receive);         /* инициирует его чтение и отображение принятого */
 }
 
-ConsoleWindow::~ConsoleWindow()
+ConsoleWidget::~ConsoleWidget()
 {
 }
 
-void ConsoleWindow::send (void)
+void ConsoleWidget::send (void)
 {
     QString Msg(Message->text());
     if(Msg == "" || Serial->getConnectionStatus() == CLOSED)   /* Если в поле ввода пусто,  */
@@ -59,12 +59,12 @@ void ConsoleWindow::send (void)
     Workspace->textCursor().insertText("\n");
 }
 
-void ConsoleWindow::clear (void)
+void ConsoleWidget::clear (void)
 {
     Workspace->clear();   /* Очищаем окно терминала */
 }
 
-void ConsoleWindow::receive(void)
+void ConsoleWidget::receive(void)
 {
     QString message = QString::fromLocal8Bit(Serial->getData());  /* Принимаем данные и сразу преобразуем в строку */
     Workspace->moveCursor(QTextCursor::End);                      /* Смещаем курсор текста гарантированно в конец */
