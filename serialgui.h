@@ -1,5 +1,5 @@
 /**
- * @class SerialForGUI
+ * @class SerialGui
  *
  * Класс потомок QSerialPort и QSerialPortInfo, позволяющий быстро связать
  * SerialPort c GUI, элементами, такими как:
@@ -12,8 +12,8 @@
  * 6) ComboBox выбора контроля;
  * 7) PushButton подключения/отключения;
  */
-#ifndef SERIAL_FOR_GUI_H
-#define SERIAL_FOR_GUI_H
+#ifndef SERIAL_GUI_H
+#define SERIAL_GUI_H
 
 #include <QSerialPort>
 #include <QSerialPortInfo>
@@ -25,19 +25,19 @@ typedef enum{
     OPEN
 }ConnectionStatusType;
 
-class SerialForGUI : public QSerialPort, public QSerialPortInfo
+class SerialGui : public QSerialPort, public QSerialPortInfo
 {
     Q_OBJECT
 
 public:
-    explicit SerialForGUI(QComboBox*   _Ports,              // ComboBox c доступными Com портами
+    explicit SerialGui(QComboBox*   _Ports,              // ComboBox c доступными Com портами
                           QComboBox*   _Baudrate,           // ComboBox с настройками скорости
                           QComboBox*   _Parity,             // ComboBox с настройками паритета
                           QComboBox*   _Databits,           // ComboBox с настройками бит данных
                           QComboBox*   _Stopbits,           // ComboBox с настройками стоп-бит
                           QComboBox*   _Flowcontrol,        // ComboBox с настройками контроля
                           QPushButton* _ConnectDisconnect); // Кнопка подключения/отключения
-     ~SerialForGUI();
+     ~SerialGui();
 
     /* Узнать состояние подключения */
     ConnectionStatusType getConnectionStatus (void);
@@ -81,4 +81,4 @@ signals:
     void receivedNewData(void);
 };
 
-#endif // SERIAL_FOR_GUI_H
+#endif // SERIAL_GUI_H

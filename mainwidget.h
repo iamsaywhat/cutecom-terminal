@@ -5,7 +5,7 @@
 #include <QSerialPort>
 #include "consolemode/consolewidget.h"
 #include "hexmode/tableconsole.h"
-#include "SerialForGUI.h"
+#include "serialgui.h"
 #include "settingsdialog.h"
 
 
@@ -22,11 +22,11 @@ public:
     ~MainWidget();
 
 private:
-    Ui::MainWidget *ui;
-    SettingsDialog       *settingsWindow;
-    SerialForGUI         *serial;
-    ConsoleWidget        *console;
-    TableConsole         *tableConsole;
+    Ui::MainWidget    *ui;
+    SettingsDialog    *settingsWindow;
+    SerialGui         *serial;
+    ConsoleWidget     *console;
+    TableConsole       *tableConsole;
 
 };
 #endif // MAINWIDGET_H

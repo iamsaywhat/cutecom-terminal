@@ -16,7 +16,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    SerialForGUI.cpp \
     consolemode/consolewidget.cpp \
     decorator.cpp \
     framelesswindow.cpp \
@@ -24,17 +23,18 @@ SOURCES += \
     hexmode/tableconsole.cpp \
     main.cpp \
     mainwidget.cpp \
+    serialgui.cpp \
     settingsdialog.cpp
 
 HEADERS += \
     ConsoleWindow.h \
-    SerialForGUI.h \
     consolemode/consolewidget.h \
     decorator.h \
     framelesswindow.h \
     hexmode/delegate.h \
     hexmode/tableconsole.h \
     mainwidget.h \
+    serialgui.h \
     settingsdialog.h
 
 FORMS += \

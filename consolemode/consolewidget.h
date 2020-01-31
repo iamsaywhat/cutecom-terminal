@@ -6,7 +6,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 
-#include "SerialForGUI.h"
+#include "serialgui.h"
 
 class ConsoleWidget : public QObject
 {
@@ -14,14 +14,14 @@ class ConsoleWidget : public QObject
 
 public:
     explicit ConsoleWidget(QObject*        parent,
-                           SerialForGUI*   Serial,
+                           SerialGui*      Serial,
                            QPlainTextEdit* Workspace,
                            QLineEdit *     Message,
                            QPushButton*    SendButton,
                            QPushButton*    ClearButton);
     ~ConsoleWidget();
 private:
-    SerialForGUI*   Serial;
+    SerialGui*      Serial;
     QPlainTextEdit* Workspace;
     QLineEdit *     Message;
     QPushButton*    SendButton;

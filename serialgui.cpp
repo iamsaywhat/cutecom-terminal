@@ -1,4 +1,4 @@
-#include "SerialForGUI.h"
+#include "serialgui.h"
 
 #include <QString>
 #include <QtDebug>
@@ -6,7 +6,7 @@
 #include <QLineEdit>
 #include <QMessageBox>
 
-SerialForGUI::SerialForGUI(QComboBox*   _Ports,              // ComboBox c доступными Com портами
+SerialGui::SerialGui(QComboBox*   _Ports,              // ComboBox c доступными Com портами
                            QComboBox*   _Baudrate,           // ComboBox с настройками скорости
                            QComboBox*   _Parity,             // ComboBox с настройками паритета
                            QComboBox*   _Databits,           // ComboBox с настройками бит данных
@@ -81,15 +81,15 @@ SerialForGUI::SerialForGUI(QComboBox*   _Ports,              // ComboBox c до�
     Baudrate->setInsertPolicy(QComboBox::NoInsert);
 
     // Подключаем сигнал при изменении селектора бодрейта на слот работы с custom значением
-    connect(Baudrate, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SerialForGUI::setCustomBaudrate);
+    connect(Baudrate, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SerialGui::setCustomBaudrate);
 
     // Подключаем клик по кнопке ConnectDisconnect на слот OpenOrClose
-    connect(ConnectDisconnect, &QPushButton::clicked, this, &SerialForGUI::slotConnection);
+    connect(ConnectDisconnect, &QPushButton::clicked, this, &SerialGui::slotConnection);
     /* */
-    connect(this, &QSerialPort::readyRead, this, &SerialForGUI::receiveData);
+    connect(this, &QSerialPort::readyRead, this, &SerialGui::receiveData);
 }
 
-SerialForGUI::~SerialForGUI ()
+SerialGui::~SerialGui ()
 {
     delete Baudrate_Validator;
 }
@@ -97,7 +97,7 @@ SerialForGUI::~SerialForGUI ()
 /*********************************************************************************
  * getStatus - Получить статус подключения
 *********************************************************************************/
-ConnectionStatusType SerialForGUI::getConnectionStatus (void)
+ConnectionStatusType SerialGui::getConnectionStatus (void)
 {
     return connectionStatus;
 }
@@ -105,7 +105,7 @@ ConnectionStatusType SerialForGUI::getConnectionStatus (void)
 /*********************************************************************************
  * openPort - Подключение к порту
 *********************************************************************************/
-void SerialForGUI::openPort(void)
+void SerialGui::openPort(void)
 {
     // Устанавливаем настройки - Выбор порта
     setPortName(Ports->currentText());
@@ -163,7 +163,7 @@ void SerialForGUI::openPort(void)
 /*********************************************************************************
  * closePort - Отключение порта
 **********************************************************************************/
-void SerialForGUI::closePort(void)
+void SerialGui::closePort(void)
 {
     // Заменяем текст на кнопке
     ConnectDisconnect->setText("Connect");
@@ -187,7 +187,7 @@ void SerialForGUI::closePort(void)
 /*********************************************************************************
 * OpenOrClose - Слот обслуживания кнопки Connect
 *********************************************************************************/
-void SerialForGUI::slotConnection(void)
+void SerialGui::slotConnection(void)
 {
     // Если Checked не установлен, значит выполняем подключение
     if(ConnectDisconnect->isChecked())
@@ -200,7 +200,7 @@ void SerialForGUI::slotConnection(void)
 /*********************************************************************************
  * setCustomBaudrate - Слот обслуживания custom baudrate
 *********************************************************************************/
-void SerialForGUI::setCustomBaudrate(void)
+void SerialGui::setCustomBaudrate(void)
 {
     // Если выбран Custom
     if (Baudrate->currentIndex() == BaudrateCustom_indx)
@@ -219,7 +219,7 @@ void SerialForGUI::setCustomBaudrate(void)
 }
 
 
-void SerialForGUI::receiveData(void)
+void SerialGui::receiveData(void)
 {
     /* По рекомендациям втыкаем ожидание перед считыванием */
     waitForReadyRead(1);
@@ -229,7 +229,7 @@ void SerialForGUI::receiveData(void)
     emit receivedNewData();
 }
 
-QByteArray SerialForGUI::getData(void)
+QByteArray SerialGui::getData(void)
 {
     return receiveBuffer;
 }

@@ -6,7 +6,7 @@
 #include <QTime>
 
 ConsoleWidget::ConsoleWidget(QObject*        parent,
-                             SerialForGUI*   Serial,
+                             SerialGui*      Serial,
                              QPlainTextEdit* Workspace,
                              QLineEdit *     Message,
                              QPushButton*    SendButton,
@@ -36,7 +36,7 @@ ConsoleWidget::ConsoleWidget(QObject*        parent,
             this,        &ConsoleWidget::send);            /* инициирует отправку данных */
     connect(ClearButton, &QPushButton::clicked,            /* Нажатие кнопки Clear */
             this,        &ConsoleWidget::clear);           /* инициирует очистку окна терминала */
-    connect(Serial,      &SerialForGUI::receivedNewData,   /* Наличие новых данных в com-порт */
+    connect(Serial,      &SerialGui::receivedNewData,   /* Наличие новых данных в com-порт */
             this,        &ConsoleWidget::receive);         /* инициирует его чтение и отображение принятого */
 }
 

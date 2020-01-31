@@ -5,7 +5,7 @@
 #include <QScrollBar>
 
 TableConsole::TableConsole(QObject*           parent,
-                           SerialForGUI*      serial,
+                           SerialGui*         serial,
                            QTableView*        tableView,
                            QLineEdit*         lineEdit,
                            QPushButton*       sendButton,
@@ -60,7 +60,7 @@ TableConsole::TableConsole(QObject*           parent,
             this, &TableConsole::send);                                 /* и отображение введенного сообщения */
     connect(field, &QLineEdit::textChanged,                             /* Каждый введенный символ запускает автоустановщик */
             this, &TableConsole::slotTextDelimiter);                    /* разделителей между байтами */
-    connect(serial, &SerialForGUI::receivedNewData,                            /* QSerialPort будет уведомлять о принятых данных */
+    connect(serial, &SerialGui::receivedNewData,                            /* QSerialPort будет уведомлять о принятых данных */
             this, &TableConsole::receive);                              /* и вызывать slot обработки входящих данных */
 }
 

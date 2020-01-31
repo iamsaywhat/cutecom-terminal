@@ -18,7 +18,7 @@ MainWidget::MainWidget(QWidget *parent)
     /* Создаём окно настроек COM */
     settingsWindow = new SettingsDialog(this);
     /* Выполняем связку класса работы с портом окном настроек */
-    serial = new SerialForGUI(settingsWindow->Ports,                // ComboBox c доступными Com портами
+    serial = new SerialGui(settingsWindow->Ports,                // ComboBox c доступными Com портами
                               settingsWindow->Baudrate,             // ComboBox с настройками скорости
                               settingsWindow->Parity,               // ComboBox с настройками паритета
                               settingsWindow->Databits,             // ComboBox с настройками бит данных

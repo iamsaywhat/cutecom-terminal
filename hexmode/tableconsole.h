@@ -10,7 +10,7 @@
 #include <QByteArray>
 
 #include "delegate.h"
-#include "SerialForGUI.h"
+#include "serialgui.h"
 
 class TableConsole : public QObject
 {
@@ -18,7 +18,7 @@ class TableConsole : public QObject
 
 public:
     explicit TableConsole(QObject*           parent,
-                          SerialForGUI*      serial,
+                          SerialGui*         serial,
                           QTableView*        tableView,
                           QLineEdit*         lineEdit,
                           QPushButton*       sendButton,
@@ -46,7 +46,7 @@ public:
     QString convertHexToAscii(QByteArray source);
 
 private:
-    SerialForGUI*       serial;
+    SerialGui*          serial;
     QTableView*         table;       /* Таблица */
     TextEditDelegate*   delegate;    /* Делегат для особого отображения содержимого */
     QStandardItemModel* model;       /* Модель данных для таблицы */
