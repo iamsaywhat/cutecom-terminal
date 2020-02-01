@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QGraphicsDropShadowEffect>
 #include <QWidget>
+#include <QScrollBar>
 
 #include "decorator.h"
 
@@ -45,13 +46,9 @@ MainWidget::MainWidget(QWidget *parent)
     ui->tableField->setShowGrid(true);
 
     /* Внешний вид приложения */
-    this->setStyleSheet(Decorator::getMainWidgetStyleSheet());
-    ui->closeButton->setStyleSheet(Decorator::getCloseButtonStyleSheet());
-    ui->minimizeButton->setStyleSheet(Decorator::getMinimizeButtonStyleSheet());
-    ui->maximazeButton->setStyleSheet(Decorator::getMaximizeButtonStyleSheet());
-    ui->connectionButton->setStyleSheet(Decorator::getConnectionButtonStyleSheet());
-    ui->settingsButton->setStyleSheet(Decorator::getSettingsButtonStyleSheet());
-    ui->consoleField->setStyleSheet(Decorator::getConsoleStyleSheet());
+    applyTopPanelStyleSheet();
+    applyConsoleStyleSheet();
+    applyTableStyleSheet();
 
     /* Подключение кнопок закрыть, свернуть, развернуть окно, так как стандартные скрыты */
     connect(ui->closeButton,    &QToolButton::clicked, parent, &QWidget::close);
@@ -98,3 +95,31 @@ MainWidget::~MainWidget()
     delete ui;
 }
 
+void MainWidget::applyTopPanelStyleSheet(void) {
+    ui->closeButton->setText("");
+    ui->maximazeButton->setText("");
+    ui->minimizeButton->setText("");
+    ui->connectionButton->setText("");
+    ui->settingsButton->setText("");
+    ui->appName->setText("");
+    this->setStyleSheet(Decorator::getMainWidgetStyleSheet());
+    ui->closeButton->setStyleSheet     (Decorator::getCloseButtonStyleSheet());
+    ui->minimizeButton->setStyleSheet  (Decorator::getMinimizeButtonStyleSheet());
+    ui->maximazeButton->setStyleSheet  (Decorator::getMaximizeButtonStyleSheet());
+    ui->connectionButton->setStyleSheet(Decorator::getConnectionButtonStyleSheet());
+    ui->settingsButton->setStyleSheet  (Decorator::getSettingsButtonStyleSheet());
+}
+
+void MainWidget::applyConsoleStyleSheet(void) {
+    ui->consoleField->setFont(QFont("System", 8, QFont::Normal));
+    ui->inputConsoleField->setFont(QFont("System", 8, QFont::Normal));
+    ui->consoleField->setStyleSheet(Decorator::getConsoleStyleSheet());
+    ui->sendConsoleButton->setStyleSheet(Decorator::getUsualButtonStyleSheet());
+    ui->clearConsoleButton->setStyleSheet(Decorator::getUsualButtonStyleSheet());
+    ui->inputConsoleField->setStyleSheet(Decorator::getInputFieldStyleSheet());
+    ui->consoleField->verticalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet());
+}
+
+void MainWidget::applyTableStyleSheet(void) {
+
+}

@@ -20,7 +20,9 @@ class MainWidget : public QWidget
 public:
     MainWidget(QWidget *parent = nullptr);
     ~MainWidget();
-
+    void applyTopPanelStyleSheet (void);
+    void applyConsoleStyleSheet(void);
+    void applyTableStyleSheet(void);
 private:
     Ui::MainWidget    *ui;
     SettingsDialog    *settingsWindow;

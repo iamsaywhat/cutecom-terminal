@@ -21,15 +21,13 @@ ConsoleWidget::ConsoleWidget(QObject*        parent,
 
     /* Настраиваем свойства и внешний вид рабочих областей */
     Workspace->setReadOnly(true);                            /* Запрещаем пользователю редактировать консоль */
-    Workspace->setFont(QFont("System", 8, QFont::Normal));   /* Устанавливаем шрифт */
-    Workspace->setStyleSheet(                                /* Выбор палитры */
-                "QPlainTextEdit{color: #aaaaaa;"
-                               "background-color: #000000;"
-                               "selection-background-color: #606060;"
-                                "selection-color: #ffffff;}");
 
     /* Привязываем кнопки клавиатуры к кнопкам UI */
     SendButton->setShortcut(Qt::Key_Return);
+
+    /* Разместим текст на кнопках */
+    SendButton->setText("Send");
+    ClearButton->setText("Clear");
 
     /* Выполняем функциональные подключения */
     connect(SendButton,  &QPushButton::clicked,            /* Нажатие кнопки Send  */
