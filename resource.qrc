@@ -1,3 +1,9 @@
 <RCC>
-    <qresource prefix="/icons"/>
+    <qresource prefix="/icons">
+        <file>resources/close.png</file>
+        <file>resources/connect.png</file>
+        <file>resources/maximize.png</file>
+        <file>resources/minimize.png</file>
+        <file>resources/settings.png</file>
+    </qresource>
 </RCC>

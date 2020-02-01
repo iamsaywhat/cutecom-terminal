@@ -16,7 +16,7 @@ QString Decorator::getMainWidgetStyleSheet() {
 
 QString Decorator::getCloseButtonStyleSheet() {
     return "QToolButton { "
-                "image: url(:/buttons/close-orange.png);"
+                "image: url(:/icons/resources/close.png);"
                 "background-color: #292929; "
                 "icon-size: 12px;"
                 "padding-left: 10px;"
@@ -36,7 +36,7 @@ QString Decorator::getCloseButtonStyleSheet() {
 
 QString Decorator::getMaximizeButtonStyleSheet() {
     return "QToolButton { "
-                "image: url(:/buttons/window-maximize-gray.png);"
+                "image: url(:/icons/resources/maximize.png);"
                 "background-color: #292929;"
                 "icon-size: 12px;"
                 "padding-left: 10px;"
@@ -76,7 +76,7 @@ QString Decorator::getRestoreButtonStyleSheet() {
 
 QString Decorator::getMinimizeButtonStyleSheet() {
     return "QToolButton { "
-                "image: url(:/buttons/window-minimize-gray.png);"
+                "image: url(:/icons/resources/minimize.png);"
                 "background-color: #292929;"
                 "icon-size: 12px;"
                 "padding-left: 10px;"
@@ -96,9 +96,9 @@ QString Decorator::getMinimizeButtonStyleSheet() {
 
 QString Decorator::getConnectionButtonStyleSheet() {
     return "QToolButton { "
-                "image: url(:/buttons/window-minimize-gray.png);"
+                "image: url(:/icons/resources/connect.png);"
                 "background-color: #292929;"
-                "icon-size: 12px;"
+                "icon-size: 20px;"
                 "padding-left: 10px;"
                 "padding-right: 10px;"
                 "padding-top: 5px;"
@@ -117,7 +117,7 @@ QString Decorator::getConnectionButtonStyleSheet() {
 
 QString Decorator::getSettingsButtonStyleSheet() {
     return "QToolButton { "
-                "image: url(:/buttons/window-minimize-gray.png);"
+                "image: url(:/icons/resources/settings.png);"
                 "background-color: #292929;"
                 "icon-size: 12px;"
                 "padding-left: 10px;"
