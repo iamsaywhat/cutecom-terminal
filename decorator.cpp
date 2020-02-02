@@ -269,3 +269,114 @@ QString Decorator::getComboBoxStyleSheet(void) {
             "}"
             ;
 }
+
+
+QString Decorator::get_ConnectionButtonStyleSheet(void) {
+    return "QPushButton { "
+                "image: url(:/icons/resources/connect.png);"
+                "background-color: #212121;"
+                "icon-size: 12px;"
+                "qproperty-iconSize: 12px;"
+                "padding-left: 10px;"
+                "padding-right: 10px;"
+                "padding-top: 10px;"
+                "padding-bottom: 10px;"
+                "border: 0px solid #292929; "
+           "}"
+           "QPushButton:hover { "
+                "image: url(:/buttons/window-minimize.png); "
+                "background-color: #23282B;"
+           "}"
+           "QPushButton:pressed { "
+                "image: url(:/buttons/window-minimize.png);"
+                "background-color: #de8e37; "
+           "}";
+}
+
+QString Decorator::get_SettingsButtonStyleSheet(void) {
+    return "QPushButton { "
+                "image: url(:/icons/resources/connect.png);"
+                "background-color: #212121;"
+                "icon-size: 12px;"
+                "qproperty-iconSize: 12px;"
+                "padding-left: 10px;"
+                "padding-right: 10px;"
+                "padding-top: 10px;"
+                "padding-bottom: 10px;"
+                "border: 0px solid #292929; "
+           "}"
+           "QPushButton:hover { "
+                "image: url(:/buttons/window-minimize.png); "
+                "background-color: #23282B;"
+           "}"
+           "QPushButton:pressed { "
+                "image: url(:/buttons/window-minimize.png);"
+                "background-color: #de8e37; "
+           "}";
+}
+
+QString Decorator::getConsoleModeButtonStyleSheet(void) {
+    return "QPushButton { "
+                "image: url(:/icons/resources/connect.png);"
+                "background-color: #212121;"
+                "icon-size: 12px;"
+                "qproperty-iconSize: 12px;"
+                "padding-left: 10px;"
+                "padding-right: 10px;"
+                "padding-top: 10px;"
+                "padding-bottom: 10px;"
+                "border: 0px solid #292929; "
+           "}"
+           "QPushButton:hover { "
+                "image: url(:/buttons/window-minimize.png); "
+                "background-color: #23282B;"
+           "}"
+           "QPushButton:pressed { "
+                "image: url(:/buttons/window-minimize.png);"
+                "background-color: #de8e37; "
+           "}";
+}
+
+QString Decorator::getTableModeButtonStyleSheet(void) {
+    return "QPushButton { "
+                "image: url(:/icons/resources/connect.png);"
+                "background-color: #212121;"
+                "icon-size: 12px;"
+                "qproperty-iconSize: 12px;"
+                "padding-left: 10px;"
+                "padding-right: 10px;"
+                "padding-top: 10px;"
+                "padding-bottom: 10px;"
+                "border: 0px solid #292929; "
+           "}"
+           "QPushButton:hover { "
+                "image: url(:/buttons/window-minimize.png); "
+                "background-color: #23282B;"
+           "}"
+           "QPushButton:pressed { "
+                "image: url(:/buttons/window-minimize.png);"
+                "background-color: #de8e37; "
+           "}";
+}
+QString Decorator::getConverterModeButtonStyleSheet(void) {
+    return "QPushButton { "
+                "image: url(:/icons/resources/connect.png);"
+                "background-color: #212121;"
+                "icon-size: 12px;"
+                "qproperty-iconSize: 12px;"
+                "padding-left: 10px;"
+                "padding-right: 10px;"
+                "padding-top: 10px;"
+                "padding-bottom: 10px;"
+                "border: 0px solid #292929; "
+           "}"
+           "QPushButton:hover { "
+                "image: url(:/buttons/window-minimize.png); "
+                "background-color: #23282B;"
+           "}"
+           "QPushButton:pressed { "
+                "image: url(:/buttons/window-minimize.png);"
+                "background-color: #de8e37; "
+           "}";
+}
+

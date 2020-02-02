@@ -23,12 +23,16 @@ public:
     void applyTopPanelStyleSheet (void);
     void applyConsoleStyleSheet(void);
     void applyTableStyleSheet(void);
+    void applyMenuStyleSheet(void);
 private:
     Ui::MainWidget    *ui;
     SettingsDialog    *settingsWindow;
     SerialGui         *serial;
     ConsoleWidget     *console;
-    TableConsole       *tableConsole;
+    TableConsole      *tableConsole;
+    const int         indexConsole   = 0;
+    const int         indexTable     = 1;
+    const int         indexConverter = 2;
 
 };
 #endif // MAINWIDGET_H

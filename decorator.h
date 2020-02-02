@@ -20,6 +20,13 @@ public:
     static QString getInputFieldStyleSheet (void);
     static QString getScrollBarStyleSheet (void);
     static QString getComboBoxStyleSheet(void);
+
+
+    static QString get_ConnectionButtonStyleSheet(void);
+    static QString get_SettingsButtonStyleSheet(void);
+    static QString getConsoleModeButtonStyleSheet(void);
+    static QString getTableModeButtonStyleSheet(void);
+    static QString getConverterModeButtonStyleSheet(void);
 };
 
 #endif // DECORATOR_H

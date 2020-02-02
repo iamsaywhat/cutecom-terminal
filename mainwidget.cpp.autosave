@@ -113,10 +113,10 @@ void MainWidget::applyTopPanelStyleSheet(void) {
     ui->connectionButton->setStyleSheet(Decorator::getConnectionButtonStyleSheet());
     ui->settingsButton->setStyleSheet  (Decorator::getSettingsButtonStyleSheet());
 
-    ui->showConnectionButton->setStyleSheet(Decorator::get_ConnectionButtonStyleSheet());
-    ui->showSettingsButton->setStyleSheet(Decorator::get_SettingsButtonStyleSheet());
-    ui->switchToConsoleButton->setStyleSheet(Decorator::getConsoleModeButtonStyleSheet());
-    ui->switchToTableButton->setStyleSheet(Decorator::getTableModeButtonStyleSheet());
+    ui->showConnectionButton->setStyleSheet   (Decorator::get_ConnectionButtonStyleSheet());
+    ui->showSettingsButton->setStyleSheet     (Decorator::get_SettingsButtonStyleSheet());
+    ui->switchToConsoleButton->setStyleSheet  (Decorator::getConsoleModeButtonStyleSheet());
+    ui->switchToTableButton->setStyleSheet    (Decorator::getTableModeButtonStyleSheet());
     ui->switchToConverterButton->setStyleSheet(Decorator::getConverterModeButtonStyleSheet());
 }
 
