@@ -34,8 +34,6 @@ void FramelessWindow::maximizeFramelessWindow (void) {
     // Делаем проверку на то, в каком состоянии находится окно и переключаем его режим
     if (!this->isMaximized())
     {
-        //ui->maximazeButton->setStyleSheet(StyleHelper::getRestoreStyleSheet());
-
         /* Здесь важный нюанс: при разворачивании окна - необходимо поля centralwidget
          * (на уровень выше interfaceWidget) убрать, чтобы окно полноценно развернулось
          * в полный экран, однако, при этом исчезает тень, которую в полноэкранном режиме
@@ -46,7 +44,6 @@ void FramelessWindow::maximizeFramelessWindow (void) {
     else
     {
         // Заметьте, каждый раз устанавливаем новый стиль в эту кнопку
-        //ui->maximazeButton->setStyleSheet(StyleHelper::getMaximizeStyleSheet());
         /* Здесь при минимизации возвращаем поля в исходный вид,
          * чтобы тень отобразилась */
         this->layout()->setMargin(recomendedMargin);
