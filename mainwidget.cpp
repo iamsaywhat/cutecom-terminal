@@ -118,6 +118,7 @@ void MainWidget::applyTopPanelStyleSheet(void) {
     ui->switchToConsoleButton->setStyleSheet  (Decorator::getConsoleModeButtonStyleSheet());
     ui->switchToTableButton->setStyleSheet    (Decorator::getTableModeButtonStyleSheet());
     ui->switchToConverterButton->setStyleSheet(Decorator::getConverterModeButtonStyleSheet());
+    ui->appName->setStyleSheet(Decorator::getAppLabelStyleSheet());
 }
 
 void MainWidget::applyConsoleStyleSheet(void) {

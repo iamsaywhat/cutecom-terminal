@@ -27,6 +27,7 @@ public:
     static QString getConsoleModeButtonStyleSheet(void);
     static QString getTableModeButtonStyleSheet(void);
     static QString getConverterModeButtonStyleSheet(void);
+    static QString getAppLabelStyleSheet(void);
 };
 
 #endif // DECORATOR_H

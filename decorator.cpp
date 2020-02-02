@@ -380,3 +380,9 @@ QString Decorator::getConverterModeButtonStyleSheet(void) {
            "}";
 }
 
+QString Decorator::getAppLabelStyleSheet(void){
+    return "QLabel {"
+                "image: url(:/icons/resources/label.png);"
+            "}";
+}
+
