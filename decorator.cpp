@@ -147,11 +147,12 @@ QString Decorator::getSettingsButtonStyleSheet() {
 QString Decorator::getUsualButtonStyleSheet (void) {
     return "QPushButton { "
                 "background-color: #212121;"
-                "padding-left:   10px;"
-                "padding-right:  10px;"
-                "padding-top:    10px;"
-                "padding-bottom: 10px;"
-                "border: 0px solid #292929; "
+                "color:            #aaaaaa;"
+                "padding-left:     10px;"
+                "padding-right:    10px;"
+                "padding-top:      5px;"
+                "padding-bottom:   5px;"
+                "border:           none; "
            "}";
 //           "QPushButton:hover { "
 //           "}"
@@ -163,7 +164,7 @@ QString Decorator::getInputFieldStyleSheet (void) {
     return "QLineEdit { "
                 "background: #000000; "
                 "color:      #aaaaaa; "
-                "border:     0px; "
+                "border:     none; "
            "}";
 }
 
@@ -209,5 +210,62 @@ QString Decorator::getConsoleStyleSheet() {
 //                "border-radius: 10px;"
 //                "border-color: #2D2DF0;"
            "}";
+}
 
+QString Decorator::getComboBoxStyleSheet(void) {
+    return
+            "QComboBox { "
+                "border: 1px solid gray; "
+                "border-radius: 3px; "
+                "padding: 1px 18px 1px 3px;"
+                "min-width: 6em; "
+            "}"
+            "QComboBox:editable { "
+                "background: black;"
+            "}"
+            "QComboBox QAbstractItemView { "
+                "border: 2px solid darkgray; "
+                "background:                 #212121;"
+                "color:                      #aaaaaa;"
+                "selection-background-color: #161A1E;"
+                "selection-color:            #aaaaaa;"
+            "}"
+            "QComboBox:!editable, QComboBox::drop-down:editable { "
+                "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+                                            "stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,"
+                                            "stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);"
+            "}"
+            "QComboBox:!editable:on, QComboBox::drop-down:editable:on { "
+                "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+                                            "stop: 0 #D3D3D3, stop: 0.4 #D8D8D8,"
+                                            "stop: 0.5 #DDDDDD, stop: 1.0 #E1E1E1);"
+            "}"
+            "QComboBox:on { "
+                "padding-top: 3px; "
+                "padding-left: 4px;"
+            "}"
+            /* */
+            "QComboBox::drop-down { "
+                 "subcontrol-origin: padding; "
+                 "subcontrol-position: top right;"
+                 "width: 15px; "
+                 "border-left-width: 1px; "
+                 "border-left-color: darkgray; "
+                 "border-left-style: solid; "/* только одна линия */
+                 "border-top-right-radius: 8px; " /* тот же радиус закругления что и у QComboBox */
+                 "border-bottom-right-radius: 3px;"
+            "}"
+            /* Стрелка, при закрытом списке */
+            "QComboBox::down-arrow { "
+                 "image: url(/usr/share/icons/crystalsvg/16x16/actions/1downarrow.png);"
+            "}"
+            /* Стрелка, когда список раскрыт */
+            "QComboBox::down-arrow:on { "
+                "top: 1px;"
+                "left: 1px;"
+            "}"
+            "QComboBox QListView:editable {"
+                "background: black;"
+            "}"
+            ;
 }

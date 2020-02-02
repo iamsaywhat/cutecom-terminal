@@ -46,7 +46,7 @@ MainWidget::MainWidget(QWidget *parent)
     ui->tableField->setShowGrid(true);
 
     /* Внешний вид приложения */
-    applyTopPanelStyleSheet();
+    //applyTopPanelStyleSheet();
     applyConsoleStyleSheet();
     applyTableStyleSheet();
 
@@ -84,7 +84,7 @@ MainWidget::MainWidget(QWidget *parent)
 
 
     // При запуске будем предлагать подключение
-    //settingsWindow->show();
+    settingsWindow->show();
 }
 
 MainWidget::~MainWidget()

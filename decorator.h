@@ -19,6 +19,7 @@ public:
     static QString getUsualButtonStyleSheet(void);
     static QString getInputFieldStyleSheet (void);
     static QString getScrollBarStyleSheet (void);
+    static QString getComboBoxStyleSheet(void);
 };
 
 #endif // DECORATOR_H
