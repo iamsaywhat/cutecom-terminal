@@ -81,14 +81,13 @@ MainWidget::MainWidget(QWidget *parent)
 
 
     /* Дополнительные функциональные кнопки */
-    connect(ui->connectionButton,        &QToolButton::clicked, settingsWindow, &SettingsDialog::show);
     connect(ui->showConnectionButton,    &QPushButton::clicked, settingsWindow, &SettingsDialog::show);
     connect(ui->switchToConsoleButton,   &QPushButton::clicked, [this](){ui->workspaceWidget->setCurrentIndex(indexConsole);});
     connect(ui->switchToTableButton,     &QPushButton::clicked, [this](){ui->workspaceWidget->setCurrentIndex(indexTable);});
     connect(ui->switchToConverterButton, &QPushButton::clicked, [this](){ui->workspaceWidget->setCurrentIndex(indexConverter);});
 
     // При запуске будем предлагать подключение
-    settingsWindow->show();
+    //settingsWindow->show();
 }
 
 MainWidget::~MainWidget()
@@ -103,22 +102,33 @@ void MainWidget::applyTopPanelStyleSheet(void) {
     ui->closeButton->setText("");
     ui->maximazeButton->setText("");
     ui->minimizeButton->setText("");
-    ui->connectionButton->setText("");
-    ui->settingsButton->setText("");
     ui->appName->setText("");
     this->setStyleSheet(Decorator::getMainWidgetStyleSheet());
     ui->closeButton->setStyleSheet     (Decorator::getCloseButtonStyleSheet());
     ui->minimizeButton->setStyleSheet  (Decorator::getMinimizeButtonStyleSheet());
     ui->maximazeButton->setStyleSheet  (Decorator::getMaximizeButtonStyleSheet());
-    ui->connectionButton->setStyleSheet(Decorator::getConnectionButtonStyleSheet());
-    ui->settingsButton->setStyleSheet  (Decorator::getSettingsButtonStyleSheet());
 
-    ui->showConnectionButton->setStyleSheet   (Decorator::get_ConnectionButtonStyleSheet());
-    ui->showSettingsButton->setStyleSheet     (Decorator::get_SettingsButtonStyleSheet());
+    ui->showConnectionButton->setStyleSheet   (Decorator::getConnectionButtonStyleSheet());
+    ui->showSettingsButton->setStyleSheet     (Decorator::getSettingsButtonStyleSheet());
     ui->switchToConsoleButton->setStyleSheet  (Decorator::getConsoleModeButtonStyleSheet());
     ui->switchToTableButton->setStyleSheet    (Decorator::getTableModeButtonStyleSheet());
     ui->switchToConverterButton->setStyleSheet(Decorator::getConverterModeButtonStyleSheet());
+
+    ui->appName->setAttribute(Qt::WA_TransparentForMouseEvents, true);
     ui->appName->setStyleSheet(Decorator::getAppLabelStyleSheet());
+
+    ui->showConnectionButton->setMinimumSize(50,50);
+    ui->showConnectionButton->setMinimumSize(50,50);
+    ui->showSettingsButton->setMinimumSize(50,50);
+    ui->switchToConsoleButton->setMinimumSize(50,50);
+    ui->switchToTableButton->setMinimumSize(50,50);
+    ui->switchToConverterButton->setMinimumSize(50,50);
+    ui->showConnectionButton->setText("");
+    ui->showConnectionButton->setText("");
+    ui->showSettingsButton->setText("");
+    ui->switchToConsoleButton->setText("");
+    ui->switchToTableButton->setText("");
+    ui->switchToConverterButton->setText("");
 }
 
 void MainWidget::applyConsoleStyleSheet(void) {
@@ -132,5 +142,7 @@ void MainWidget::applyConsoleStyleSheet(void) {
 }
 
 void MainWidget::applyTableStyleSheet(void) {
-
+    ui->tableField->verticalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet());
+    ui->tableField->horizontalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet());
+    ui->tableField->setStyleSheet(Decorator::getTableStyleSheet());
 }

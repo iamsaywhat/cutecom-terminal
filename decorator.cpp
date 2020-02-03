@@ -101,48 +101,6 @@ QString Decorator::getMinimizeButtonStyleSheet() {
            "}";
 }
 
-QString Decorator::getConnectionButtonStyleSheet() {
-    return "QToolButton { "
-                "image: url(:/icons/resources/connect.png);"
-                "background-color: #212121;"
-                "icon-size: 12px;"
-                "qproperty-iconSize: 12px;"
-                "padding-left: 10px;"
-                "padding-right: 10px;"
-                "padding-top: 5px;"
-                "padding-bottom: 5px;"
-                "border: 0px solid #292929; "
-           "}"
-           "QToolButton:hover { "
-//                "image: url(:/buttons/window-minimize.png); "
-                "background-color: #23282B;"
-           "}"
-           "QToolButton:pressed { "
-                "image: url(:/buttons/window-minimize.png);"
-                "background-color: #de8e37; "
-           "}";
-}
-
-QString Decorator::getSettingsButtonStyleSheet() {
-    return "QToolButton { "
-                "image: url(:/icons/resources/settings.png);"
-                "background-color: #212121;"
-                "icon-size: 12px;"
-                "padding-left: 10px;"
-                "padding-right: 10px;"
-                "padding-top: 5px;"
-                "padding-bottom: 5px;"
-                "border: 0px solid #292929; "
-           "}"
-           "QToolButton:hover { "
-//                "image: url(:/buttons/window-minimize.png); "
-                "background-color: #23282B;"
-           "}"
-           "QToolButton:pressed { "
-                "image: url(:/buttons/window-minimize.png);"
-                "background-color: #de8e37; "
-           "}";
-}
 
 QString Decorator::getUsualButtonStyleSheet (void) {
     return "QPushButton { "
@@ -179,24 +137,50 @@ QString Decorator::getScrollBarStyleSheet (void) {
                 "background: #212121; "
                 "min-width:  20px; "
                 "min-height: 20px; "
-
-            "}"
-            "QScrollBar::add-line:vertical {"
+           "}"
+           "QScrollBar::add-line:vertical {"
                 "background: none;"
                 "border:     none; "
-            "}"
-            "QScrollBar::sub-line:vertical {"
+           "}"
+           "QScrollBar::sub-line:vertical {"
                 "background: none; "
                 "border:     none; "
-            "}"
-            "QScrollBar::add-page:vertical {"
+           "}"
+           "QScrollBar::add-page:vertical {"
                 "background: #000000;"
                 "border:     none; "
-            "}"
-            "QScrollBar::sub-page:vertical {"
+           "}"
+           "QScrollBar::sub-page:vertical {"
                 "background: #000000; "
                 "border:     none; "
-            "}";
+           "}"
+           "QScrollBar:horizontal { "
+                "border: none;"
+                "height: 10px;"
+                "width:  10px;"
+                "margin: 0;"
+           "}"
+           "QScrollBar::handle:horizontal {"
+                "background: #212121; "
+                "min-width:  20px; "
+                "min-height: 20px; "
+           "}"
+           "QScrollBar::add-line:horizontal {"
+                "background: none;"
+                "border:     none; "
+           "}"
+           "QScrollBar::sub-line:horizontal {"
+                "background: none; "
+                "border:     none; "
+           "}"
+           "QScrollBar::add-page:horizontal {"
+                "background: #000000;"
+                "border:     none; "
+           "}"
+           "QScrollBar::sub-page:horizontal {"
+                "background: #000000; "
+                "border:     none; "
+           "}";
 }
 
 QString Decorator::getConsoleStyleSheet() {
@@ -271,7 +255,7 @@ QString Decorator::getComboBoxStyleSheet(void) {
 }
 
 
-QString Decorator::get_ConnectionButtonStyleSheet(void) {
+QString Decorator::getConnectionButtonStyleSheet(void) {
     return "QPushButton { "
                 "image: url(:/icons/resources/connect.png);"
                 "background-color: #212121;"
@@ -284,18 +268,18 @@ QString Decorator::get_ConnectionButtonStyleSheet(void) {
                 "border: 0px solid #292929; "
            "}"
            "QPushButton:hover { "
-                "image: url(:/buttons/window-minimize.png); "
+//                "image: url(:/buttons/window-minimize.png); "
                 "background-color: #23282B;"
            "}"
            "QPushButton:pressed { "
-                "image: url(:/buttons/window-minimize.png);"
+//                "image: url(:/buttons/window-minimize.png);"
                 "background-color: #de8e37; "
            "}";
 }
 
-QString Decorator::get_SettingsButtonStyleSheet(void) {
+QString Decorator::getSettingsButtonStyleSheet(void) {
     return "QPushButton { "
-                "image: url(:/icons/resources/connect.png);"
+                "image: url(:/icons/resources/settings.png);"
                 "background-color: #212121;"
                 "icon-size: 12px;"
                 "qproperty-iconSize: 12px;"
@@ -306,18 +290,16 @@ QString Decorator::get_SettingsButtonStyleSheet(void) {
                 "border: 0px solid #292929; "
            "}"
            "QPushButton:hover { "
-                "image: url(:/buttons/window-minimize.png); "
                 "background-color: #23282B;"
            "}"
            "QPushButton:pressed { "
-                "image: url(:/buttons/window-minimize.png);"
                 "background-color: #de8e37; "
            "}";
 }
 
 QString Decorator::getConsoleModeButtonStyleSheet(void) {
     return "QPushButton { "
-                "image: url(:/icons/resources/connect.png);"
+                "image: url(:/icons/resources/consolemode.png);"
                 "background-color: #212121;"
                 "icon-size: 12px;"
                 "qproperty-iconSize: 12px;"
@@ -328,18 +310,16 @@ QString Decorator::getConsoleModeButtonStyleSheet(void) {
                 "border: 0px solid #292929; "
            "}"
            "QPushButton:hover { "
-                "image: url(:/buttons/window-minimize.png); "
                 "background-color: #23282B;"
            "}"
            "QPushButton:pressed { "
-                "image: url(:/buttons/window-minimize.png);"
                 "background-color: #de8e37; "
            "}";
 }
 
 QString Decorator::getTableModeButtonStyleSheet(void) {
     return "QPushButton { "
-                "image: url(:/icons/resources/connect.png);"
+                "image: url(:/icons/resources/tablemode.png);"
                 "background-color: #212121;"
                 "icon-size: 12px;"
                 "qproperty-iconSize: 12px;"
@@ -350,17 +330,15 @@ QString Decorator::getTableModeButtonStyleSheet(void) {
                 "border: 0px solid #292929; "
            "}"
            "QPushButton:hover { "
-                "image: url(:/buttons/window-minimize.png); "
                 "background-color: #23282B;"
            "}"
            "QPushButton:pressed { "
-                "image: url(:/buttons/window-minimize.png);"
                 "background-color: #de8e37; "
            "}";
 }
 QString Decorator::getConverterModeButtonStyleSheet(void) {
     return "QPushButton { "
-                "image: url(:/icons/resources/connect.png);"
+                "image: url(:/icons/resources/converter.png);"
                 "background-color: #212121;"
                 "icon-size: 12px;"
                 "qproperty-iconSize: 12px;"
@@ -368,14 +346,16 @@ QString Decorator::getConverterModeButtonStyleSheet(void) {
                 "padding-right: 10px;"
                 "padding-top: 10px;"
                 "padding-bottom: 10px;"
-                "border: 0px solid #292929; "
+                //"border: 0px solid #292929; "
+            //"border: none;"
+            "border-width: 1px;"
+            "border-style: solid;"
+            "border-radius: 20px;"
            "}"
            "QPushButton:hover { "
-                "image: url(:/buttons/window-minimize.png); "
                 "background-color: #23282B;"
            "}"
            "QPushButton:pressed { "
-                "image: url(:/buttons/window-minimize.png);"
                 "background-color: #de8e37; "
            "}";
 }
@@ -386,3 +366,24 @@ QString Decorator::getAppLabelStyleSheet(void){
             "}";
 }
 
+QString Decorator::getTableStyleSheet(void) {
+    return "QTableView {"
+                "selection-background-color: qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5,"
+                                        "stop: 0 #FF92BB, stop: 1 white);"
+            "}"
+            "QTableView QTableCornerButton::section {"
+                "background: red;"
+                "border: 2px outset red;"
+            "}"
+            "QTableView::indicator:unchecked {"
+                "background-color: #d7d6d5;"
+            "}"
+            "QHeaderView::section:horizontal {"
+                "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,"
+                                                  "stop:0 #616161, stop: 0.5 #505050,"
+                                                  "stop: 0.6 #434343, stop:1 #656565);"
+                "color: white;"
+                "padding-left: 4px;"
+                "border: 1px solid #6c6c6c;"
+            "}";
+}
