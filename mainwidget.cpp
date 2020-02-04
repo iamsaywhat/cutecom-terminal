@@ -145,4 +145,7 @@ void MainWidget::applyTableStyleSheet(void) {
     ui->tableField->verticalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet());
     ui->tableField->horizontalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet());
     ui->tableField->setStyleSheet(Decorator::getTableStyleSheet());
+    ui->inputTableField->setStyleSheet(Decorator::getInputFieldStyleSheet());
+    ui->sendTableButton->setStyleSheet(Decorator::getUsualButtonStyleSheet());
+    ui->clearTableButton->setStyleSheet(Decorator::getUsualButtonStyleSheet());
 }

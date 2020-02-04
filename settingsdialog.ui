@@ -53,7 +53,7 @@
         <item>
          <widget class="QLabel" name="Baudrate_label">
           <property name="text">
-           <string>Boudrate:</string>
+           <string>Baudrate:</string>
           </property>
          </widget>
         </item>

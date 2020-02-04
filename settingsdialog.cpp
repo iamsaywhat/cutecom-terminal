@@ -22,7 +22,8 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     setWindowTitle("Setting");
     setFixedSize(203,238);
 
-//    Ports->setStyleSheet(Decorator::getComboBoxStyleSheet());
+    //setStyleSheet(Decorator::getMainWidgetStyleSheet());
+    Ports->setStyleSheet(Decorator::getComboBoxStyleSheet());
     Baudrate->setStyleSheet(Decorator::getComboBoxStyleSheet());
 //    Parity->setStyleSheet(Decorator::getComboBoxStyleSheet());
 //    Databits->setStyleSheet(Decorator::getComboBoxStyleSheet());
