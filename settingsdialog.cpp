@@ -25,10 +25,10 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     //setStyleSheet(Decorator::getMainWidgetStyleSheet());
     Ports->setStyleSheet(Decorator::getComboBoxStyleSheet());
     Baudrate->setStyleSheet(Decorator::getComboBoxStyleSheet());
-//    Parity->setStyleSheet(Decorator::getComboBoxStyleSheet());
-//    Databits->setStyleSheet(Decorator::getComboBoxStyleSheet());
-//    Stopbits->setStyleSheet(Decorator::getComboBoxStyleSheet());
-//    Flowcontrol->setStyleSheet(Decorator::getComboBoxStyleSheet());
+    Parity->setStyleSheet(Decorator::getComboBoxStyleSheet());
+    Databits->setStyleSheet(Decorator::getComboBoxStyleSheet());
+    Stopbits->setStyleSheet(Decorator::getComboBoxStyleSheet());
+    Flowcontrol->setStyleSheet(Decorator::getComboBoxStyleSheet());
     //Baudrate->findChild <QLineEdit*>()->setStyleSheet ("QLineEdit {background: green;}");
     //Baudrate->lineEdit()->setStyleSheet("QLineEdit {background: green;}");
 }

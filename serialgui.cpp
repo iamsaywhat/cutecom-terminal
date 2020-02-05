@@ -6,6 +6,7 @@
 #include <QLineEdit>
 #include <QMessageBox>
 
+
 SerialGui::SerialGui(QComboBox*   _Ports,              // ComboBox c доступными Com портами
                            QComboBox*   _Baudrate,           // ComboBox с настройками скорости
                            QComboBox*   _Parity,             // ComboBox с настройками паритета
