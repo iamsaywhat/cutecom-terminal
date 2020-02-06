@@ -23,8 +23,7 @@ SOURCES += \
     hexmode/tableconsole.cpp \
     main.cpp \
     mainwidget.cpp \
-    serialgui.cpp \
-    settingsdialog.cpp
+    serialgui.cpp
 
 HEADERS += \
     ConsoleWindow.h \
@@ -34,12 +33,10 @@ HEADERS += \
     hexmode/delegate.h \
     hexmode/tableconsole.h \
     mainwidget.h \
-    serialgui.h \
-    settingsdialog.h
+    serialgui.h
 
 FORMS += \
-    mainwidget.ui \
-    settingsdialog.ui
+    mainwidget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

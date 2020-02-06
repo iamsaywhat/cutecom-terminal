@@ -6,7 +6,7 @@
 #include "consolemode/consolewidget.h"
 #include "hexmode/tableconsole.h"
 #include "serialgui.h"
-#include "settingsdialog.h"
+
 
 
 QT_BEGIN_NAMESPACE
@@ -24,16 +24,16 @@ public:
     void applyConsoleStyleSheet(void);
     void applyTableStyleSheet(void);
     void applyMenuStyleSheet(void);
+    void applySettingsStylesheet(void);
 private:
     Ui::MainWidget    *ui;
-    SettingsDialog    *settingsWindow;
     SerialGui         *serial;
     ConsoleWidget     *console;
     TableConsole      *tableConsole;
     const int         indexConsole   = 0;
     const int         indexTable     = 1;
     const int         indexConverter = 2;
-
+    const int         indexSettings  = 3;
 };
 #endif // MAINWIDGET_H
 

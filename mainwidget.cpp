@@ -16,30 +16,28 @@ MainWidget::MainWidget(QWidget *parent)
 {
     ui->setupUi(this);
 
-    /* Создаём окно настроек COM */
-    settingsWindow = new SettingsDialog(this);
     /* Выполняем связку класса работы с портом окном настроек */
-    serial = new SerialGui(settingsWindow->Ports,                // ComboBox c доступными Com портами
-                              settingsWindow->Baudrate,             // ComboBox с настройками скорости
-                              settingsWindow->Parity,               // ComboBox с настройками паритета
-                              settingsWindow->Databits,             // ComboBox с настройками бит данных
-                              settingsWindow->Stopbits,             // ComboBox с настройками стоп-бит
-                              settingsWindow->Flowcontrol,          // ComboBox с настройками контроля
-                              settingsWindow->ConnectDisconnect);   // Кнопка подключения/отключения
+    serial = new SerialGui(ui->boxPorts,                   /* ComboBox c доступными Com портами */
+                           ui->boxBaudrate,                /* ComboBox с настройками скорости */
+                           ui->boxParity,                  /* ComboBox с настройками паритета */
+                           ui->boxData,                    /* ComboBox с настройками бит данных */
+                           ui->boxStopBits,                /* ComboBox с настройками стоп-бит */
+                           ui->boxFlowControl,             /* ComboBox с настройками контроля */
+                           ui->buttonConnectDisconnect);   /* Кнопка подключения/отключения */
     /* Выполняем связку класса работы с консолью с формами */
     console = new ConsoleWidget(this,
-                                serial,               /* Указатель на SerialSettings экземпляр */
-                                ui->consoleField,        /* Указатель на QPlainTextEdit форму*/
-                                ui->inputConsoleField,          /* Указатель на QLineEdit форму */
-                                ui->sendConsoleButton,       /* Указатель на QPushButton форму*/
-                                ui->clearConsoleButton);     /* Указатель на QPushButton форму*/
+                                serial,                    /* Указатель на SerialSettings экземпляр */
+                                ui->consoleField,          /* Указатель на QPlainTextEdit форму*/
+                                ui->inputConsoleField,     /* Указатель на QLineEdit форму */
+                                ui->sendConsoleButton,     /* Указатель на QPushButton форму*/
+                                ui->clearConsoleButton);   /* Указатель на QPushButton форму*/
     /* Создаём и связываем табличную консоль с формой */
     tableConsole = new TableConsole(this,
-                                    serial,                  /* Указатель на SerialSettings экземпляр */
-                                    ui->tableField,           /* Указатель на QTableView форму */
-                                    ui->inputTableField,        /* Указатель на QLineEdit форму */
-                                    ui->sendTableButton,     /* Указатель на QPushButton форму*/
-                                    ui->clearTableButton);   /* Указатель на QPushButton форму*/
+                                    serial,                /* Указатель на SerialSettings экземпляр */
+                                    ui->tableField,        /* Указатель на QTableView форму */
+                                    ui->inputTableField,   /* Указатель на QLineEdit форму */
+                                    ui->sendTableButton,   /* Указатель на QPushButton форму*/
+                                    ui->clearTableButton); /* Указатель на QPushButton форму*/
 
 
     /* Включаем сетку на таблице */
@@ -49,6 +47,7 @@ MainWidget::MainWidget(QWidget *parent)
     applyTopPanelStyleSheet();
     applyConsoleStyleSheet();
     applyTableStyleSheet();
+    applySettingsStylesheet();
 
 
     /* Подключение кнопок закрыть, свернуть, развернуть окно, так как стандартные скрыты */
@@ -81,20 +80,22 @@ MainWidget::MainWidget(QWidget *parent)
 
 
     /* Дополнительные функциональные кнопки */
-    connect(ui->showConnectionButton,    &QPushButton::clicked, settingsWindow, &SettingsDialog::show);
+    connect(ui->showConnectionButton,    &QPushButton::clicked, [this](){ui->workspaceWidget->setCurrentIndex(indexSettings);});
     connect(ui->switchToConsoleButton,   &QPushButton::clicked, [this](){ui->workspaceWidget->setCurrentIndex(indexConsole);});
     connect(ui->switchToTableButton,     &QPushButton::clicked, [this](){ui->workspaceWidget->setCurrentIndex(indexTable);});
     connect(ui->switchToConverterButton, &QPushButton::clicked, [this](){ui->workspaceWidget->setCurrentIndex(indexConverter);});
+    connect(ui->showSettingsButton,      &QPushButton::clicked, [this](){ui->workspaceWidget->setCurrentIndex(indexSettings);});
 
-    // При запуске будем предлагать подключение
-    //settingsWindow->show();
+    /* Подключения для меню настроек */
+    connect(ui->connectionContents,      &QPushButton::clicked, [this](){ui->rightStackedPanel->setCurrentIndex(0);});
+    connect(ui->generalContent,          &QPushButton::clicked, [this](){ui->rightStackedPanel->setCurrentIndex(1);});
+
 }
 
 MainWidget::~MainWidget()
 {
     delete console;
     delete serial;
-    delete settingsWindow;
     delete ui;
 }
 
@@ -148,4 +149,32 @@ void MainWidget::applyTableStyleSheet(void) {
     ui->inputTableField->setStyleSheet(Decorator::getInputFieldStyleSheet());
     ui->sendTableButton->setStyleSheet(Decorator::getUsualButtonStyleSheet());
     ui->clearTableButton->setStyleSheet(Decorator::getUsualButtonStyleSheet());
+}
+
+void MainWidget::applySettingsStylesheet(void) {
+    /* Настройка левой панели */
+    ui->connectionContents->setText("Connection");
+    ui->generalContent->setText("General");
+    ui->infoLabel->setText("Version:????");
+    ui->settingsLeftPanel->horizontalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet());
+    ui->settingsLeftPanel->verticalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet());
+    ui->settingsLeftPanel->setStyleSheet(Decorator::getScrollAreaStyleSheet());
+    ui->leftPanelContents->setStyleSheet(Decorator::getScrollAreaStyleSheet());
+
+    ui->pageDelimiterLayout->setSpacing(0);
+    ui->settingsRightPanel->setStyleSheet(Decorator::getScrollAreaStyleSheet());
+    ui->scrollAreaWidgetContents_2->setStyleSheet(Decorator::getScrollAreaStyleSheet());
+
+
+    /* Настройка правой панели */
+    ui->settingsRightPanel->horizontalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet());
+    ui->settingsRightPanel->verticalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet());
+    ui->boxPorts->setStyleSheet       (Decorator::getComboBoxStyleSheet());
+    ui->boxBaudrate->setStyleSheet    (Decorator::getComboBoxStyleSheet());
+    ui->boxParity->setStyleSheet      (Decorator::getComboBoxStyleSheet());
+    ui->boxData->setStyleSheet        (Decorator::getComboBoxStyleSheet());
+    ui->boxStopBits->setStyleSheet    (Decorator::getComboBoxStyleSheet());
+    ui->boxFlowControl->setStyleSheet (Decorator::getComboBoxStyleSheet());
+    ui->labelSectionConnection->setText("Connection");
+
 }

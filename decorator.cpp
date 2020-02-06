@@ -323,6 +323,18 @@ QString Decorator::getTableStyleSheet(void) {
            "}";
 }
 
+QString Decorator::getScrollAreaStyleSheet(void) {
+    return
+            "QScrollArea, QWidget{ "
+                "border: none;"
+                "border-style: solid;"
+                "background-color: #3d563d;"
+                "margin: 0;"
+            "}"
+            ;
+
+}
+
 QString Decorator::getComboBoxStyleSheet(void) {
     return
             "QComboBox { "
@@ -335,7 +347,7 @@ QString Decorator::getComboBoxStyleSheet(void) {
                 "selection-color:            #dcddde;"
                 "font-size:                  12px;"
                 "font-weight:                large;"
-                //"font-style:                 bold;"
+                //"font-style:               bold;"
                 "font-family:                New Century Schoolbook;"
             "}"
             /* Стиль виджета при редактировании элемента */
