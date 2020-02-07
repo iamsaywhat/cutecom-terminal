@@ -7,6 +7,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QWidget>
 #include <QScrollBar>
+#include <QString>
 
 #include "decorator.h"
 
@@ -87,9 +88,12 @@ MainWidget::MainWidget(QWidget *parent)
     connect(ui->showSettingsButton,      &QPushButton::clicked, [this](){ui->workspaceWidget->setCurrentIndex(indexSettings);});
 
     /* Подключения для меню настроек */
-    connect(ui->connectionContents,      &QPushButton::clicked, [this](){ui->rightStackedPanel->setCurrentIndex(0);});
-    connect(ui->generalContent,          &QPushButton::clicked, [this](){ui->rightStackedPanel->setCurrentIndex(1);});
+    connect(ui->connectionContentsButton, &QPushButton::clicked, [this](){ui->rightStackedPanel->setCurrentIndex(0);});
+    connect(ui->generalContentButton,     &QPushButton::clicked, [this](){ui->rightStackedPanel->setCurrentIndex(1);});
 
+    QString str("background: %1");
+    str = str.arg("#1a1c20;");
+    qDebug()<<str;
 }
 
 MainWidget::~MainWidget()
@@ -152,18 +156,38 @@ void MainWidget::applyTableStyleSheet(void) {
 }
 
 void MainWidget::applySettingsStylesheet(void) {
+
     /* Настройка левой панели */
-    ui->connectionContents->setText("Connection");
-    ui->generalContent->setText("General");
+    ui->connectionContentsButton->setText("Connection");
+    ui->generalContentButton->setText("General");
+    ui->consoleContentButton->setText("Console");
+    ui->tableContentButton->setText("Table");
+    ui->logsContentButton->setText("Logs");
+    ui->bindsContentButton->setText("Binds");
     ui->infoLabel->setText("Version:????");
+
     ui->settingsLeftPanel->horizontalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet());
     ui->settingsLeftPanel->verticalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet());
-    ui->settingsLeftPanel->setStyleSheet(Decorator::getScrollAreaStyleSheet());
-    ui->leftPanelContents->setStyleSheet(Decorator::getScrollAreaStyleSheet());
+    ui->settingsLeftPanel->setStyleSheet(Decorator::getLeftScrollAreaStyleSheet());
+    ui->leftPanelContents->setStyleSheet(Decorator::getLeftScrollAreaStyleSheet());
 
-    ui->pageDelimiterLayout->setSpacing(0);
-    ui->settingsRightPanel->setStyleSheet(Decorator::getScrollAreaStyleSheet());
-    ui->scrollAreaWidgetContents_2->setStyleSheet(Decorator::getScrollAreaStyleSheet());
+    //ui->connectionContentsButton->setStyleSheet(Decorator::getSettingsMenuButtons());
+    ui->connectionContentsButton->setStyleSheet(Decorator::getTestStyleSheet("#2b2d33", "#33363d", "#2b2d33"));
+
+    ui->generalContentButton->setStyleSheet(Decorator::getSettingsMenuButtons());
+    ui->consoleContentButton->setStyleSheet(Decorator::getSettingsMenuButtons());
+    ui->tableContentButton->setStyleSheet(Decorator::getSettingsMenuButtons());
+    ui->logsContentButton->setStyleSheet(Decorator::getSettingsMenuButtons());
+    ui->bindsContentButton->setStyleSheet(Decorator::getSettingsMenuButtons());
+    ui->infoLabel->setText("Version:????");
+
+
+    ui->leftPanelContents->layout()->setMargin(0);
+    ui->leftPanelContents->layout()->setSpacing(0);
+
+
+    ui->pageDelimiterLayout->setSpacing(0); // Убирает границу между левой и правой панелями
+    ui->pageDelimiterLayout->setMargin(0); // Убирает границу между левой и правой панелями
 
 
     /* Настройка правой панели */
@@ -176,5 +200,19 @@ void MainWidget::applySettingsStylesheet(void) {
     ui->boxStopBits->setStyleSheet    (Decorator::getComboBoxStyleSheet());
     ui->boxFlowControl->setStyleSheet (Decorator::getComboBoxStyleSheet());
     ui->labelSectionConnection->setText("Connection");
+
+    ui->settingsRightPanel->setStyleSheet(Decorator::getRightScrollAreaStyleSheet());
+    ui->rightPanelContents->setStyleSheet(Decorator::getRightScrollAreaStyleSheet());
+    ui->rightStackedPanel->setStyleSheet(Decorator::getRightScrollAreaStyleSheet());
+    ui->rightPanelContents->layout()->setMargin(0);   // Убирает рамку вокруг StackedWidget
+
+    ui->labelSectionConnection->setStyleSheet(Decorator::getRightScrollAreaStyleSheet());
+    ui->labelPorts->setStyleSheet(Decorator::getRightScrollAreaStyleSheet());
+    ui->labelBaudrate->setStyleSheet(Decorator::getRightScrollAreaStyleSheet());
+    ui->labelData->setStyleSheet(Decorator::getRightScrollAreaStyleSheet());
+    ui->labelParity->setStyleSheet(Decorator::getRightScrollAreaStyleSheet());
+    ui->labelStopBits->setStyleSheet(Decorator::getRightScrollAreaStyleSheet());
+    ui->labelFlowControl->setStyleSheet(Decorator::getRightScrollAreaStyleSheet());
+
 
 }

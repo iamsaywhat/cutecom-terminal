@@ -323,16 +323,70 @@ QString Decorator::getTableStyleSheet(void) {
            "}";
 }
 
-QString Decorator::getScrollAreaStyleSheet(void) {
+
+
+
+
+QString Decorator::getLeftScrollAreaStyleSheet(void) {
     return
-            "QScrollArea, QWidget{ "
-                "border: none;"
-                "border-style: solid;"
-                "background-color: #3d563d;"
-                "margin: 0;"
+            "QScrollArea, QWidget { "
+                "border:           none;"
+                "border-style:     solid;"
+                "background-color: #2b2d33;"
+                "margin:           0;"
             "}"
             ;
+}
 
+QString Decorator::getRightScrollAreaStyleSheet(void) {
+    return
+            "QScrollArea, QWidget { "
+                "border:           none;"
+                "border-style:     solid;"
+                "background-color: #33363d;"
+                "margin:           0;"
+            "}"
+            ;
+}
+
+QString Decorator::getSettingsMenuButtons(void) {
+    return "QPushButton { "
+                "background-color:       #2b2d33;"
+                "padding-left:           40px;"
+                "padding-right:          40px;"
+                "padding-top:            10px;"
+                "padding-bottom:         10px;"
+                "border:                 none;"
+                "border-radius: 5px;"
+                "margin: 2px;"
+           "}"
+           "QPushButton:hover { "
+                "background-color:   #33363d;"
+           "}"
+           "QPushButton:pressed { "
+                "background-color:   #2b2d33; "
+           "}";
+
+}
+QString Decorator::getTestStyleSheet(QString backgroundBase, QString backgroundHover, QString backgroundPressed){
+    QString styleSheet(
+                "QPushButton { "
+                       "background-color:       %1;"
+                       "padding-left:           40px;"
+                       "padding-right:          40px;"
+                       "padding-top:            10px;"
+                       "padding-bottom:         10px;"
+                       "border:                 none;"
+                       "border-radius: 5px;"
+                       "margin: 2px;"
+                  "}"
+                  "QPushButton:hover { "
+                       "background-color:   %2;"
+                  "}"
+                  "QPushButton:pressed { "
+                       "background-color:   %3; "
+                  "}");
+    return styleSheet.arg(backgroundBase).arg(backgroundHover).arg(backgroundPressed);
 }
 
 QString Decorator::getComboBoxStyleSheet(void) {

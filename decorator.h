@@ -25,7 +25,11 @@ public:
     static QString getConverterModeButtonStyleSheet(void);
     static QString getAppLabelStyleSheet(void);
     static QString getTableStyleSheet(void);
-    static QString getScrollAreaStyleSheet(void);
+    static QString getLeftScrollAreaStyleSheet(void);
+    static QString getRightScrollAreaStyleSheet(void);
+    static QString getSettingsMenuButtons(void);
+
+    static QString getTestStyleSheet(QString backgroundBase, QString backgroundHover, QString backgroundPressed);
 };
 
 #endif // DECORATOR_H
