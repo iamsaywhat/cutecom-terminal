@@ -8,28 +8,38 @@ class Decorator
 public:
     Decorator();
 
-    static QString getMainWidgetStyleSheet(void);
-    static QString getCloseButtonStyleSheet(void);
-    static QString getMaximizeButtonStyleSheet(void);
-    static QString getRestoreButtonStyleSheet(void);
-    static QString getMinimizeButtonStyleSheet(void);
-    static QString getConsoleStyleSheet(void);
-    static QString getUsualButtonStyleSheet(void);
-    static QString getInputFieldStyleSheet (void);
-    static QString getScrollBarStyleSheet (void);
-    static QString getComboBoxStyleSheet(void);
-    static QString getConnectionButtonStyleSheet(void);
-    static QString getSettingsButtonStyleSheet(void);
-    static QString getConsoleModeButtonStyleSheet(void);
-    static QString getTableModeButtonStyleSheet(void);
-    static QString getConverterModeButtonStyleSheet(void);
-    static QString getAppLabelStyleSheet(void);
-    static QString getTableStyleSheet(void);
-    static QString getLeftScrollAreaStyleSheet(void);
-    static QString getRightScrollAreaStyleSheet(void);
-    static QString getSettingsMenuButtons(void);
+    static QString getAppLabelStyleSheet(QString iconUrl);
+    static QString getTableStyleSheet(int backgroundColor,
+                                      int textColor,
+                                      int selectionBackgroundColor,
+                                      int selectionTextColor,
+                                      int headerBackgroundColor);
+    static QString getConsoleStyleSheet(int backgroundColor,
+                                        int textColor,
+                                        int selectionBackgroundColor,
+                                        int selectionTextColor);
+    static QString getQuickPanelButtonStyleSheet(QString iconUrl,
+                                                 int backgroundColor,
+                                                 int hoverBackgroundColor,
+                                                 int pressedBackgroundColor);
 
-    static QString getTestStyleSheet(QString backgroundBase, QString backgroundHover, QString backgroundPressed);
+    static QString getMainWidgetStyleSheet(int backgroundColor, int textColor);
+    static QString getWindowButtonStyleSheet(QString iconUrl,
+                                                 int backgroundColor,
+                                                 int hoverBackgroundColor,
+                                                 int pressedBackgroundColor);
+    static QString getUsualButtonStyleSheet (int backgroundColor,
+                                             int textColor,
+                                             int hoverBackgroundColor,
+                                             int pressedBackgroundColor);
+    static QString getInputFieldStyleSheet (int backgroundColor,
+                                            int textColor,
+                                            int selectionBackgroundColor,
+                                            int selectionTextColor);
+    static QString getScrollBarStyleSheet (int handleColor, int pageColor);
+    static QString getScrollAreaStyleSheet(int background);
+    static QString getSettingsMenuButtonStyleSheet(int background, int backgroundHover, int backgroundPressed);
+    static QString getComboBoxStyleSheet(int background, int color, int selectionBackgroundColor, int selectionColor);
 };
 
 #endif // DECORATOR_H

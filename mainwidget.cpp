@@ -91,9 +91,9 @@ MainWidget::MainWidget(QWidget *parent)
     connect(ui->connectionContentsButton, &QPushButton::clicked, [this](){ui->rightStackedPanel->setCurrentIndex(0);});
     connect(ui->generalContentButton,     &QPushButton::clicked, [this](){ui->rightStackedPanel->setCurrentIndex(1);});
 
-    QString str("background: %1");
-    str = str.arg("#1a1c20;");
-    qDebug()<<str;
+    QString str ("image:     %1;");
+    qDebug() << str.arg("url(:/icons/resources/color.png)");
+
 }
 
 MainWidget::~MainWidget()
@@ -108,19 +108,32 @@ void MainWidget::applyTopPanelStyleSheet(void) {
     ui->maximazeButton->setText("");
     ui->minimizeButton->setText("");
     ui->appName->setText("");
-    this->setStyleSheet(Decorator::getMainWidgetStyleSheet());
-    ui->closeButton->setStyleSheet     (Decorator::getCloseButtonStyleSheet());
-    ui->minimizeButton->setStyleSheet  (Decorator::getMinimizeButtonStyleSheet());
-    ui->maximazeButton->setStyleSheet  (Decorator::getMaximizeButtonStyleSheet());
 
-    ui->showConnectionButton->setStyleSheet   (Decorator::getConnectionButtonStyleSheet());
-    ui->showSettingsButton->setStyleSheet     (Decorator::getSettingsButtonStyleSheet());
-    ui->switchToConsoleButton->setStyleSheet  (Decorator::getConsoleModeButtonStyleSheet());
-    ui->switchToTableButton->setStyleSheet    (Decorator::getTableModeButtonStyleSheet());
-    ui->switchToConverterButton->setStyleSheet(Decorator::getConverterModeButtonStyleSheet());
+    this->setStyleSheet(Decorator::getMainWidgetStyleSheet(0x1a1c20, 0xdcddde));
+
+    ui->closeButton->setStyleSheet     (Decorator::getWindowButtonStyleSheet(":/icons/resources/close.png",
+                                                                             0x1a1c20, 0xea4445, 0xac4042));
+    ui->minimizeButton->setStyleSheet  (Decorator::getWindowButtonStyleSheet(":/icons/resources/minimize.png",
+                                                                             0x1a1c20, 0x33363d, 0x2b2d33));
+    ui->maximazeButton->setStyleSheet  (Decorator::getWindowButtonStyleSheet(":/icons/resources/maximize.png",
+                                                                             0x1a1c20, 0x33363d, 0x2b2d33));
+
+
+    ui->showConnectionButton->setStyleSheet   (Decorator::getQuickPanelButtonStyleSheet(":/icons/resources/connect.png",
+                                                                                        0x1a1c20, 0x33363d, 0x2b2d33));
+    ui->showSettingsButton->setStyleSheet     (Decorator::getQuickPanelButtonStyleSheet(":/icons/resources/settings.png",
+                                                                                        0x1a1c20, 0x33363d, 0x2b2d33));
+    ui->switchToConsoleButton->setStyleSheet  (Decorator::getQuickPanelButtonStyleSheet(":/icons/resources/consolemode.png",
+                                                                                        0x1a1c20, 0x33363d, 0x2b2d33));
+    ui->switchToTableButton->setStyleSheet    (Decorator::getQuickPanelButtonStyleSheet(":/icons/resources/tablemode.png",
+                                                                                        0x1a1c20, 0x33363d, 0x2b2d33));
+    ui->switchToConverterButton->setStyleSheet(Decorator::getQuickPanelButtonStyleSheet(":/icons/resources/converter.png",
+                                                                                        0x1a1c20, 0x33363d, 0x2b2d33));
+
+
 
     ui->appName->setAttribute(Qt::WA_TransparentForMouseEvents, true);
-    ui->appName->setStyleSheet(Decorator::getAppLabelStyleSheet());
+    ui->appName->setStyleSheet(Decorator::getAppLabelStyleSheet(":/icons/resources/label.png"));
 
     ui->showConnectionButton->setMinimumSize(50,50);
     ui->showConnectionButton->setMinimumSize(50,50);
@@ -139,20 +152,20 @@ void MainWidget::applyTopPanelStyleSheet(void) {
 void MainWidget::applyConsoleStyleSheet(void) {
     ui->consoleField->setFont(QFont("System", 8, QFont::Normal));
     ui->inputConsoleField->setFont(QFont("System", 8, QFont::Normal));
-    ui->consoleField->setStyleSheet(Decorator::getConsoleStyleSheet());
-    ui->sendConsoleButton->setStyleSheet(Decorator::getUsualButtonStyleSheet());
-    ui->clearConsoleButton->setStyleSheet(Decorator::getUsualButtonStyleSheet());
-    ui->inputConsoleField->setStyleSheet(Decorator::getInputFieldStyleSheet());
-    ui->consoleField->verticalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet());
+    ui->consoleField->setStyleSheet(Decorator::getConsoleStyleSheet(0x2b2d33, 0xdcddde, 0x3d563d, 0xdcddde));
+    ui->sendConsoleButton->setStyleSheet(Decorator::getUsualButtonStyleSheet(0x1a1c20, 0xdcddde, 0x33363d, 0x2b2d33));
+    ui->clearConsoleButton->setStyleSheet(Decorator::getUsualButtonStyleSheet(0x1a1c20, 0xdcddde, 0x33363d, 0x2b2d33));
+    ui->inputConsoleField->setStyleSheet(Decorator::getInputFieldStyleSheet(0x2b2d33, 0xdcddde, 0x3d563d, 0xdcddde));
+    ui->consoleField->verticalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet(0x2b2d33, 0x1a1c20));
 }
 
 void MainWidget::applyTableStyleSheet(void) {
-    ui->tableField->verticalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet());
-    ui->tableField->horizontalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet());
-    ui->tableField->setStyleSheet(Decorator::getTableStyleSheet());
-    ui->inputTableField->setStyleSheet(Decorator::getInputFieldStyleSheet());
-    ui->sendTableButton->setStyleSheet(Decorator::getUsualButtonStyleSheet());
-    ui->clearTableButton->setStyleSheet(Decorator::getUsualButtonStyleSheet());
+    ui->tableField->verticalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
+    ui->tableField->horizontalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
+    ui->tableField->setStyleSheet(Decorator::getTableStyleSheet(0x2b2d33, 0xdcddde, 0x3d563d, 0xdcddde, 0x1a1c20));
+    ui->inputTableField->setStyleSheet(Decorator::getInputFieldStyleSheet(0x2b2d33, 0xdcddde, 0x3d563d, 0xdcddde));
+    ui->sendTableButton->setStyleSheet(Decorator::getUsualButtonStyleSheet(0x1a1c20, 0xdcddde, 0x33363d, 0x2b2d33));
+    ui->clearTableButton->setStyleSheet(Decorator::getUsualButtonStyleSheet(0x1a1c20, 0xdcddde, 0x33363d, 0x2b2d33));
 }
 
 void MainWidget::applySettingsStylesheet(void) {
@@ -166,19 +179,17 @@ void MainWidget::applySettingsStylesheet(void) {
     ui->bindsContentButton->setText("Binds");
     ui->infoLabel->setText("Version:????");
 
-    ui->settingsLeftPanel->horizontalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet());
-    ui->settingsLeftPanel->verticalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet());
-    ui->settingsLeftPanel->setStyleSheet(Decorator::getLeftScrollAreaStyleSheet());
-    ui->leftPanelContents->setStyleSheet(Decorator::getLeftScrollAreaStyleSheet());
+    ui->settingsLeftPanel->horizontalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
+    ui->settingsLeftPanel->verticalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
+    ui->settingsLeftPanel->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x1a1c20));
+    ui->leftPanelContents->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x1a1c20));
 
-    //ui->connectionContentsButton->setStyleSheet(Decorator::getSettingsMenuButtons());
-    ui->connectionContentsButton->setStyleSheet(Decorator::getTestStyleSheet("#2b2d33", "#33363d", "#2b2d33"));
-
-    ui->generalContentButton->setStyleSheet(Decorator::getSettingsMenuButtons());
-    ui->consoleContentButton->setStyleSheet(Decorator::getSettingsMenuButtons());
-    ui->tableContentButton->setStyleSheet(Decorator::getSettingsMenuButtons());
-    ui->logsContentButton->setStyleSheet(Decorator::getSettingsMenuButtons());
-    ui->bindsContentButton->setStyleSheet(Decorator::getSettingsMenuButtons());
+    ui->connectionContentsButton->setStyleSheet(Decorator::getSettingsMenuButtonStyleSheet(0x2b2d33, 0x33363d, 0x2b2d33));
+    ui->generalContentButton->setStyleSheet(Decorator::getSettingsMenuButtonStyleSheet(0x2b2d33, 0x33363d, 0x2b2d33));
+    ui->consoleContentButton->setStyleSheet(Decorator::getSettingsMenuButtonStyleSheet(0x2b2d33, 0x33363d, 0x2b2d33));
+    ui->tableContentButton->setStyleSheet(Decorator::getSettingsMenuButtonStyleSheet(0x2b2d33, 0x33363d, 0x2b2d33));
+    ui->logsContentButton->setStyleSheet(Decorator::getSettingsMenuButtonStyleSheet(0x2b2d33, 0x33363d, 0x2b2d33));
+    ui->bindsContentButton->setStyleSheet(Decorator::getSettingsMenuButtonStyleSheet(0x2b2d33, 0x33363d, 0x2b2d33));
     ui->infoLabel->setText("Version:????");
 
 
@@ -191,28 +202,28 @@ void MainWidget::applySettingsStylesheet(void) {
 
 
     /* Настройка правой панели */
-    ui->settingsRightPanel->horizontalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet());
-    ui->settingsRightPanel->verticalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet());
-    ui->boxPorts->setStyleSheet       (Decorator::getComboBoxStyleSheet());
-    ui->boxBaudrate->setStyleSheet    (Decorator::getComboBoxStyleSheet());
-    ui->boxParity->setStyleSheet      (Decorator::getComboBoxStyleSheet());
-    ui->boxData->setStyleSheet        (Decorator::getComboBoxStyleSheet());
-    ui->boxStopBits->setStyleSheet    (Decorator::getComboBoxStyleSheet());
-    ui->boxFlowControl->setStyleSheet (Decorator::getComboBoxStyleSheet());
+    ui->settingsRightPanel->horizontalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
+    ui->settingsRightPanel->verticalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
+//    ui->boxPorts->setStyleSheet       (Decorator::getComboBoxStyleSheet());
+//    ui->boxBaudrate->setStyleSheet    (Decorator::getComboBoxStyleSheet());
+//    ui->boxParity->setStyleSheet      (Decorator::getComboBoxStyleSheet());
+//    ui->boxData->setStyleSheet        (Decorator::getComboBoxStyleSheet());
+//    ui->boxStopBits->setStyleSheet    (Decorator::getComboBoxStyleSheet());
+//    ui->boxFlowControl->setStyleSheet (Decorator::getComboBoxStyleSheet());
     ui->labelSectionConnection->setText("Connection");
 
-    ui->settingsRightPanel->setStyleSheet(Decorator::getRightScrollAreaStyleSheet());
-    ui->rightPanelContents->setStyleSheet(Decorator::getRightScrollAreaStyleSheet());
-    ui->rightStackedPanel->setStyleSheet(Decorator::getRightScrollAreaStyleSheet());
+    ui->settingsRightPanel->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x2b2d33));
+    ui->rightPanelContents->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x2b2d33));
+    ui->rightStackedPanel->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x2b2d33));
     ui->rightPanelContents->layout()->setMargin(0);   // Убирает рамку вокруг StackedWidget
 
-    ui->labelSectionConnection->setStyleSheet(Decorator::getRightScrollAreaStyleSheet());
-    ui->labelPorts->setStyleSheet(Decorator::getRightScrollAreaStyleSheet());
-    ui->labelBaudrate->setStyleSheet(Decorator::getRightScrollAreaStyleSheet());
-    ui->labelData->setStyleSheet(Decorator::getRightScrollAreaStyleSheet());
-    ui->labelParity->setStyleSheet(Decorator::getRightScrollAreaStyleSheet());
-    ui->labelStopBits->setStyleSheet(Decorator::getRightScrollAreaStyleSheet());
-    ui->labelFlowControl->setStyleSheet(Decorator::getRightScrollAreaStyleSheet());
+    ui->labelSectionConnection->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x2b2d33));
+    ui->labelPorts->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x2b2d33));
+    ui->labelBaudrate->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x2b2d33));
+    ui->labelData->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x2b2d33));
+    ui->labelParity->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x2b2d33));
+    ui->labelStopBits->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x2b2d33));
+    ui->labelFlowControl->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x2b2d33));
 
 
 }

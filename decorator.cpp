@@ -6,95 +6,54 @@ Decorator::Decorator()
 
 }
 
-QString Decorator::getMainWidgetStyleSheet() {
-    return "QWidget { "
-                "background-color: #1a1c20; "
-                "color:            #dcddde;"
-//                "border:         1px solid black; "
-           "}";
+QString Decorator::getMainWidgetStyleSheet(int backgroundColor,
+                                           int textColor) {
+    QString styleSheet (
+            "QWidget { "
+                "background-color: #%1;"
+                "color:            #%2;"
+                "border:           none;"
+           "}");
+    return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16)).
+                      arg(QString::number(textColor&0xFFFFFF, 16));
 }
 
-QString Decorator::getCloseButtonStyleSheet() {
-    return "QToolButton { "
-                "image: url(:/icons/resources/close.png);"
-                "background-color: #1a1c20;"
-                "icon-size: 12px;"
-                "padding-left: 10px;"
-                "padding-right: 10px;"
-                "padding-top: 5px;"
-                "padding-bottom: 5px;"
-                "border: 0px solid #292929; "
+QString Decorator::getWindowButtonStyleSheet(QString iconUrl,
+                                             int backgroundColor,
+                                             int hoverBackgroundColor,
+                                             int pressedBackgroundColor) {
+    QString styleSheet (
+           "QToolButton { "
+                "image:            url(%1);"
+                "background-color: #%2;"
+                "icon-size:        12px;"
+                "padding-left:     10px;"
+                "padding-right:    10px;"
+                "padding-top:      5px;"
+                "padding-bottom:   5px;"
+                "border:           none;"
            "}"
            "QToolButton:hover {"
-                "background-color: #ea4445;"
+                "background-color: #%3;"
            "}"
            "QToolButton:pressed { "
-                "background-color: #ac4042; "
-           "}";
-}
-
-QString Decorator::getMaximizeButtonStyleSheet() {
-    return "QToolButton { "
-                "image: url(:/icons/resources/maximize.png);"
-                "background-color: #1a1c20;"
-                "icon-size: 12px;"
-                "padding-left: 10px;"
-                "padding-right: 10px;"
-                "padding-top: 5px;"
-                "padding-bottom: 5px;"
-                "border: none;"
-           "}"
-           "QToolButton:hover {"
-                "background-color: #33363d;"
-           "}"
-           "QToolButton:pressed { "
-                "background-color: #2b2d33; "
-           "}";
-}
-
-QString Decorator::getRestoreButtonStyleSheet() {
-    return "QToolButton { "
-                "image: url(:/buttons/window-restore-gray.png);"
-                "background-color: #1a1c20;"
-                "icon-size: 12px;"
-                "padding-left: 10px;"
-                "padding-right: 10px;"
-                "padding-top: 5px;"
-                "padding-bottom: 5px;"
-                "border: none;"
-           "}"
-           "QToolButton:hover {"
-                "background-color: #33363d;"
-           "}"
-           "QToolButton:pressed { "
-                "background-color: #2b2d33; "
-           "}";
-}
-
-QString Decorator::getMinimizeButtonStyleSheet() {
-    return "QToolButton { "
-                "image: url(:/icons/resources/minimize.png);"
-                "background-color: #1a1c20;"
-                "icon-size: 12px;"
-                "padding-left: 10px;"
-                "padding-right: 10px;"
-                "padding-top: 5px;"
-                "padding-bottom: 5px;"
-                "border: none;"
-           "}"
-           "QToolButton:hover {"
-                "background-color: #33363d;"
-           "}"
-           "QToolButton:pressed { "
-                "background-color: #2b2d33; "
-           "}";
+                "background-color: #%4;"
+           "}");
+    return styleSheet.arg(iconUrl).
+                      arg(QString::number(backgroundColor&0xFFFFFF, 16)).
+                      arg(QString::number(hoverBackgroundColor&0xFFFFFF, 16)).
+                      arg(QString::number(pressedBackgroundColor&0xFFFFFF, 16));
 }
 
 
-QString Decorator::getUsualButtonStyleSheet (void) {
-    return "QPushButton { "
-                "background-color: #1a1c20;"
-                "color:            #dcddde;"
+QString Decorator::getUsualButtonStyleSheet (int backgroundColor,
+                                             int textColor,
+                                             int hoverBackgroundColor,
+                                             int pressedBackgroundColor) {
+    QString styleSheet (
+           "QPushButton { "
+                "background-color: #%1;"
+                "color:            #%2;"
                 "padding-left:     10px;"
                 "padding-right:    10px;"
                 "padding-top:      5px;"
@@ -102,49 +61,64 @@ QString Decorator::getUsualButtonStyleSheet (void) {
                 "border:           none; "
            "}"
            "QPushButton:hover { "
-                "background-color: #33363d;"
+                "background-color: #%3;"
            "}"
            "QPushButton:pressed { "
-                "background-color: #2b2d33; "
-           "}";
+                "background-color: #%4; "
+           "}");
+    return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16)).
+                      arg(QString::number(textColor&0xFFFFFF, 16)).
+                      arg(QString::number(hoverBackgroundColor&0xFFFFFF, 16)).
+                      arg(QString::number(pressedBackgroundColor&0xFFFFFF, 16));
 }
 
-QString Decorator::getInputFieldStyleSheet (void) {
-    return "QLineEdit { "
-                "background:                 #2b2d33;"
-                "color:                      #dcddde;"
-                "border:                     none;"
-                "selection-background-color: #3d563d;"
-           "}";
+QString Decorator::getInputFieldStyleSheet (int backgroundColor,
+                                            int textColor,
+                                            int selectionBackgroundColor,
+                                            int selectionTextColor) {
+    QString styleSheet (
+                "QLineEdit { "
+                    "background:                 #%1;"
+                    "color:                      #%2;"
+                    "border:                     none;"
+                    "selection-background-color: #%3;"
+                    "selection-color:            #%4;"
+                "}"
+                );
+    return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16)).
+                      arg(QString::number(textColor&0xFFFFFF, 16)).
+                      arg(QString::number(selectionBackgroundColor&0xFFFFFF, 16)).
+                      arg(QString::number(selectionTextColor&0xFFFFFF, 16));
 }
 
-QString Decorator::getScrollBarStyleSheet (void) {
-    return "QScrollBar:vertical { "
+QString Decorator::getScrollBarStyleSheet (int handleColor, int pageColor) {
+    QString styleSheet (
+           "QScrollBar:vertical { "
                 "border: none;"
                 "height: 10px;"
                 "width:  10px;"
                 "margin: 0;"
            "}"
            "QScrollBar::handle:vertical {"
-                "background: #2b2d33; "
-                "min-width:  20px; "
-                "min-height: 20px; "
+                "background: #%1;"
+                "min-width:  20px;"
+                "min-height: 20px;"
            "}"
            "QScrollBar::add-line:vertical {"
                 "background: none;"
                 "border:     none; "
            "}"
            "QScrollBar::sub-line:vertical {"
-                "background: none; "
-                "border:     none; "
+                "background: none;"
+                "border:     none;"
            "}"
            "QScrollBar::add-page:vertical {"
-                "background: #1a1c20;"
-                "border:     none; "
+                "background: #%2;"
+                "border:     none;"
            "}"
            "QScrollBar::sub-page:vertical {"
-                "background: #1a1c20; "
-                "border:     none; "
+                "background: #%2;"
+                "border:     none;"
            "}"
            "QScrollBar:horizontal { "
                 "border: none;"
@@ -153,47 +127,62 @@ QString Decorator::getScrollBarStyleSheet (void) {
                 "margin: 0;"
            "}"
            "QScrollBar::handle:horizontal {"
-                "background: #2b2d33; "
-                "min-width:  20px; "
-                "min-height: 20px; "
+                "background: #%1;"
+                "min-width:  20px;"
+                "min-height: 20px;"
            "}"
            "QScrollBar::add-line:horizontal {"
                 "background: none;"
-                "border:     none; "
+                "border:     none;"
            "}"
            "QScrollBar::sub-line:horizontal {"
-                "background: none; "
-                "border:     none; "
+                "background: none;"
+                "border:     none;"
            "}"
            "QScrollBar::add-page:horizontal {"
-                "background: #1a1c20;"
-                "border:     none; "
+                "background: #%2;"
+                "border:     none;"
            "}"
            "QScrollBar::sub-page:horizontal {"
-                "background: #1a1c20; "
-                "border:     none; "
-           "}";
+                "background: #%2;"
+                "border:     none;"
+           "}"
+                );
+    return styleSheet.arg(QString::number(handleColor&0xFFFFFF, 16)).
+                      arg(QString::number(pageColor&0xFFFFFF,16));
 }
 
-QString Decorator::getConsoleStyleSheet() {
-    return "QPlainTextEdit { "
-                "background:                 #2b2d33;"
-                "color:                      #dcddde;"
-                "selection-background-color: #3d563d;"
-                "selection-color:            #ffffff;"
+
+QString Decorator::getConsoleStyleSheet(int backgroundColor,
+                                        int textColor,
+                                        int selectionBackgroundColor,
+                                        int selectionTextColor) {
+    QString styleSheet (
+           "QPlainTextEdit { "
+                "background:                 #%1;"
+                "color:                      #%2;"
+                "selection-background-color: #%3;"
+                "selection-color:            #%4;"
                 "border-style:               solid;"       // Без этого свойства бэкграунд не устанавливается(??)
                 "border:                     none;"
                 "border-top-left-radius:     5px;"
-           "}";
+           "}");
+    return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16)).
+                      arg(QString::number(textColor&0xFFFFFF, 16)).
+                      arg(QString::number(selectionBackgroundColor&0xFFFFFF, 16)).
+                      arg(QString::number(selectionTextColor&0xFFFFFF, 16));
 }
 
 
 
-
-QString Decorator::getConnectionButtonStyleSheet(void) {
-    return "QPushButton { "
-                "image: url(:/icons/resources/connect.png);"
-                "background-color:   #1a1c20;"
+QString Decorator::getQuickPanelButtonStyleSheet(QString iconUrl,
+                                                 int backgroundColor,
+                                                 int hoverBackgroundColor,
+                                                 int pressedBackgroundColor) {
+    QString styleSheet (
+                "QPushButton { "
+                "image:              url(%1);"
+                "background-color:   #%2;"
                 "icon-size:          12px;"
                 "qproperty-iconSize: 12px;"
                 "padding-left:       10px;"
@@ -203,194 +192,110 @@ QString Decorator::getConnectionButtonStyleSheet(void) {
                 "border:             none;"
            "}"
            "QPushButton:hover { "
-                "background-color:   #33363d;"
+                "background-color:   #%3;"
            "}"
            "QPushButton:pressed { "
-                "background-color:   #2b2d33; "
-           "}";
+                "background-color:   #%4;"
+           "}");
+    return styleSheet.arg(iconUrl).
+                      arg(QString::number(backgroundColor&0xFFFFFF, 16)).
+                      arg(QString::number(hoverBackgroundColor&0xFFFFFF, 16)).
+                      arg(QString::number(pressedBackgroundColor&0xFFFFFF, 16));
 }
 
-QString Decorator::getSettingsButtonStyleSheet(void) {
-    return "QPushButton { "
-                "image: url(:/icons/resources/settings.png);"
-                "background-color:   #1a1c20;"
-                "icon-size:          12px;"
-                "qproperty-iconSize: 12px;"
-                "padding-left:       10px;"
-                "padding-right:      10px;"
-                "padding-top:        10px;"
-                "padding-bottom:     10px;"
-                "border:             none;"
-           "}"
-           "QPushButton:hover { "
-                "background-color:   #33363d;"
-           "}"
-           "QPushButton:pressed { "
-                "background-color:   #2b2d33"
-           "}";
+
+
+QString Decorator::getAppLabelStyleSheet(QString iconUrl){
+    QString styleSheet (
+            "QLabel {"
+                "image: url(%1);"
+            "}");
+    return styleSheet.arg(iconUrl);
 }
 
-QString Decorator::getConsoleModeButtonStyleSheet(void) {
-    return "QPushButton { "
-                "image: url(:/icons/resources/consolemode.png);"
-                "background-color:   #1a1c20;"
-                "icon-size:          12px;"
-                "qproperty-iconSize: 12px;"
-                "padding-left:       10px;"
-                "padding-right:      10px;"
-                "padding-top:        10px;"
-                "padding-bottom:     10px;"
-                "border:             none;"
-           "}"
-           "QPushButton:hover { "
-                "background-color:   #33363d;"
-           "}"
-           "QPushButton:pressed { "
-                "background-color:   #2b2d33; "
-           "}";
-}
-
-QString Decorator::getTableModeButtonStyleSheet(void) {
-    return "QPushButton { "
-                "image: url(:/icons/resources/tablemode.png);"
-                "background-color:   #1a1c20;"
-                "icon-size:          12px;"
-                "qproperty-iconSize: 12px;"
-                "padding-left:       10px;"
-                "padding-right:      10px;"
-                "padding-top:        10px;"
-                "padding-bottom:     10px;"
-                "border:             none;"
-           "}"
-           "QPushButton:hover { "
-                "background-color:   #33363d;"
-           "}"
-           "QPushButton:pressed { "
-                "background-color:   #2b2d33;"
-           "}";
-}
-QString Decorator::getConverterModeButtonStyleSheet(void) {
-    return "QPushButton { "
-                "image: url(:/icons/resources/converter.png);"
-                "background-color:   #1a1c20;"
-                "icon-size:          12px;"
-                "qproperty-iconSize: 12px;"
-                "padding-left:       10px;"
-                "padding-right:      10px;"
-                "padding-top:        10px;"
-                "padding-bottom:     10px;"
-                "border:             none;"
-                "border-style:       solid;"
-                "border-radius:      20px;"
-           "}"
-           "QPushButton:hover { "
-                "background-color:   #33363d;"
-           "}"
-           "QPushButton:pressed { "
-                "background-color:   #2b2d33;"
-           "}";
-}
-
-QString Decorator::getAppLabelStyleSheet(void){
-    return "QLabel {"
-                "image: url(:/icons/resources/label.png);"
-            "}";
-}
-
-QString Decorator::getTableStyleSheet(void) {
-    return "QTableView {"
-                "selection-background-color: #3d563d;"
-                "selection-color:            #dcddde;"
-                "background-color:           #2b2d33;"
-                "color:                      #dcddde;"
+QString Decorator::getTableStyleSheet(int backgroundColor,
+                                      int textColor,
+                                      int selectionBackgroundColor,
+                                      int selectionTextColor,
+                                      int headerBackgroundColor) {
+    QString styleSheet (
+            "QTableView {"
+                "background:                 #%1;"
+                "color:                      #%2;"
+                "selection-background-color: #%3;"
+                "selection-color:            #%4;"
                 "border:                     none;"
                 "border-top-left-radius:     5px;"
             "}"
-            "QTableView QTableCornerButton::section {"
-                "background:                 red;"
-                "border:                     2px outset red;"
-            "}"
-            "QTableView::indicator:unchecked {"
-                "background-color:           #d7d6d5;"
-            "}"
-
+//            "QTableView QTableCornerButton::section {"
+//                "background:                 red;"
+//                "border:                     2px outset red;"
+//            "}"
+//            "QTableView::indicator:unchecked {"
+//                "background-color:           red;" //#d7d6d5;"
+//            "}"
+              /* Горизонтальный хэдер таблицы */
             "QHeaderView::section:horizontal {"
-                "background-color:           #1a1c20;"
-                "color:                      #dcddde;"
+                "background-color:           #%5;"
+                "color:                      #%2;"
                 "padding-left:               1px;"
-                "border:                     0px solid white;"
+                "border:                     none;"
                 "border-top-left-radius:     5px;"
-           "}";
+           "}"
+            );
+    return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16))
+                     .arg(QString::number(textColor&0xFFFFFF, 16))
+                     .arg(QString::number(selectionBackgroundColor&0xFFFFFF, 16))
+                     .arg(QString::number(selectionTextColor&0xFFFFFF, 16))
+                     .arg(QString::number(headerBackgroundColor&0xFFFFFF, 16));
 }
 
 
 
 
 
-QString Decorator::getLeftScrollAreaStyleSheet(void) {
-    return
+
+
+QString Decorator::getScrollAreaStyleSheet(int background) {
+   QString styleSheet(
             "QScrollArea, QWidget { "
                 "border:           none;"
                 "border-style:     solid;"
-                "background-color: #2b2d33;"
+                "background-color: #%1;"
                 "margin:           0;"
             "}"
-            ;
+            );
+   return styleSheet.arg(QString::number(background&0xFFFFFF, 16));
 }
 
-QString Decorator::getRightScrollAreaStyleSheet(void) {
-    return
-            "QScrollArea, QWidget { "
-                "border:           none;"
-                "border-style:     solid;"
-                "background-color: #33363d;"
-                "margin:           0;"
-            "}"
-            ;
-}
-
-QString Decorator::getSettingsMenuButtons(void) {
-    return "QPushButton { "
-                "background-color:       #2b2d33;"
-                "padding-left:           40px;"
-                "padding-right:          40px;"
-                "padding-top:            10px;"
-                "padding-bottom:         10px;"
-                "border:                 none;"
-                "border-radius: 5px;"
-                "margin: 2px;"
-           "}"
-           "QPushButton:hover { "
-                "background-color:   #33363d;"
-           "}"
-           "QPushButton:pressed { "
-                "background-color:   #2b2d33; "
-           "}";
-
-}
-QString Decorator::getTestStyleSheet(QString backgroundBase, QString backgroundHover, QString backgroundPressed){
+QString Decorator::getSettingsMenuButtonStyleSheet(int background, int backgroundHover, int backgroundPressed){
     QString styleSheet(
                 "QPushButton { "
-                       "background-color:       %1;"
+                       "background-color:       #%1;"
                        "padding-left:           40px;"
                        "padding-right:          40px;"
                        "padding-top:            10px;"
                        "padding-bottom:         10px;"
                        "border:                 none;"
-                       "border-radius: 5px;"
-                       "margin: 2px;"
+                       "border-radius:          5px;"
+                       "margin:                 2px;"
                   "}"
                   "QPushButton:hover { "
-                       "background-color:   %2;"
+                       "background-color:       #%2;"
                   "}"
                   "QPushButton:pressed { "
-                       "background-color:   %3; "
+                       "background-color:       #%3; "
                   "}");
-    return styleSheet.arg(backgroundBase).arg(backgroundHover).arg(backgroundPressed);
+    return styleSheet.arg(QString::number(background&0xFFFFFF, 16)).
+                      arg(QString::number(backgroundHover&0xFFFFFF,16)).
+                      arg(QString::number(backgroundPressed&0xFFFFFF, 16));
 }
 
-QString Decorator::getComboBoxStyleSheet(void) {
-    return
+QString Decorator::getComboBoxStyleSheet(int background,
+                                         int color,
+                                         int selectionBackgroundColor,
+                                         int selectionColor) {
+    QString styleSheet(
             "QComboBox { "
                 "border:                     0px solid gray; "
                 "border-style:               solid;"
@@ -399,10 +304,6 @@ QString Decorator::getComboBoxStyleSheet(void) {
                 "color:                      #dcddde;"
                 "selection-background-color: #3d563d;"
                 "selection-color:            #dcddde;"
-                "font-size:                  12px;"
-                "font-weight:                large;"
-                //"font-style:               bold;"
-                "font-family:                New Century Schoolbook;"
             "}"
             /* Стиль виджета при редактировании элемента */
             "QComboBox:editable { "
@@ -457,5 +358,9 @@ QString Decorator::getComboBoxStyleSheet(void) {
             /* Стрелка, когда список раскрыт */
             "QComboBox::down-arrow:on { "
             "}"
-            ;
+            );
+    return styleSheet.arg(QString::number(background&0xFFFFFF, 16)).
+                      arg(QString::number(background&0xFFFFFF, 16)).
+                      arg(QString::number(background&0xFFFFFF, 16)).
+                      arg(QString::number(background&0xFFFFFF, 16));
 }
