@@ -90,10 +90,6 @@ MainWidget::MainWidget(QWidget *parent)
     /* Подключения для меню настроек */
     connect(ui->connectionContentsButton, &QPushButton::clicked, [this](){ui->rightStackedPanel->setCurrentIndex(0);});
     connect(ui->generalContentButton,     &QPushButton::clicked, [this](){ui->rightStackedPanel->setCurrentIndex(1);});
-
-    QString str ("image:     %1;");
-    qDebug() << str.arg("url(:/icons/resources/color.png)");
-
 }
 
 MainWidget::~MainWidget()
@@ -169,61 +165,75 @@ void MainWidget::applyTableStyleSheet(void) {
 }
 
 void MainWidget::applySettingsStylesheet(void) {
+    ///////////////////////////////////////////////////////////////////////////////////
+        //    ui->settingsPage;
+        //        ui->pageDelimiterLayout;
+        //            ui->settingsLeftPanel;
+        //                ui->leftPanelContents;
+        //            ui->settingsRightPanel;
+        //                ui->rightPanelContents;
+        //                  ui->rightStackedPanel;
 
-    /* Настройка левой панели */
+        ui->settingsPage->layout()->setMargin(5);
+            ui->pageDelimiterLayout->setMargin(5);
+    //            ui->settingsLeftPanel->layout()->setMargin(5);
+                    ui->leftPanelContents->layout()->setMargin(5);
+    //            ui->settingsRightPanel->layout()->setMargin(5);
+                    ui->rightPanelContents->layout()->setMargin(5);
+                     ui->rightStackedPanel->layout()->setMargin(5);
+
+        ui->settingsPage->setStyleSheet(Decorator::getSipmleWidgetStyleSheet(0xFFFFFF, 0x100000));
+            ui->pageDelimiterLayout->setMargin(5);
+                    ui->leftPanelContents->setStyleSheet(Decorator::getSipmleWidgetStyleSheet(0xFF0000, 0x100000));
+                ui->settingsRightPanel->setStyleSheet(Decorator::getSipmleWidgetStyleSheet(0xFFFFFF, 0x100000));
+                    ui->rightPanelContents->setStyleSheet(Decorator::getSipmleWidgetStyleSheet(0xFF0000, 0x100000));
+                        ui->rightStackedPanel->setStyleSheet(Decorator::getSipmleWidgetStyleSheet(0xFF00FF, 0x100000));
+
+    ////////////////////////////////////////////////////////////
+
+
+    /* Настройка левой панели **************************************************************/
     ui->connectionContentsButton->setText("Connection");
     ui->generalContentButton->setText("General");
     ui->consoleContentButton->setText("Console");
     ui->tableContentButton->setText("Table");
     ui->logsContentButton->setText("Logs");
     ui->bindsContentButton->setText("Binds");
-    ui->infoLabel->setText("Version:????");
-
+    ui->infoLabel->setText("Version: 0.0.0");
     ui->settingsLeftPanel->horizontalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
     ui->settingsLeftPanel->verticalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
-    ui->settingsLeftPanel->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x1a1c20));
-    ui->leftPanelContents->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x1a1c20));
-
+    ui->leftPanelContents->setStyleSheet(Decorator::getSipmleWidgetStyleSheet(0x1a1c20, 0xdcddde));
     ui->connectionContentsButton->setStyleSheet(Decorator::getSettingsMenuButtonStyleSheet(0x2b2d33, 0x33363d, 0x2b2d33));
     ui->generalContentButton->setStyleSheet(Decorator::getSettingsMenuButtonStyleSheet(0x2b2d33, 0x33363d, 0x2b2d33));
     ui->consoleContentButton->setStyleSheet(Decorator::getSettingsMenuButtonStyleSheet(0x2b2d33, 0x33363d, 0x2b2d33));
     ui->tableContentButton->setStyleSheet(Decorator::getSettingsMenuButtonStyleSheet(0x2b2d33, 0x33363d, 0x2b2d33));
     ui->logsContentButton->setStyleSheet(Decorator::getSettingsMenuButtonStyleSheet(0x2b2d33, 0x33363d, 0x2b2d33));
     ui->bindsContentButton->setStyleSheet(Decorator::getSettingsMenuButtonStyleSheet(0x2b2d33, 0x33363d, 0x2b2d33));
-    ui->infoLabel->setText("Version:????");
 
 
-    ui->leftPanelContents->layout()->setMargin(0);
-    ui->leftPanelContents->layout()->setSpacing(0);
-
-
-    ui->pageDelimiterLayout->setSpacing(0); // Убирает границу между левой и правой панелями
-    ui->pageDelimiterLayout->setMargin(0); // Убирает границу между левой и правой панелями
-
-
-    /* Настройка правой панели */
+    /* Настройка правой панели **************************************************************/
+    ui->labelSectionConnection->setText("Connection");
     ui->settingsRightPanel->horizontalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
     ui->settingsRightPanel->verticalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
-//    ui->boxPorts->setStyleSheet       (Decorator::getComboBoxStyleSheet());
-//    ui->boxBaudrate->setStyleSheet    (Decorator::getComboBoxStyleSheet());
-//    ui->boxParity->setStyleSheet      (Decorator::getComboBoxStyleSheet());
-//    ui->boxData->setStyleSheet        (Decorator::getComboBoxStyleSheet());
-//    ui->boxStopBits->setStyleSheet    (Decorator::getComboBoxStyleSheet());
-//    ui->boxFlowControl->setStyleSheet (Decorator::getComboBoxStyleSheet());
-    ui->labelSectionConnection->setText("Connection");
+    ui->rightPanelContents->setStyleSheet(Decorator::getSipmleWidgetStyleSheet(0x2b2d33, 0xdcddde));
+    ui->rightStackedPanel->setStyleSheet(Decorator::getSipmleWidgetStyleSheet(0x2b2d33, 0xdcddde));
 
-    ui->settingsRightPanel->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x2b2d33));
-    ui->rightPanelContents->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x2b2d33));
-    ui->rightStackedPanel->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x2b2d33));
-    ui->rightPanelContents->layout()->setMargin(0);   // Убирает рамку вокруг StackedWidget
+    /* Вкладка Connection */
+    ui->labelSectionConnection->setStyleSheet(Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
+    ui->labelPorts->setStyleSheet            (Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
+    ui->labelBaudrate->setStyleSheet         (Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
+    ui->labelData->setStyleSheet             (Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
+    ui->labelParity->setStyleSheet           (Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
+    ui->labelStopBits->setStyleSheet         (Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
+    ui->labelFlowControl->setStyleSheet      (Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
 
-    ui->labelSectionConnection->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x2b2d33));
-    ui->labelPorts->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x2b2d33));
-    ui->labelBaudrate->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x2b2d33));
-    ui->labelData->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x2b2d33));
-    ui->labelParity->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x2b2d33));
-    ui->labelStopBits->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x2b2d33));
-    ui->labelFlowControl->setStyleSheet(Decorator::getScrollAreaStyleSheet(0x2b2d33));
+
+    //    ui->boxPorts->setStyleSheet       (Decorator::getComboBoxStyleSheet());
+    //    ui->boxBaudrate->setStyleSheet    (Decorator::getComboBoxStyleSheet());
+    //    ui->boxParity->setStyleSheet      (Decorator::getComboBoxStyleSheet());
+    //    ui->boxData->setStyleSheet        (Decorator::getComboBoxStyleSheet());
+    //    ui->boxStopBits->setStyleSheet    (Decorator::getComboBoxStyleSheet());
+    //    ui->boxFlowControl->setStyleSheet (Decorator::getComboBoxStyleSheet());
 
 
 }

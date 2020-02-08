@@ -256,16 +256,17 @@ QString Decorator::getTableStyleSheet(int backgroundColor,
 
 
 
-QString Decorator::getScrollAreaStyleSheet(int background) {
+QString Decorator::getSipmleWidgetStyleSheet(int backgroundColor,
+                                             int textColor) {
    QString styleSheet(
-            "QScrollArea, QWidget { "
+            "QWidget { "
                 "border:           none;"
                 "border-style:     solid;"
-                "background-color: #%1;"
-                "margin:           0;"
-            "}"
-            );
-   return styleSheet.arg(QString::number(background&0xFFFFFF, 16));
+                "background:       #%1;"
+                "color:            #%2;"
+            "}");
+   return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16))
+                    .arg(QString::number(textColor&0xFFFFFF, 16));
 }
 
 QString Decorator::getSettingsMenuButtonStyleSheet(int background, int backgroundHover, int backgroundPressed){
