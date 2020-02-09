@@ -26,7 +26,6 @@ SOURCES += \
     serialgui.cpp
 
 HEADERS += \
-    ConsoleWindow.h \
     consolemode/consolewidget.h \
     decorator.h \
     framelesswindow.h \

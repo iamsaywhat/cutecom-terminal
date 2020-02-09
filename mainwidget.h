@@ -6,6 +6,7 @@
 #include "consolemode/consolewidget.h"
 #include "hexmode/tableconsole.h"
 #include "serialgui.h"
+#include "decorator.h"
 
 
 
@@ -34,6 +35,8 @@ private:
     const int         indexTable     = 1;
     const int         indexConverter = 2;
     const int         indexSettings  = 3;
+
+    Decorator         *darkTheme;
 };
 #endif // MAINWIDGET_H
 

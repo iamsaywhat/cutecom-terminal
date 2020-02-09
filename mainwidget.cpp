@@ -40,6 +40,7 @@ MainWidget::MainWidget(QWidget *parent)
                                     ui->sendTableButton,   /* Указатель на QPushButton форму*/
                                     ui->clearTableButton); /* Указатель на QPushButton форму*/
 
+    darkTheme = new Decorator(0x1a1c20, 0x2b2d33, 0x33363d, 0xdcddde, 0x3d563d);
 
     /* Включаем сетку на таблице */
     ui->tableField->setShowGrid(true);
@@ -94,6 +95,7 @@ MainWidget::MainWidget(QWidget *parent)
 
 MainWidget::~MainWidget()
 {
+    delete darkTheme;
     delete console;
     delete serial;
     delete ui;
@@ -105,31 +107,22 @@ void MainWidget::applyTopPanelStyleSheet(void) {
     ui->minimizeButton->setText("");
     ui->appName->setText("");
 
-    this->setStyleSheet(Decorator::getMainWidgetStyleSheet(0x1a1c20, 0xdcddde));
-
-    ui->closeButton->setStyleSheet     (Decorator::getWindowButtonStyleSheet(":/icons/resources/close.png",
-                                                                             0x1a1c20, 0xea4445, 0xac4042));
-    ui->minimizeButton->setStyleSheet  (Decorator::getWindowButtonStyleSheet(":/icons/resources/minimize.png",
-                                                                             0x1a1c20, 0x33363d, 0x2b2d33));
-    ui->maximazeButton->setStyleSheet  (Decorator::getWindowButtonStyleSheet(":/icons/resources/maximize.png",
-                                                                             0x1a1c20, 0x33363d, 0x2b2d33));
+    //this->setStyleSheet(Decorator::getMainWidgetStyleSheet(0x1a1c20, 0xdcddde));
+    darkTheme->applyBasicColorsToWidget(this, darkTheme->baseColor(), darkTheme->textColor());
 
 
-    ui->showConnectionButton->setStyleSheet   (Decorator::getQuickPanelButtonStyleSheet(":/icons/resources/connect.png",
-                                                                                        0x1a1c20, 0x33363d, 0x2b2d33));
-    ui->showSettingsButton->setStyleSheet     (Decorator::getQuickPanelButtonStyleSheet(":/icons/resources/settings.png",
-                                                                                        0x1a1c20, 0x33363d, 0x2b2d33));
-    ui->switchToConsoleButton->setStyleSheet  (Decorator::getQuickPanelButtonStyleSheet(":/icons/resources/consolemode.png",
-                                                                                        0x1a1c20, 0x33363d, 0x2b2d33));
-    ui->switchToTableButton->setStyleSheet    (Decorator::getQuickPanelButtonStyleSheet(":/icons/resources/tablemode.png",
-                                                                                        0x1a1c20, 0x33363d, 0x2b2d33));
-    ui->switchToConverterButton->setStyleSheet(Decorator::getQuickPanelButtonStyleSheet(":/icons/resources/converter.png",
-                                                                                        0x1a1c20, 0x33363d, 0x2b2d33));
-
+    darkTheme->applyToCloseButton(ui->closeButton);
+    darkTheme->applyToMaximizeButton(ui->maximazeButton);
+    darkTheme->applyToMinimizeButton(ui->minimizeButton);
+    darkTheme->applyToConnectionButton(ui->showConnectionButton);
+    darkTheme->applyToConsoleButton(ui->switchToConsoleButton);
+    darkTheme->applyToTableButton(ui->switchToTableButton);
+    darkTheme->applyToConverterButton(ui->switchToConverterButton);
+    darkTheme->applyToSettingsButton(ui->showSettingsButton);
 
 
     ui->appName->setAttribute(Qt::WA_TransparentForMouseEvents, true);
-    ui->appName->setStyleSheet(Decorator::getAppLabelStyleSheet(":/icons/resources/label.png"));
+    darkTheme->applyToAppLabel(ui->appName);
 
     ui->showConnectionButton->setMinimumSize(50,50);
     ui->showConnectionButton->setMinimumSize(50,50);
@@ -146,22 +139,11 @@ void MainWidget::applyTopPanelStyleSheet(void) {
 }
 
 void MainWidget::applyConsoleStyleSheet(void) {
-    ui->consoleField->setFont(QFont("System", 8, QFont::Normal));
-    ui->inputConsoleField->setFont(QFont("System", 8, QFont::Normal));
-    ui->consoleField->setStyleSheet(Decorator::getConsoleStyleSheet(0x2b2d33, 0xdcddde, 0x3d563d, 0xdcddde));
-    ui->sendConsoleButton->setStyleSheet(Decorator::getUsualButtonStyleSheet(0x1a1c20, 0xdcddde, 0x33363d, 0x2b2d33));
-    ui->clearConsoleButton->setStyleSheet(Decorator::getUsualButtonStyleSheet(0x1a1c20, 0xdcddde, 0x33363d, 0x2b2d33));
-    ui->inputConsoleField->setStyleSheet(Decorator::getInputFieldStyleSheet(0x2b2d33, 0xdcddde, 0x3d563d, 0xdcddde));
-    ui->consoleField->verticalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet(0x2b2d33, 0x1a1c20));
+    darkTheme->applyToConsoleWidget(ui->consoleField, ui->inputConsoleField, ui->sendConsoleButton, ui->clearConsoleButton);
 }
 
 void MainWidget::applyTableStyleSheet(void) {
-    ui->tableField->verticalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
-    ui->tableField->horizontalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
-    ui->tableField->setStyleSheet(Decorator::getTableStyleSheet(0x2b2d33, 0xdcddde, 0x3d563d, 0xdcddde, 0x1a1c20));
-    ui->inputTableField->setStyleSheet(Decorator::getInputFieldStyleSheet(0x2b2d33, 0xdcddde, 0x3d563d, 0xdcddde));
-    ui->sendTableButton->setStyleSheet(Decorator::getUsualButtonStyleSheet(0x1a1c20, 0xdcddde, 0x33363d, 0x2b2d33));
-    ui->clearTableButton->setStyleSheet(Decorator::getUsualButtonStyleSheet(0x1a1c20, 0xdcddde, 0x33363d, 0x2b2d33));
+    darkTheme->applyToTableWidget(ui->tableField, ui->inputTableField, ui->sendTableButton, ui->clearTableButton);
 }
 
 void MainWidget::applySettingsStylesheet(void) {

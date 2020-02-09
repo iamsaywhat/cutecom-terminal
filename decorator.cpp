@@ -1,10 +1,99 @@
 #include "decorator.h"
 
 
-Decorator::Decorator()
+Decorator::Decorator(int base, int second, int third, int text, int selection)
 {
+    /* Пути к иконкам */
+    appIconlUrl       = new QString(":/icons/resources/label.png");
+    closeIconUrl      = new QString(":/icons/resources/close.png");
+    maximizeIconUrl   = new QString(":/icons/resources/maximize.png");
+    minimizeIconUrl   = new QString(":/icons/resources/minimize.png");
+    connectionIconUrl = new QString(":/icons/resources/connect.png");
+    consoleIconUrl    = new QString(":/icons/resources/consolemode.png");
+    tableIconUrl      = new QString(":/icons/resources/tablemode.png");
+    converterIconUrl  = new QString(":/icons/resources/converter.png");
+    settingsIconUrl   = new QString(":/icons/resources/settings.png");
 
+    /* Устанавливаем основные цвета */
+    setBaseColor(base);
+    setSecondColor(second);
+    setThirdColor(third);
+    setTextColor(text);
+    setSelectionColor(selection);
+
+    /* Остальные цвета по-умолчанию такие */
+    setSelectionTextColor(textColor());
+    setCloseHoverColor(0xea4445);
+    setClosePressedColor(0xac4042);
+    setMaximizeHoverColor(thirdColor());
+    setMaximizePressedColor(secondColor());
+    setMinimizeHoverColor(thirdColor());
+    setMinimizePressedColor(secondColor());
 }
+
+Decorator::~Decorator(){
+    delete appIconlUrl;
+    delete closeIconUrl;
+    delete maximizeIconUrl;
+    delete minimizeIconUrl;
+    delete connectionIconUrl;
+    delete consoleIconUrl;
+    delete tableIconUrl;
+    delete converterIconUrl;
+    delete settingsIconUrl;
+}
+
+
+void Decorator::applyToCloseButton(QToolButton *button){
+    button->setStyleSheet(getWindowButtonStyleSheet(*closeIconUrl, baseColor(), closeHoverColor(), closePressedColor()));
+}
+void Decorator::applyToMaximizeButton(QToolButton *button){
+    button->setStyleSheet(getWindowButtonStyleSheet(*maximizeIconUrl, baseColor(), maximizeHoverColor(), maximizePressedColor()));
+}
+void Decorator::applyToMinimizeButton(QToolButton *button){
+    button->setStyleSheet(getWindowButtonStyleSheet(*minimizeIconUrl, baseColor(), minimizeHoverColor(), minimizePressedColor()));
+}
+void Decorator::applyToConnectionButton(QPushButton *button){
+    button->setStyleSheet(getQuickPanelButtonStyleSheet(*connectionIconUrl, baseColor(), thirdColor(), secondColor()));
+}
+void Decorator::applyToConsoleButton(QPushButton *button){
+    button->setStyleSheet(getQuickPanelButtonStyleSheet(*consoleIconUrl, baseColor(), thirdColor(), secondColor()));
+}
+void Decorator::applyToTableButton(QPushButton *button){
+    button->setStyleSheet(getQuickPanelButtonStyleSheet(*tableIconUrl, baseColor(), thirdColor(), secondColor()));
+}
+void Decorator::applyToConverterButton(QPushButton *button){
+    button->setStyleSheet(getQuickPanelButtonStyleSheet(*converterIconUrl, baseColor(), thirdColor(), secondColor()));
+}
+void Decorator::applyToSettingsButton(QPushButton *button){
+    button->setStyleSheet(getQuickPanelButtonStyleSheet(*settingsIconUrl, baseColor(), thirdColor(), secondColor()));
+}
+void Decorator::applyToAppLabel(QLabel *label){
+    label->setStyleSheet(getAppLabelStyleSheet(*appIconlUrl));
+}
+void Decorator::applyToConsoleWidget(QPlainTextEdit *display, QLineEdit *input, QPushButton *sendButton, QPushButton *clearButton){
+    display->setStyleSheet(getConsoleStyleSheet(secondColor(), textColor(), selectionColor(), selectionTextColor()));
+    display->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
+    input->setStyleSheet(getInputFieldStyleSheet(secondColor(), textColor(), selectionColor(), selectionTextColor()));
+    sendButton->setStyleSheet(getUsualButtonStyleSheet(baseColor(), textColor(), thirdColor(), secondColor()));
+    clearButton->setStyleSheet(getUsualButtonStyleSheet(baseColor(), textColor(), thirdColor(), secondColor()));
+}
+void Decorator::applyToTableWidget(QTableView *table, QLineEdit *input, QPushButton *sendButton, QPushButton *clearButton){
+    table->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
+    table->horizontalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
+    table->setStyleSheet(getTableStyleSheet(secondColor(), textColor(), selectionColor(), selectionTextColor(), baseColor()));
+    input->setStyleSheet(getInputFieldStyleSheet(secondColor(), textColor(), selectionColor(), selectionTextColor()));
+    sendButton->setStyleSheet(getUsualButtonStyleSheet(baseColor(), textColor(), thirdColor(), secondColor()));
+    clearButton->setStyleSheet(getUsualButtonStyleSheet(baseColor(), textColor(), thirdColor(), secondColor()));
+}
+void Decorator::applyBasicColorsToWidget(QWidget *widget, int backgroundColor, int textColor){
+    widget->setStyleSheet(getSipmleWidgetStyleSheet(backgroundColor, textColor));
+}
+
+
+
+
+
 
 QString Decorator::getMainWidgetStyleSheet(int backgroundColor,
                                            int textColor) {
