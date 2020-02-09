@@ -66,11 +66,14 @@ public:
     void applyToTableButton(QPushButton *button);
     void applyToConverterButton(QPushButton *button);
     void applyToSettingsButton(QPushButton *button);
-
     void applyToAppLabel(QLabel *label);
     void applyToConsoleWidget(QPlainTextEdit *display, QLineEdit *input, QPushButton *sendButton, QPushButton *clearButton);
     void applyToTableWidget(QTableView *taleView, QLineEdit *lineEdit, QPushButton *sendButton, QPushButton *clearButton);
-    void applyBasicColorsToWidget(QWidget *widget, int backgroundColor, int textColor);
+
+    void setBasicColorsToWidget(QWidget *widget, int backgroundColor, int textColor);
+    void setScrollBarColors(QScrollBar *scrollBar, int handleColor, int pageColor);
+    void setSettingsButtonsColors(QPushButton *button, int background, int backgroundHover, int backgroundPressed);
+
 
 
 private:
@@ -137,7 +140,6 @@ public:
                                                    int selectionColor);
 
 signals:
-
     void baseColorChanged(void);
     void secondColorChanged(void);
     void thirdColorChanged(void);

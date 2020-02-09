@@ -86,10 +86,15 @@ void Decorator::applyToTableWidget(QTableView *table, QLineEdit *input, QPushBut
     sendButton->setStyleSheet(getUsualButtonStyleSheet(baseColor(), textColor(), thirdColor(), secondColor()));
     clearButton->setStyleSheet(getUsualButtonStyleSheet(baseColor(), textColor(), thirdColor(), secondColor()));
 }
-void Decorator::applyBasicColorsToWidget(QWidget *widget, int backgroundColor, int textColor){
+void Decorator::setBasicColorsToWidget(QWidget *widget, int backgroundColor, int textColor){
     widget->setStyleSheet(getSipmleWidgetStyleSheet(backgroundColor, textColor));
 }
-
+void Decorator::setScrollBarColors(QScrollBar *scrollBar, int handleColor, int pageColor){
+    scrollBar->setStyleSheet(getScrollBarStyleSheet(handleColor, pageColor));
+}
+void Decorator::setSettingsButtonsColors(QPushButton *button, int background, int backgroundHover, int backgroundPressed){
+    button->setStyleSheet(getSettingsMenuButtonStyleSheet(background, backgroundHover, backgroundPressed));
+}
 
 
 

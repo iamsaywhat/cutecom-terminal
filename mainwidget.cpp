@@ -107,9 +107,7 @@ void MainWidget::applyTopPanelStyleSheet(void) {
     ui->minimizeButton->setText("");
     ui->appName->setText("");
 
-    //this->setStyleSheet(Decorator::getMainWidgetStyleSheet(0x1a1c20, 0xdcddde));
-    darkTheme->applyBasicColorsToWidget(this, darkTheme->baseColor(), darkTheme->textColor());
-
+    darkTheme->setBasicColorsToWidget(this, darkTheme->baseColor(), darkTheme->textColor());
 
     darkTheme->applyToCloseButton(ui->closeButton);
     darkTheme->applyToMaximizeButton(ui->maximazeButton);
@@ -182,32 +180,41 @@ void MainWidget::applySettingsStylesheet(void) {
     ui->logsContentButton->setText("Logs");
     ui->bindsContentButton->setText("Binds");
     ui->infoLabel->setText("Version: 0.0.0");
-    ui->settingsLeftPanel->horizontalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
-    ui->settingsLeftPanel->verticalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
-    ui->leftPanelContents->setStyleSheet(Decorator::getSipmleWidgetStyleSheet(0x1a1c20, 0xdcddde));
-    ui->connectionContentsButton->setStyleSheet(Decorator::getSettingsMenuButtonStyleSheet(0x2b2d33, 0x33363d, 0x2b2d33));
-    ui->generalContentButton->setStyleSheet(Decorator::getSettingsMenuButtonStyleSheet(0x2b2d33, 0x33363d, 0x2b2d33));
-    ui->consoleContentButton->setStyleSheet(Decorator::getSettingsMenuButtonStyleSheet(0x2b2d33, 0x33363d, 0x2b2d33));
-    ui->tableContentButton->setStyleSheet(Decorator::getSettingsMenuButtonStyleSheet(0x2b2d33, 0x33363d, 0x2b2d33));
-    ui->logsContentButton->setStyleSheet(Decorator::getSettingsMenuButtonStyleSheet(0x2b2d33, 0x33363d, 0x2b2d33));
-    ui->bindsContentButton->setStyleSheet(Decorator::getSettingsMenuButtonStyleSheet(0x2b2d33, 0x33363d, 0x2b2d33));
 
+    ui->settingsPage->layout()->setMargin(0);
+    ui->pageDelimiterLayout->setMargin(0);
+    ui->leftPanelContents->layout()->setMargin(0);
+    ui->rightPanelContents->layout()->setMargin(0);
+    ui->rightStackedPanel->layout()->setMargin(0);
+    ui->pageDelimiterLayout->setSpacing(0);
+
+    darkTheme->setScrollBarColors(ui->settingsLeftPanel->horizontalScrollBar(), darkTheme->secondColor(), darkTheme->baseColor());
+    darkTheme->setScrollBarColors(ui->settingsLeftPanel->verticalScrollBar(), darkTheme->secondColor(), darkTheme->baseColor());
+    darkTheme->setBasicColorsToWidget(ui->leftPanelContents, darkTheme->baseColor(), darkTheme->textColor());
+    darkTheme->setBasicColorsToWidget(ui->settingsPage, darkTheme->baseColor(), darkTheme->textColor());
+
+    darkTheme->setSettingsButtonsColors(ui->connectionContentsButton, darkTheme->baseColor(), darkTheme->thirdColor(), darkTheme->secondColor());
+    darkTheme->setSettingsButtonsColors(ui->generalContentButton, darkTheme->baseColor(), darkTheme->thirdColor(), darkTheme->secondColor());
+    darkTheme->setSettingsButtonsColors(ui->consoleContentButton, darkTheme->baseColor(), darkTheme->thirdColor(), darkTheme->secondColor());
+    darkTheme->setSettingsButtonsColors(ui->tableContentButton, darkTheme->baseColor(), darkTheme->thirdColor(), darkTheme->secondColor());
+    darkTheme->setSettingsButtonsColors(ui->logsContentButton, darkTheme->baseColor(), darkTheme->thirdColor(), darkTheme->secondColor());
+    darkTheme->setSettingsButtonsColors(ui->bindsContentButton, darkTheme->baseColor(), darkTheme->thirdColor(), darkTheme->secondColor());
 
     /* Настройка правой панели **************************************************************/
     ui->labelSectionConnection->setText("Connection");
-    ui->settingsRightPanel->horizontalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
-    ui->settingsRightPanel->verticalScrollBar()->setStyleSheet(Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
-    ui->rightPanelContents->setStyleSheet(Decorator::getSipmleWidgetStyleSheet(0x2b2d33, 0xdcddde));
-    ui->rightStackedPanel->setStyleSheet(Decorator::getSipmleWidgetStyleSheet(0x2b2d33, 0xdcddde));
-
+    darkTheme->setScrollBarColors(ui->settingsRightPanel->horizontalScrollBar(), darkTheme->secondColor(), darkTheme->baseColor());
+    darkTheme->setScrollBarColors(ui->settingsRightPanel->verticalScrollBar(), darkTheme->secondColor(), darkTheme->baseColor());
+    darkTheme->setBasicColorsToWidget(ui->rightPanelContents, darkTheme->secondColor(), darkTheme->textColor());
+    darkTheme->setBasicColorsToWidget(ui->rightStackedPanel, darkTheme->secondColor(), darkTheme->textColor());
     /* Вкладка Connection */
-    ui->labelSectionConnection->setStyleSheet(Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
-    ui->labelPorts->setStyleSheet            (Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
-    ui->labelBaudrate->setStyleSheet         (Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
-    ui->labelData->setStyleSheet             (Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
-    ui->labelParity->setStyleSheet           (Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
-    ui->labelStopBits->setStyleSheet         (Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
-    ui->labelFlowControl->setStyleSheet      (Decorator::getScrollBarStyleSheet(0x2b2d33,0x1a1c20));
+    darkTheme->setBasicColorsToWidget(ui->labelSectionConnection, darkTheme->secondColor(), darkTheme->textColor());
+    darkTheme->setBasicColorsToWidget(ui->labelPorts, darkTheme->secondColor(), darkTheme->textColor());
+    darkTheme->setBasicColorsToWidget(ui->labelBaudrate, darkTheme->secondColor(), darkTheme->textColor());
+    darkTheme->setBasicColorsToWidget(ui->labelData, darkTheme->secondColor(), darkTheme->textColor());
+    darkTheme->setBasicColorsToWidget(ui->labelParity, darkTheme->secondColor(), darkTheme->textColor());
+    darkTheme->setBasicColorsToWidget(ui->labelStopBits, darkTheme->secondColor(), darkTheme->textColor());
+    darkTheme->setBasicColorsToWidget(ui->labelFlowControl, darkTheme->secondColor(), darkTheme->textColor());
+
 
 
     //    ui->boxPorts->setStyleSheet       (Decorator::getComboBoxStyleSheet());
