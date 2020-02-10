@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>915</width>
-    <height>680</height>
+    <width>745</width>
+    <height>719</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Terminal</string>
@@ -241,8 +247,8 @@ g</string>
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>260</width>
-                <height>610</height>
+                <width>203</width>
+                <height>649</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_5">
@@ -341,13 +347,19 @@ g</string>
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>522</width>
-                <height>610</height>
+                <width>409</width>
+                <height>649</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_4">
                <item row="0" column="0">
                 <widget class="QStackedWidget" name="rightStackedPanel">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="currentIndex">
                   <number>0</number>
                  </property>
@@ -372,7 +384,14 @@ g</string>
                         </widget>
                        </item>
                        <item>
-                        <widget class="QComboBox" name="boxPorts"/>
+                        <widget class="QComboBox" name="boxPorts">
+                         <property name="maximumSize">
+                          <size>
+                           <width>16777215</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                        </widget>
                        </item>
                       </layout>
                      </item>
@@ -481,6 +500,9 @@ g</string>
                 <spacer name="horizontalSpacer_2">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Expanding</enum>
                  </property>
                  <property name="sizeHint" stdset="0">
                   <size>

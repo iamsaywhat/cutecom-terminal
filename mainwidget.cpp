@@ -213,6 +213,7 @@ void MainWidget::applyColorSchemeToSettings(Decorator *scheme){
     scheme->setComboBoxColors(ui->boxBaudrate);
     scheme->setComboBoxColors(ui->boxStopBits);
     scheme->setComboBoxColors(ui->boxFlowControl);
+    scheme->setStandartButtonColors(ui->buttonConnectDisconnect, scheme->baseColor(), scheme->textColor(), scheme->thirdColor(), scheme->secondColor());
 
 }
 

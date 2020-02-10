@@ -76,16 +76,16 @@ void Decorator::applyToConsoleWidget(QPlainTextEdit *display, QLineEdit *input, 
     display->setStyleSheet(getConsoleStyleSheet(secondColor(), textColor(), selectionColor(), selectionTextColor()));
     display->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
     input->setStyleSheet(getInputFieldStyleSheet(secondColor(), textColor(), selectionColor(), selectionTextColor()));
-    sendButton->setStyleSheet(getUsualButtonStyleSheet(baseColor(), textColor(), thirdColor(), secondColor()));
-    clearButton->setStyleSheet(getUsualButtonStyleSheet(baseColor(), textColor(), thirdColor(), secondColor()));
+    sendButton->setStyleSheet(getStandartButtonStyleSheet(baseColor(), textColor(), thirdColor(), secondColor()));
+    clearButton->setStyleSheet(getStandartButtonStyleSheet(baseColor(), textColor(), thirdColor(), secondColor()));
 }
 void Decorator::applyToTableWidget(QTableView *table, QLineEdit *input, QPushButton *sendButton, QPushButton *clearButton){
     table->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
     table->horizontalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
     table->setStyleSheet(getTableStyleSheet(secondColor(), textColor(), selectionColor(), selectionTextColor(), baseColor()));
     input->setStyleSheet(getInputFieldStyleSheet(secondColor(), textColor(), selectionColor(), selectionTextColor()));
-    sendButton->setStyleSheet(getUsualButtonStyleSheet(baseColor(), textColor(), thirdColor(), secondColor()));
-    clearButton->setStyleSheet(getUsualButtonStyleSheet(baseColor(), textColor(), thirdColor(), secondColor()));
+    sendButton->setStyleSheet(getStandartButtonStyleSheet(baseColor(), textColor(), thirdColor(), secondColor()));
+    clearButton->setStyleSheet(getStandartButtonStyleSheet(baseColor(), textColor(), thirdColor(), secondColor()));
 }
 void Decorator::setBasicColorsToWidget(QWidget *widget, int backgroundColor, int textColor){
     widget->setStyleSheet(getSipmleWidgetStyleSheet(backgroundColor, textColor));
@@ -100,11 +100,9 @@ void Decorator::setComboBoxColors(QComboBox *comboBox){
     comboBox->setStyleSheet(getComboBoxStyleSheet(baseColor(), textColor(), selectionColor(), selectionTextColor()));
     comboBox->view()->setStyleSheet(getComboBoxStyleSheet(baseColor(), textColor(), selectionColor(), selectionTextColor()));
     comboBox->lineEdit();//->setStyleSheet(getComboBoxStyleSheet(baseColor(), textColor(), selectionColor(), selectionTextColor()));
-
-    //comboBox->setEditable(true);
-    //QLineEdit *edit = comboBox->lineEdit();
-    //edit->setStyleSheet(getComboBoxStyleSheet(baseColor(), textColor(), selectionColor(), selectionTextColor()));
-    //comboBox->setEditable(false);
+}
+void Decorator::setStandartButtonColors(QPushButton *button, int backgroundColor, int textColor, int hoverBackgroundColor, int pressedBackgroundColor) {
+    button->setStyleSheet(getStandartButtonStyleSheet(backgroundColor, textColor, hoverBackgroundColor, pressedBackgroundColor));
 }
 
 
@@ -151,18 +149,18 @@ QString Decorator::getWindowButtonStyleSheet(QString iconUrl,
 }
 
 
-QString Decorator::getUsualButtonStyleSheet (int backgroundColor,
-                                             int textColor,
-                                             int hoverBackgroundColor,
-                                             int pressedBackgroundColor) {
+QString Decorator::getStandartButtonStyleSheet (int backgroundColor,
+                                                int textColor,
+                                                int hoverBackgroundColor,
+                                                int pressedBackgroundColor) {
     QString styleSheet (
            "QPushButton { "
                 "background-color: #%1;"
                 "color:            #%2;"
-                "padding-left:     10px;"
-                "padding-right:    10px;"
-                "padding-top:      5px;"
-                "padding-bottom:   5px;"
+                "padding-left:     20px;"
+                "padding-right:    20px;"
+                "padding-top:      10px;"
+                "padding-bottom:   10px;"
                 "border:           none; "
            "}"
            "QPushButton:hover { "
@@ -188,6 +186,7 @@ QString Decorator::getInputFieldStyleSheet (int backgroundColor,
                     "border:                     none;"
                     "selection-background-color: #%3;"
                     "selection-color:            #%4;"
+                    "padding:                    10px;"
                 "}"
                 );
     return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16)).
@@ -421,7 +420,7 @@ QString Decorator::getComboBoxStyleSheet(int background,
 //                "}"
 
 //                "QComboBox::down-arrow{"
-//                 "   image:                      url(:/icons/combobox_down_arrow.png);"
+//                 "   image:                      url(:/icons/resources/minimize.png);"
 //                  "  padding-right:          5px;"
 //                "}"
 
@@ -445,13 +444,22 @@ QString Decorator::getComboBoxStyleSheet(int background,
 //                );
 
             "QComboBox { "
-                "border:                     0px solid gray; "
+                "border:                     none; "
                 "border-style:               solid;"
                 "border-radius:              3px;"
                 "background:                 #1a1c20;"
                 "color:                      #dcddde;"
                 "selection-background-color: #3d563d;"
                 "selection-color:            #dcddde;"
+                "padding-top:                5px;"
+                "padding-bottom:             5px;"
+                "padding-right:              10px;"
+                "padding-left:               10px;"
+            "}"
+            // Если бокс деактивирован
+            "QComboBox:disabled { "
+                "background:                 #2b2d33;"
+                "color:                      #dcddde;"
             "}"
             // Стиль виджета при редактировании элемента
             "QComboBox:editable { "
@@ -459,26 +467,12 @@ QString Decorator::getComboBoxStyleSheet(int background,
             "}"
             // Выпадающий список целиком
             "QComboBox QAbstractItemView { "
-                "background:                 #2b2d33;"
+                "background:                 #1a1c20;"
                 "color:                      #dcddde;"
                 "selection-background-color: #3d563d;"
                 "selection-color:            #dcddde;"
                 "border:                     none; "   // Внешняя граница в выпадающем списке
                 "outline:                    none;"    // Граница элемента списка
-            "}"
-            // Работает только если установить для Combobox специальный делегат
-            //   combobox->setItemDelegate(new QStyledItemDelegate(combobox));
-            //   https://switch-case.ru/33415621
-            "QComboBox QAbstractItemView::item {"
-                "border-style:             solid;"
-                "border:                   none;"
-                "padding-left:             5px;"
-            "}"
-            "QComboBox QAbstractItemView::item:selected {"
-                "border-style:               solid;"
-                "border: none;"
-                "background: rgb(47, 175, 178);"
-                "padding-left: 5px;"
             "}"
             // Применяется для неизменяемого поля, и ненажатой кнопки
             "QComboBox:!editable, QComboBox::drop-down:editable { "
@@ -493,19 +487,40 @@ QString Decorator::getComboBoxStyleSheet(int background,
             "}"
             // Кнопка раскрытия списка
             "QComboBox::drop-down { "
-                "width: 15px; "
-                "border-left-width: 1px; "
-                "border-left-color: darkgray; "
-                "border-left-style: solid; "       // только одна линия
-                "border-top-right-radius: 8px; " // тот же радиус закругления что и у QComboBox
+                "width:                      15px;"
+                "border:                     none;"
+                "border-top-right-radius:    8px;"
                 "border-bottom-right-radius: 3px;"
+                "padding-right:              4px;"
             "}"
             // Стрелка при закрытом списке
             "QComboBox::down-arrow { "
+                "image: url(:/icons/resources/minimize.png);"
+                "width: 14px;"
+                "height: 14px;"
             "}"
             // Стрелка, когда список раскрыт
             "QComboBox::down-arrow:on { "
+                "top: 1px;"
+                "left: 1px;"
             "}"
+
+
+
+//            // Работает только если установить для Combobox специальный делегат
+//            //   combobox->setItemDelegate(new QStyledItemDelegate(combobox));
+//            //   https://switch-case.ru/33415621
+//            "QComboBox QAbstractItemView::item {"
+//                "border-style:             solid;"
+//                "border:                   none;"
+//                "padding-left:             5px;"
+//            "}"
+//            "QComboBox QAbstractItemView::item:selected {"
+//                "border-style:               solid;"
+//                "border: none;"
+//                "background: rgb(47, 175, 178);"
+//                "padding-left: 5px;"
+//            "}"
            );
     return styleSheet;//.arg(QString::number(background&0xFFFFFF, 16)).
                       //arg(QString::number(background&0xFFFFFF, 16)).

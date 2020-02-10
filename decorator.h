@@ -49,6 +49,7 @@ public:
     void setScrollBarColors(QScrollBar *scrollBar, int handleColor, int pageColor);
     void setSettingsButtonsColors(QPushButton *button, int background, int backgroundHover, int backgroundPressed);
     void setComboBoxColors(QComboBox *comboBox);
+    void setStandartButtonColors(QPushButton *button, int backgroundColor, int textColor, int hoverBackgroundColor, int pressedBackgroundColor);
 
     int baseColor(void)            {return _baseColor;}
     int secondColor(void)          {return _secondColor;}
@@ -119,7 +120,7 @@ private:
                                                    int backgroundColor,
                                                    int hoverBackgroundColor,
                                                    int pressedBackgroundColor);
-    static QString getUsualButtonStyleSheet       (int backgroundColor,
+    static QString getStandartButtonStyleSheet    (int backgroundColor,
                                                    int textColor,
                                                    int hoverBackgroundColor,
                                                    int pressedBackgroundColor);
