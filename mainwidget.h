@@ -21,22 +21,41 @@ class MainWidget : public QWidget
 public:
     MainWidget(QWidget *parent = nullptr);
     ~MainWidget();
-    void applyTopPanelStyleSheet (void);
-    void applyConsoleStyleSheet(void);
-    void applyTableStyleSheet(void);
-    void applyMenuStyleSheet(void);
-    void applySettingsStylesheet(void);
+
+    void setPropertiesToMainWidget(void);
+    void setPropertiesToConsole(void);
+    void setPropertiesToTable(void);
+    void setPropertiesToConverter(void);
+    void setPropertiesToSettingsWidget(void);
+
+    void applyColorScheme(Decorator *scheme);
+    void applyColorSchemeToMainWidget(Decorator *scheme);
+    void applyColorSchemetoConsole(Decorator *scheme);
+    void applyColorSchemeToTable(Decorator *scheme);
+    void applyColorSchemeToConverter(Decorator *scheme);
+    void applyColorSchemeToSettings(Decorator *scheme);
+
 private:
     Ui::MainWidget    *ui;
     SerialGui         *serial;
     ConsoleWidget     *console;
     TableConsole      *tableConsole;
-    const int         indexConsole   = 0;
-    const int         indexTable     = 1;
-    const int         indexConverter = 2;
-    const int         indexSettings  = 3;
-
     Decorator         *darkTheme;
+
+    enum quickMenu {
+        quickIndexConsole   = 0,
+        quickIndexTable     = 1,
+        quickIndexConverter = 2,
+        quickIndexSettings  = 3,
+    };
+    enum settingsMenu {
+        settingsIndexConnection = 0,
+        settingsIndexGeneral    = 1,
+        settingsIndexConsole    = 2,
+        settingsIndexTable      = 3,
+        settingsIndexLogs       = 4,
+        settingsIndexBinds      = 5,
+    };
 };
 #endif // MAINWIDGET_H
 

@@ -10,27 +10,45 @@
 #include <QLineEdit>
 #include <QTableView>
 #include <QScrollBar>
+#include <QComboBox>
 
 
 class Decorator : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int baseColor READ baseColor WRITE setBaseColor NOTIFY baseColorChanged)
-    Q_PROPERTY(int secondColor READ secondColor WRITE setSecondColor NOTIFY secondColorChanged)
-    Q_PROPERTY(int thirdColor READ thirdColor WRITE setThirdColor NOTIFY thirdColorChanged)
-    Q_PROPERTY(int textColor READ textColor WRITE setTextColor NOTIFY textColorChanged)
-    Q_PROPERTY(int selectionColor READ selectionColor WRITE setSelectionColor NOTIFY selectionColorChanged)
-    Q_PROPERTY(int selectionTextColor READ selectionTextColor WRITE setSelectionTextColor NOTIFY selectionTextColorChanged)
-    Q_PROPERTY(int closeHoverColor READ closeHoverColor WRITE setCloseHoverColor NOTIFY closeHoverColorChanged)
-    Q_PROPERTY(int closePressedColor READ closePressedColor WRITE setClosePressedColor NOTIFY closePressedColorChanged)
-    Q_PROPERTY(int maximizeHoverColor READ maximizeHoverColor WRITE setMaximizeHoverColor NOTIFY maximizeHoverColorChanged)
+    Q_PROPERTY(int baseColor            READ baseColor            WRITE setBaseColor            NOTIFY baseColorChanged)
+    Q_PROPERTY(int secondColor          READ secondColor          WRITE setSecondColor          NOTIFY secondColorChanged)
+    Q_PROPERTY(int thirdColor           READ thirdColor           WRITE setThirdColor           NOTIFY thirdColorChanged)
+    Q_PROPERTY(int textColor            READ textColor            WRITE setTextColor            NOTIFY textColorChanged)
+    Q_PROPERTY(int selectionColor       READ selectionColor       WRITE setSelectionColor       NOTIFY selectionColorChanged)
+    Q_PROPERTY(int selectionTextColor   READ selectionTextColor   WRITE setSelectionTextColor   NOTIFY selectionTextColorChanged)
+    Q_PROPERTY(int closeHoverColor      READ closeHoverColor      WRITE setCloseHoverColor      NOTIFY closeHoverColorChanged)
+    Q_PROPERTY(int closePressedColor    READ closePressedColor    WRITE setClosePressedColor    NOTIFY closePressedColorChanged)
+    Q_PROPERTY(int maximizeHoverColor   READ maximizeHoverColor   WRITE setMaximizeHoverColor   NOTIFY maximizeHoverColorChanged)
     Q_PROPERTY(int maximizePressedColor READ maximizePressedColor WRITE setMaximizePressedColor NOTIFY maximizePressedColorChanged)
-    Q_PROPERTY(int minimizeHoverColor READ minimizeHoverColor WRITE setMinimizeHoverColor NOTIFY minimizeHoverColorChanged)
+    Q_PROPERTY(int minimizeHoverColor   READ minimizeHoverColor   WRITE setMinimizeHoverColor   NOTIFY minimizeHoverColorChanged)
     Q_PROPERTY(int minimizePressedColor READ minimizePressedColor WRITE setMinimizePressedColor NOTIFY minimizePressedColorChanged)
 
 public:
     Decorator(int base, int second, int third, int text, int selection);
     ~Decorator();
+
+    void applyToCloseButton(QToolButton *button);
+    void applyToMaximizeButton(QToolButton *button);
+    void applyToMinimizeButton(QToolButton *button);
+    void applyToConnectionButton(QPushButton *button);
+    void applyToConsoleButton(QPushButton *button);
+    void applyToTableButton(QPushButton *button);
+    void applyToConverterButton(QPushButton *button);
+    void applyToSettingsButton(QPushButton *button);
+    void applyToAppLabel(QLabel *label);
+    void applyToConsoleWidget(QPlainTextEdit *display, QLineEdit *input, QPushButton *sendButton, QPushButton *clearButton);
+    void applyToTableWidget(QTableView *taleView, QLineEdit *lineEdit, QPushButton *sendButton, QPushButton *clearButton);
+
+    void setBasicColorsToWidget(QWidget *widget, int backgroundColor, int textColor);
+    void setScrollBarColors(QScrollBar *scrollBar, int handleColor, int pageColor);
+    void setSettingsButtonsColors(QPushButton *button, int background, int backgroundHover, int backgroundPressed);
+    void setComboBoxColors(QComboBox *comboBox);
 
     int baseColor(void)            {return _baseColor;}
     int secondColor(void)          {return _secondColor;}
@@ -58,24 +76,6 @@ public:
     void setMinimizeHoverColor(int value)   {_minimizeHoverColor = 0xffffff&value;}
     void setMinimizePressedColor(int value) {_minimizePressedColor = 0xffffff&value;}
 
-    void applyToCloseButton(QToolButton *button);
-    void applyToMaximizeButton(QToolButton *button);
-    void applyToMinimizeButton(QToolButton *button);
-    void applyToConnectionButton(QPushButton *button);
-    void applyToConsoleButton(QPushButton *button);
-    void applyToTableButton(QPushButton *button);
-    void applyToConverterButton(QPushButton *button);
-    void applyToSettingsButton(QPushButton *button);
-    void applyToAppLabel(QLabel *label);
-    void applyToConsoleWidget(QPlainTextEdit *display, QLineEdit *input, QPushButton *sendButton, QPushButton *clearButton);
-    void applyToTableWidget(QTableView *taleView, QLineEdit *lineEdit, QPushButton *sendButton, QPushButton *clearButton);
-
-    void setBasicColorsToWidget(QWidget *widget, int backgroundColor, int textColor);
-    void setScrollBarColors(QScrollBar *scrollBar, int handleColor, int pageColor);
-    void setSettingsButtonsColors(QPushButton *button, int background, int backgroundHover, int backgroundPressed);
-
-
-
 private:
     int _baseColor;
     int _secondColor;
@@ -89,9 +89,6 @@ private:
     int _maximizePressedColor;
     int _minimizeHoverColor;
     int _minimizePressedColor;
-
-
-
     QString *appIconlUrl;
     QString *closeIconUrl;
     QString *maximizeIconUrl;
@@ -102,7 +99,6 @@ private:
     QString *converterIconUrl;
     QString *settingsIconUrl;
 
-public:
     static QString getAppLabelStyleSheet          (QString iconUrl);
     static QString getTableStyleSheet             (int backgroundColor,
                                                    int textColor,
@@ -117,7 +113,8 @@ public:
                                                    int backgroundColor,
                                                    int hoverBackgroundColor,
                                                    int pressedBackgroundColor);
-    static QString getMainWidgetStyleSheet        (int backgroundColor, int textColor);
+    static QString getMainWidgetStyleSheet        (int backgroundColor,
+                                                   int textColor);
     static QString getWindowButtonStyleSheet      (QString iconUrl,
                                                    int backgroundColor,
                                                    int hoverBackgroundColor,
@@ -130,15 +127,17 @@ public:
                                                    int textColor,
                                                    int selectionBackgroundColor,
                                                    int selectionTextColor);
-    static QString getScrollBarStyleSheet         (int handleColor, int pageColor);
+    static QString getScrollBarStyleSheet         (int handleColor,
+                                                   int pageColor);
     static QString getSipmleWidgetStyleSheet      (int backgroundColor,
                                                    int textColor);
-    static QString getSettingsMenuButtonStyleSheet(int background, int backgroundHover, int backgroundPressed);
+    static QString getSettingsMenuButtonStyleSheet(int background,
+                                                   int backgroundHover,
+                                                   int backgroundPressed);
     static QString getComboBoxStyleSheet          (int background,
                                                    int color,
                                                    int selectionBackgroundColor,
                                                    int selectionColor);
-
 signals:
     void baseColorChanged(void);
     void secondColorChanged(void);

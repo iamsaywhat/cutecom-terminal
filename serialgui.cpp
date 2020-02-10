@@ -211,8 +211,7 @@ void SerialGui::setCustomBaudrate(void)
         // Убираем текст
         Baudrate->clearEditText();
         // Привязываем к полю ввода валидатор данных
-        QLineEdit *edit = Baudrate->lineEdit();
-        edit->setValidator(Baudrate_Validator);
+        Baudrate->lineEdit()->setValidator(Baudrate_Validator);
     }
     // Если выбран любой другой пункт
     else
