@@ -7,6 +7,7 @@
 #include "hexmode/tableconsole.h"
 #include "serialgui.h"
 #include "decorator.h"
+#include "converter.h"
 
 
 
@@ -40,6 +41,7 @@ private:
     SerialGui         *serial;
     ConsoleWidget     *console;
     TableConsole      *tableConsole;
+    Converter         *converter;
     Decorator         *darkTheme;
 
     enum quickMenu {

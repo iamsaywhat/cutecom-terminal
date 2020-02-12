@@ -39,6 +39,14 @@ MainWidget::MainWidget(QWidget *parent)
                                     ui->inputTableField,   /* Указатель на QLineEdit форму */
                                     ui->sendTableButton,   /* Указатель на QPushButton форму*/
                                     ui->clearTableButton); /* Указатель на QPushButton форму*/
+    converter = new Converter(this,
+                              ui->converterSource,
+                              ui->converterResult,
+                              ui->converterConvertButton,
+                              ui->converterSwapButton,
+                              ui->converterClearButton,
+                              ui->converterSourceBox,
+                              ui->converterResultBox);
 
     darkTheme = new Decorator(0x1a1c20, 0x2b2d33, 0x33363d, 0xdcddde, 0x3d563d);
 
@@ -103,6 +111,8 @@ MainWidget::MainWidget(QWidget *parent)
 MainWidget::~MainWidget()
 {
     delete darkTheme;
+    delete converter;
+    delete tableConsole;
     delete console;
     delete serial;
     delete ui;

@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     consolemode/consolewidget.cpp \
+    converter.cpp \
     decorator.cpp \
     framelesswindow.cpp \
     hexmode/delegate.cpp \
@@ -27,6 +28,7 @@ SOURCES += \
 
 HEADERS += \
     consolemode/consolewidget.h \
+    converter.h \
     decorator.h \
     framelesswindow.h \
     hexmode/delegate.h \
