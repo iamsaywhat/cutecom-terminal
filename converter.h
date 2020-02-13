@@ -23,6 +23,7 @@ public:
                        QComboBox      *sourceBox,
                        QComboBox      *resultBox);
     ~Converter();
+    static void setDelimitersInHexString(QPlainTextEdit *textEdit);
 
 private:
     QPlainTextEdit  *_source;
@@ -34,10 +35,10 @@ private:
     QComboBox       *_resultBox;
 
     QRegularExpression *hexArray   = new QRegularExpression ("[0-9A-Fa-f ]+");
-    QRegularExpression *hex8Byte   = new QRegularExpression ("[0-9A-Fa-f ]{8}");
-    QRegularExpression *hex4Byte   = new QRegularExpression ("[0-9A-Fa-f ]{4}");
-    QRegularExpression *hex2Byte   = new QRegularExpression ("[0-9A-Fa-f ]{2}");
-    QRegularExpression *hex1Byte   = new QRegularExpression ("[0-9A-Fa-f ]{1}");
+    QRegularExpression *hex8Byte   = new QRegularExpression ("[0-9A-Fa-f ]{23}");
+    QRegularExpression *hex4Byte   = new QRegularExpression ("[0-9A-Fa-f ]{11}");
+    QRegularExpression *hex2Byte   = new QRegularExpression ("[0-9A-Fa-f ]{5}");
+    QRegularExpression *hex1Byte   = new QRegularExpression ("[0-9A-Fa-f ]{2}");
 
     QRegularExpressionValidator *validator = new QRegularExpressionValidator;
 
