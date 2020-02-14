@@ -25,6 +25,22 @@ public:
     ~Converter();
     static void setDelimitersInHexString(QPlainTextEdit *textEdit);
 
+    //static QString convertHexToAscii (QByteArray &source);
+
+    static QByteArray parseStringForHex(QString &string);
+
+    static QString convertHexToAscii (QString &source);
+    static QString convertHexToUint8 (QString &source);
+    static QString convertHexToInt8 (QString &source);
+    static QString convertHexToUint16 (QString &source);
+    static QString convertHexToInt16 (QString &source);
+    static QString convertHexToUint32 (QString &source);
+    static QString convertHexToInt32 (QString &source);
+    static QString convertHexToUint64 (QString &source);
+    static QString convertHexToInt64 (QString &source);
+    static QString convertHexToFloat (QString &source);
+    static QString convertHexToDouble (QString &source);
+
 private:
     QPlainTextEdit  *_source;
     QPlainTextEdit  *_result;
@@ -60,6 +76,9 @@ private:
 signals:
 
 public slots:
+    void convert();
+    void swap();
+    void clear();
 
 private slots:
     void resultTypeChanges (void);
