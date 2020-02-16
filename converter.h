@@ -41,6 +41,18 @@ public:
     static QString convertHexToFloat (QString &source);
     static QString convertHexToDouble (QString &source);
 
+
+    static void swapEndian(uint8_t &value);
+    static void swapEndian(int8_t &value);
+    static void swapEndian(uint16_t &value);
+    static void swapEndian(int16_t &value);
+    static void swapEndian(uint32_t &value);
+    static void swapEndian(int32_t &value);
+    static void swapEndian(uint64_t &value);
+    static void swapEndian(int64_t &value);
+    static void swapEndian(float &value);
+    static void swapEndian(double &value);
+
 private:
     QPlainTextEdit  *_source;
     QPlainTextEdit  *_result;
