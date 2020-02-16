@@ -70,7 +70,7 @@ private:
 
     QRegularExpressionValidator *validator = new QRegularExpressionValidator;
 
-    enum convertTypes {
+    enum ConvertTypes {
         HEX    = 0,
         ASCII  = 1,
         UINT8  = 2,
@@ -85,6 +85,7 @@ private:
         DOUBLE = 11,
     };
 
+    QString expandToFullType(QString &source, ConvertTypes type);
 signals:
 
 public slots:

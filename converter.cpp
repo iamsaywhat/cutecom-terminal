@@ -138,32 +138,64 @@ Converter::~Converter(void) {
     delete validator;
 }
 
+
 void Converter::convert(void){
     QString sourceData(_source->toPlainText());
+
     QString resultData;
 
     if(_resultBox->currentData() == ASCII)
         resultData = convertHexToAscii(sourceData);
     else if (_resultBox->currentData() == UINT8)
+    {
+        _source->setPlainText(expandToFullType(sourceData, UINT8));
         resultData = convertHexToUint8(sourceData);
+    }
     else if (_resultBox->currentData() == INT8)
+    {
+        _source->setPlainText(expandToFullType(sourceData, INT8));
         resultData = convertHexToInt8(sourceData);
+    }
     else if (_resultBox->currentData() == UINT16)
+    {
+        _source->setPlainText(expandToFullType(sourceData, UINT16));
         resultData = convertHexToUint16(sourceData);
+    }
     else if (_resultBox->currentData() == INT16)
+    {
+        _source->setPlainText(expandToFullType(sourceData, INT16));
         resultData = convertHexToInt16(sourceData);
+    }
     else if (_resultBox->currentData() == UINT32)
+    {
+        _source->setPlainText(expandToFullType(sourceData, UINT32));
         resultData = convertHexToUint32(sourceData);
+    }
     else if (_resultBox->currentData() == INT32)
+    {
+        _source->setPlainText(expandToFullType(sourceData, INT32));
         resultData = convertHexToInt32(sourceData);
+    }
     else if (_resultBox->currentData() == UINT64)
+    {
+        _source->setPlainText(expandToFullType(sourceData, UINT64));
         resultData = convertHexToUint64(sourceData);
+    }
     else if (_resultBox->currentData() == INT64)
+    {
+        _source->setPlainText(expandToFullType(sourceData, INT64));
         resultData = convertHexToInt64(sourceData);
+    }
     else if (_resultBox->currentData() == FLOAT)
+    {
+        _source->setPlainText(expandToFullType(sourceData, FLOAT));
         resultData = convertHexToFloat(sourceData);
+    }
     else if (_resultBox->currentData() == DOUBLE)
+    {
+        _source->setPlainText(expandToFullType(sourceData, DOUBLE));
         resultData = convertHexToDouble(sourceData);
+    }
     else
         resultData = "";
 
@@ -171,18 +203,7 @@ void Converter::convert(void){
     _result->setPlainText(resultData.toLatin1());
 }
 void Converter::swap(){
-    QString str(_source->toPlainText());
-    convertHexToUint8(str);
-    convertHexToUint8 (str);
-    convertHexToInt8 (str);
-    convertHexToUint16 (str);
-    convertHexToInt16 (str);
-    convertHexToUint32 (str);
-    convertHexToInt32 (str);
-    convertHexToUint64 (str);
-    convertHexToInt64 (str);
-    convertHexToFloat (str);
-    convertHexToDouble (str);
+
 }
 
 void Converter::clear(){
@@ -295,6 +316,28 @@ void Converter::setDelimitersInHexString(QPlainTextEdit *textEdit){
         cursor.setPosition(cursorPosition);
     // Устанавливаем положение курсора на исходном виджете
     textEdit->setTextCursor(cursor);
+}
+
+QString Converter::expandToFullType(QString &source, ConvertTypes type)
+{
+    QString fullType;
+    if(type == UINT8 || type == INT8)
+        fullType = "00";
+    else if (type == UINT16 || type == INT16)
+        fullType = "00 00";
+    else if (type == UINT32 || type == INT32 || type == FLOAT)
+        fullType = "00 00 00 00";
+    else if(type == UINT64 || type == INT64 || type == DOUBLE)
+        fullType = "00 00 00 00 00 00 00 00";
+    else
+        return "";
+    // Обрезаем конец форматной строки по кол-ву символов источника
+    fullType.chop(source.count());
+    // И добавляем в нее источник
+    fullType.append(source);
+    source = fullType;
+
+    return fullType;
 }
 
 //QString Converter::convertHexToAscii (QByteArray &source){
