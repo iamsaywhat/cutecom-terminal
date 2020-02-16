@@ -138,45 +138,108 @@ Converter::~Converter(void) {
     delete validator;
 }
 
+void Converter::convert(void){
+    QString sourceData(_source->toPlainText());
+    QString resultData;
+
+    if(_resultBox->currentData() == ASCII)
+        resultData = convertHexToAscii(sourceData);
+    else if (_resultBox->currentData() == UINT8)
+        resultData = convertHexToUint8(sourceData);
+    else if (_resultBox->currentData() == INT8)
+        resultData = convertHexToInt8(sourceData);
+    else if (_resultBox->currentData() == UINT16)
+        resultData = convertHexToUint16(sourceData);
+    else if (_resultBox->currentData() == INT16)
+        resultData = convertHexToInt16(sourceData);
+    else if (_resultBox->currentData() == UINT32)
+        resultData = convertHexToUint32(sourceData);
+    else if (_resultBox->currentData() == INT32)
+        resultData = convertHexToInt32(sourceData);
+    else if (_resultBox->currentData() == UINT64)
+        resultData = convertHexToUint64(sourceData);
+    else if (_resultBox->currentData() == INT64)
+        resultData = convertHexToInt64(sourceData);
+    else if (_resultBox->currentData() == FLOAT)
+        resultData = convertHexToFloat(sourceData);
+    else if (_resultBox->currentData() == DOUBLE)
+        resultData = convertHexToDouble(sourceData);
+    else
+        resultData = "";
+
+    // Результат в правое окно
+    _result->setPlainText(resultData.toLatin1());
+}
+void Converter::swap(){
+    QString str(_source->toPlainText());
+    convertHexToUint8(str);
+    convertHexToUint8 (str);
+    convertHexToInt8 (str);
+    convertHexToUint16 (str);
+    convertHexToInt16 (str);
+    convertHexToUint32 (str);
+    convertHexToInt32 (str);
+    convertHexToUint64 (str);
+    convertHexToInt64 (str);
+    convertHexToFloat (str);
+    convertHexToDouble (str);
+}
+
+void Converter::clear(){
+    _source->clear();
+    _result->clear();
+}
 
 void Converter::resultTypeChanges (void){
-#ifdef DEBUG
-    qDebug() << "Call resultTypeChanges";
-#endif
-    if(_resultBox->currentData() == HEX){
+    if(_resultBox->currentData() == HEX)
+    {
 
     }
-    else if (_resultBox->currentData() == ASCII){
+    else if (_resultBox->currentData() == ASCII)
+    {
         validator->setRegularExpression(*hexArray);
     }
     else if (_resultBox->currentData() == UINT8 ||
-             _resultBox->currentData() == INT8){
+             _resultBox->currentData() == INT8)
+    {
+        QString temp = _source->toPlainText();
+        temp.chop(temp.count()-2);
+        _source->setPlainText(temp);
         validator->setRegularExpression(*hex1Byte);
     }
     else if (_resultBox->currentData() == UINT16 ||
-             _resultBox->currentData() == INT16){
+             _resultBox->currentData() == INT16)
+    {
+        QString temp = _source->toPlainText();
+        temp.chop(temp.count()-5);
+        _source->setPlainText(temp);
         validator->setRegularExpression(*hex2Byte);
     }
     else if (_resultBox->currentData() == UINT32 ||
              _resultBox->currentData() == INT32 ||
              _resultBox->currentData() == FLOAT){
+        QString temp = _source->toPlainText();
+        temp.chop(temp.count()-11);
+        _source->setPlainText(temp);
         validator->setRegularExpression(*hex4Byte);
     }
     else if (_resultBox->currentData() == UINT64 ||
              _resultBox->currentData() == INT64 ||
-             _resultBox->currentData() == DOUBLE){
+             _resultBox->currentData() == DOUBLE)
+    {
+        QString temp = _source->toPlainText();
+        temp.chop(temp.count()-23);
+        _source->setPlainText(temp);
         validator->setRegularExpression(*hex8Byte);
     }
-    else {
+    else
+    {
 
     }
 
 }
 
 void Converter::validateSource(void){
-#ifdef DEBUG
-    qDebug() << "Call validateSource";
-#endif
     static QString previousText("");
     static int cursorPosition;
 
@@ -190,6 +253,7 @@ void Converter::validateSource(void){
         _source->setPlainText(previousText);
         cursor.setPosition(cursorPosition);
         _source->setTextCursor(cursor);
+        qDebug() << "Validator failed";
     }
     else {
         previousText = _source->toPlainText();
@@ -352,63 +416,6 @@ QString Converter::convertHexToDouble (QString &source){
     swapEndian(value);
 
     return QString::number(value);
-}
-
-
-
-
-
-
-void Converter::convert(void){
-    QString sourceData(_source->toPlainText());
-    QString resultData;
-
-    if(_resultBox->currentData() == ASCII)
-        resultData = convertHexToAscii(sourceData);
-    else if (_resultBox->currentData() == UINT8)
-        resultData = convertHexToUint8(sourceData);
-    else if (_resultBox->currentData() == INT8)
-        resultData = convertHexToInt8(sourceData);
-    else if (_resultBox->currentData() == UINT16)
-        resultData = convertHexToUint16(sourceData);
-    else if (_resultBox->currentData() == INT16)
-        resultData = convertHexToInt16(sourceData);
-    else if (_resultBox->currentData() == UINT32)
-        resultData = convertHexToUint32(sourceData);
-    else if (_resultBox->currentData() == INT32)
-        resultData = convertHexToInt32(sourceData);
-    else if (_resultBox->currentData() == UINT64)
-        resultData = convertHexToUint64(sourceData);
-    else if (_resultBox->currentData() == INT64)
-        resultData = convertHexToInt64(sourceData);
-    else if (_resultBox->currentData() == FLOAT)
-        resultData = convertHexToFloat(sourceData);
-    else if (_resultBox->currentData() == DOUBLE)
-        resultData = convertHexToDouble(sourceData);
-    else
-        resultData = "";
-
-    // Результат в правое окно
-    _result->setPlainText(resultData.toLatin1());
-}
-void Converter::swap(){
-    QString str(_source->toPlainText());
-    convertHexToUint8(str);
-    convertHexToUint8 (str);
-    convertHexToInt8 (str);
-    convertHexToUint16 (str);
-    convertHexToInt16 (str);
-    convertHexToUint32 (str);
-    convertHexToInt32 (str);
-    convertHexToUint64 (str);
-    convertHexToInt64 (str);
-    convertHexToFloat (str);
-    convertHexToDouble (str);
-}
-
-void Converter::clear(){
-    _source->clear();
-    _result->clear();
 }
 
 void Converter::swapEndian(uint8_t &value){
