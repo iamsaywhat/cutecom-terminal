@@ -25,7 +25,7 @@ public:
     ~Converter();
     static void setDelimitersInHexString(QPlainTextEdit *textEdit);
 
-    //static QString convertHexToAscii (QByteArray &source);
+
 
     static QByteArray parseStringForHex(QString &string);
 
@@ -40,6 +40,18 @@ public:
     static QString convertHexToInt64 (QString &source);
     static QString convertHexToFloat (QString &source);
     static QString convertHexToDouble (QString &source);
+
+    static QString convertAsciiToHex (QString source);
+    static QString convertUint8ToHex (QString source);
+    static QString convertInt8ToHex(QString source);
+    static QString convertUnt16ToHex(QString source);
+    static QString convertInt16ToHex(QString source);
+    static QString convertUnt32ToHex(QString source);
+    static QString convertInt32ToHex(QString source);
+    static QString convertUnt64ToHex(QString source);
+    static QString convertInt64ToHex(QString source);
+    static QString convertFloatToHex(QString source);
+    static QString convertDoubleToHex(QString source);
 
 
     static void swapEndian(uint8_t &value);

@@ -127,6 +127,11 @@ Converter::Converter(QObject        *parent,
 //    qDebug()<< "int16" << hex<< int16Value;
 //    qDebug()<< "uint8" << hex<< uint8Value;
 //    qDebug()<< "int8" << hex << int8Value;
+    QString str("Hello world!");
+    qDebug() << "like string" << str;
+    qDebug() << "like byteArray" << str.toLatin1();
+    QByteArray array = str.toLatin1();
+    qDebug() << "converted" << convertAsciiToHex(array);
 }
 
 Converter::~Converter(void) {
@@ -340,18 +345,6 @@ QString Converter::expandToFullType(QString &source, ConvertTypes type)
     return fullType;
 }
 
-//QString Converter::convertHexToAscii (QByteArray &source){
-//    QString result = "";
-//    for(int i = 0; i < source.count(); i++)
-//    {
-//        result+=QString::number(static_cast<unsigned char>(source[i]),16).rightJustified(2, '0');
-//        if(i < source.count()-1)
-//            result.append(" ");
-//    }
-//    result = result.toUpper();
-//    return result;
-//}
-
 
 QByteArray Converter::parseStringForHex(QString &string){
     QString clearSource;
@@ -459,6 +452,49 @@ QString Converter::convertHexToDouble (QString &source){
     swapEndian(value);
 
     return QString::number(value);
+}
+
+QString Converter::convertAsciiToHex (QString source){
+    QString result = "";
+    for(int i = 0; i < source.count(); i++)
+    {
+        result+=QString::number(static_cast<unsigned char>(source.toLatin1()[i]),16).rightJustified(2, '0');
+        if(i < source.count()-1)
+            result.append(" ");
+    }
+    result = result.toUpper();
+    return result;
+}
+
+QString Converter::convertUint8ToHex (QString source){
+
+}
+QString Converter::convertInt8ToHex(QString source){
+
+}
+QString Converter::convertUnt16ToHex(QString source){
+
+}
+QString Converter::convertInt16ToHex(QString source){
+
+}
+QString Converter::convertUnt32ToHex(QString source){
+
+}
+QString Converter::convertInt32ToHex(QString source){
+
+}
+QString Converter::convertUnt64ToHex(QString source){
+
+}
+QString Converter::convertInt64ToHex(QString source){
+
+}
+QString Converter::convertFloatToHex(QString source){
+
+}
+QString Converter::convertDoubleToHex(QString source){
+
 }
 
 void Converter::swapEndian(uint8_t &value){
