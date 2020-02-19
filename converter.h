@@ -1,4 +1,4 @@
-  #ifndef CONVERTER_H
+﻿#ifndef CONVERTER_H
 #define CONVERTER_H
 
 #include <QObject>
@@ -24,6 +24,7 @@ public:
                        QComboBox      *resultBox);
     ~Converter();
     static void setDelimitersInHexString(QPlainTextEdit *textEdit);
+    static void setDelimitersInHexString(QString &currentText);
 
 
 
@@ -44,11 +45,11 @@ public:
     static QString convertAsciiToHex (QString source);
     static QString convertUint8ToHex (QString source);
     static QString convertInt8ToHex(QString source);
-    static QString convertUnt16ToHex(QString source);
+    static QString convertUint16ToHex(QString source);
     static QString convertInt16ToHex(QString source);
-    static QString convertUnt32ToHex(QString source);
+    static QString convertUint32ToHex(QString source);
     static QString convertInt32ToHex(QString source);
-    static QString convertUnt64ToHex(QString source);
+    static QString convertUint64ToHex(QString source);
     static QString convertInt64ToHex(QString source);
     static QString convertFloatToHex(QString source);
     static QString convertDoubleToHex(QString source);
@@ -80,9 +81,12 @@ private:
     QRegularExpression *hex2Byte   = new QRegularExpression ("[0-9A-Fa-f ]{5}");
     QRegularExpression *hex1Byte   = new QRegularExpression ("[0-9A-Fa-f ]{2}");
     QRegularExpression *asciiSyms  = new QRegularExpression ("[\\x00-\\xFF]+"); // Обычный до 7F, расширенная IBM cp866 до 77
-    QRegularExpression *doublef = new QRegularExpression ("^-?(?:0|[1-9][0-9]*)\\.?[0-9]+$");
+    QRegularExpression *doubleSyms = new QRegularExpression ("^-?(?:0|[1-9][0-9]*)\\.?[0-9]+$");
+    QRegularExpression *uint8RegEx = new QRegularExpression ("[0-9]+");
+    QRegularExpression *int8RegEx  = new QRegularExpression ("^-?[0-9]+$");
 
     QRegularExpressionValidator *validator = new QRegularExpressionValidator;
+
 
     enum TypeName {
         HEX    = 0,
@@ -137,7 +141,11 @@ private:
 
     QString expandToFullType(QString &source, TypeName type);
     void fillComboBoxs (QComboBox* left, QComboBox* right);
-    void updateConversionType();
+    void updateConversionType(void);
+    void validateHexInput(void);
+    void validateFloatingPointInput(void);
+    void validateIntegerInput();
+
 signals:
 
 public slots:
