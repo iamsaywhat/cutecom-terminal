@@ -1,4 +1,4 @@
-#ifndef CONVERTER_H
+  #ifndef CONVERTER_H
 #define CONVERTER_H
 
 #include <QObject>
@@ -79,10 +79,12 @@ private:
     QRegularExpression *hex4Byte   = new QRegularExpression ("[0-9A-Fa-f ]{11}");
     QRegularExpression *hex2Byte   = new QRegularExpression ("[0-9A-Fa-f ]{5}");
     QRegularExpression *hex1Byte   = new QRegularExpression ("[0-9A-Fa-f ]{2}");
+    QRegularExpression *asciiSyms  = new QRegularExpression ("[\\x00-\\xFF]+"); // Обычный до 7F, расширенная IBM cp866 до 77
+    QRegularExpression *doublef = new QRegularExpression ("^-?(?:0|[1-9][0-9]*)\\.?[0-9]+$");
 
     QRegularExpressionValidator *validator = new QRegularExpressionValidator;
 
-    enum ConvertTypes {
+    enum TypeName {
         HEX    = 0,
         ASCII  = 1,
         UINT8  = 2,
@@ -95,9 +97,47 @@ private:
         INT64  = 9,
         FLOAT  = 10,
         DOUBLE = 11,
+    };    
+    enum ConversionType {
+        // Прямые типы преобразований
+        hexToAscii  = 0,
+        hexToUint8  = 1,
+        hexToInt8   = 2,
+        hexToUint16 = 3,
+        hexToInt16  = 4,
+        hexToUint32 = 5,
+        hexToInt32  = 6,
+        hexToUint64 = 7,
+        hexToInt64  = 8,
+        hexToFloat  = 9,
+        hexToDouble = 10,
+        // Обратные типы преобразований
+        AsciiToHex  = 11,
+        Uint8ToHex  = 12,
+        Int8ToHex   = 13,
+        Uint16ToHex = 14,
+        Int16ToHex  = 15,
+        Uint32ToHex = 16,
+        Int32ToHex  = 17,
+        Uint64ToHex = 18,
+        Int64ToHex  = 19,
+        FloatToHex  = 20,
+        DoubleToHex = 21,
+        // Неопределенный тип
+        Unknown     = 255
+    };
+    enum ConversionDirect{
+        DIRECT,
+        INDIRECT
     };
 
-    QString expandToFullType(QString &source, ConvertTypes type);
+    // Состояния
+    ConversionDirect direction;
+    ConversionType convertionId;
+
+    QString expandToFullType(QString &source, TypeName type);
+    void fillComboBoxs (QComboBox* left, QComboBox* right);
+    void updateConversionType();
 signals:
 
 public slots:

@@ -25,31 +25,26 @@ Converter::Converter(QObject        *parent,
 
     result->setReadOnly(true);
 
-    sourceBox->addItem("hex", HEX);
-
-    resultBox->addItem("ascii",  ASCII);
-    resultBox->addItem("uint8",  UINT8);
-    resultBox->addItem("int8",   INT8);
-    resultBox->addItem("uint16", UINT16);
-    resultBox->addItem("int16",  INT16);
-    resultBox->addItem("uint32", UINT32);
-    resultBox->addItem("int32",  INT32);
-    resultBox->addItem("uint64", UINT64);
-    resultBox->addItem("int64",  INT64);
-    resultBox->addItem("float",  FLOAT);
-    resultBox->addItem("double", DOUBLE);
+    fillComboBoxs(sourceBox, resultBox);
 
     convertButton->setText("Convert");
     swapButton->setText("Swap");
     clearButton->setText("Clear");
 
     connect(resultBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &Converter::resultTypeChanges);
+    connect(sourceBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &Converter::resultTypeChanges);
     connect(source, &QPlainTextEdit::textChanged, this,  &Converter::validateSource);
     connect(convertButton, &QPushButton::clicked, this, &Converter::convert);
     connect(swapButton, &QPushButton::clicked, this, &Converter::swap);
     connect(clearButton, &QPushButton::clicked, this, &Converter::clear);
 
+
+    direction = DIRECT;
+    updateConversionType();
     validator->setRegularExpression(*hexArray);
+
+    validator->setRegularExpression(*doublef);
+    validator->setRegularExpression(*asciiSyms);
 
 //    QByteArray array;
 //    array[0] = 0x40;
@@ -143,72 +138,275 @@ Converter::~Converter(void) {
     delete validator;
 }
 
+void Converter::fillComboBoxs (QComboBox* comboBox1, QComboBox* comboBox2){
+    comboBox1->clear();
+    comboBox2->clear();
+
+    comboBox1->addItem("hex", HEX);
+
+    comboBox2->addItem("ascii",  ASCII);
+    comboBox2->addItem("uint8",  UINT8);
+    comboBox2->addItem("int8",   INT8);
+    comboBox2->addItem("uint16", UINT16);
+    comboBox2->addItem("int16",  INT16);
+    comboBox2->addItem("uint32", UINT32);
+    comboBox2->addItem("int32",  INT32);
+    comboBox2->addItem("uint64", UINT64);
+    comboBox2->addItem("int64",  INT64);
+    comboBox2->addItem("float",  FLOAT);
+    comboBox2->addItem("double", DOUBLE);
+}
+
+void Converter::updateConversionType(){
+    // Прямое направление преобзования
+    if(direction == DIRECT)
+    {
+        if(_sourceBox->currentData() == HEX)
+        {
+            if(_resultBox->currentData() == ASCII)
+            {
+                convertionId = hexToAscii;
+            }
+            else if (_resultBox->currentData() == UINT8)
+            {
+                convertionId = hexToUint8;
+            }
+            else if (_resultBox->currentData() == INT8)
+            {
+                convertionId = hexToInt8;
+            }
+            else if (_resultBox->currentData() == UINT16)
+            {
+                convertionId = hexToUint16;
+            }
+            else if (_resultBox->currentData() == INT16)
+            {
+                convertionId = hexToInt16;
+            }
+            else if (_resultBox->currentData() == UINT32)
+            {
+                convertionId = hexToUint32;
+            }
+            else if (_resultBox->currentData() == INT32)
+            {
+                convertionId = hexToInt32;
+            }
+            else if (_resultBox->currentData() == UINT64)
+            {
+                convertionId = hexToUint64;
+            }
+            else if (_resultBox->currentData() == INT64)
+            {
+                convertionId = hexToInt64;
+            }
+            else if (_resultBox->currentData() == FLOAT)
+            {
+                convertionId = hexToFloat;
+            }
+            else if (_resultBox->currentData() == DOUBLE)
+            {
+                convertionId = hexToDouble;
+            }
+            else
+                convertionId = Unknown;
+        }
+    }
+    // Обратный тип преобразований
+    else
+    {
+        if(_resultBox->currentData() == HEX)
+        {
+            // Прямое направление преобзования
+            if(_sourceBox->currentData() == ASCII)
+            {
+                convertionId = AsciiToHex;
+            }
+            else if (_sourceBox->currentData() == UINT8)
+            {
+                convertionId = Uint8ToHex;
+            }
+            else if (_sourceBox->currentData() == INT8)
+            {
+                convertionId = Int8ToHex;
+            }
+            else if (_sourceBox->currentData() == UINT16)
+            {
+                convertionId = Uint16ToHex;
+            }
+            else if (_sourceBox->currentData() == INT16)
+            {
+                convertionId = Int16ToHex;
+            }
+            else if (_sourceBox->currentData() == UINT32)
+            {
+                convertionId = Uint32ToHex;
+            }
+            else if (_sourceBox->currentData() == INT32)
+            {
+                convertionId = Int32ToHex;
+            }
+            else if (_sourceBox->currentData() == UINT64)
+            {
+                convertionId = Uint64ToHex;
+            }
+            else if (_sourceBox->currentData() == INT64)
+            {
+                convertionId = Int64ToHex;
+            }
+            else if (_sourceBox->currentData() == FLOAT)
+            {
+                convertionId = FloatToHex;
+            }
+            else if (_sourceBox->currentData() == DOUBLE)
+            {
+                convertionId = DoubleToHex;
+            }
+            else
+                convertionId = Unknown;
+        }
+    }
+}
 
 void Converter::convert(void){
     QString sourceData(_source->toPlainText());
-
     QString resultData;
-
-    if(_resultBox->currentData() == ASCII)
-        resultData = convertHexToAscii(sourceData);
-    else if (_resultBox->currentData() == UINT8)
-    {
-        _source->setPlainText(expandToFullType(sourceData, UINT8));
-        resultData = convertHexToUint8(sourceData);
+    switch (convertionId) {
+        case hexToAscii:
+        {
+            resultData = convertHexToAscii(sourceData);
+            break;
+        }
+        case hexToUint8:
+        {
+            _source->setPlainText(expandToFullType(sourceData, UINT8));
+            resultData = convertHexToUint8(sourceData);
+            break;
+        }
+        case hexToInt8:
+        {
+            _source->setPlainText(expandToFullType(sourceData, INT8));
+            resultData = convertHexToInt8(sourceData);
+            break;
+        }
+        case hexToUint16:
+        {
+            _source->setPlainText(expandToFullType(sourceData, UINT16));
+            resultData = convertHexToUint16(sourceData);
+            break;
+        }
+        case hexToInt16:
+        {
+            _source->setPlainText(expandToFullType(sourceData, INT16));
+            resultData = convertHexToInt16(sourceData);
+            break;
+        }
+        case hexToUint32:
+        {
+            _source->setPlainText(expandToFullType(sourceData, UINT32));
+            resultData = convertHexToUint32(sourceData);
+            break;
+        }
+        case hexToInt32:
+        {
+            _source->setPlainText(expandToFullType(sourceData, INT32));
+            resultData = convertHexToInt32(sourceData);
+            break;
+        }
+        case hexToUint64:
+        {
+            _source->setPlainText(expandToFullType(sourceData, UINT64));
+            resultData = convertHexToUint64(sourceData);
+            break;
+        }
+        case hexToInt64:
+        {
+            _source->setPlainText(expandToFullType(sourceData, INT64));
+            resultData = convertHexToInt64(sourceData);
+            break;
+        }
+        case hexToFloat:
+        {
+            _source->setPlainText(expandToFullType(sourceData, FLOAT));
+            resultData = convertHexToFloat(sourceData);
+            break;
+        }
+        case hexToDouble:
+        {
+            _source->setPlainText(expandToFullType(sourceData, DOUBLE));
+            resultData = convertHexToDouble(sourceData);
+            break;
+        }
+        case AsciiToHex:
+        {
+            resultData = convertAsciiToHex(sourceData);
+            break;
+        }
+        case Uint8ToHex:
+        {
+            break;
+        }
+        case Int8ToHex:
+        {
+            break;
+        }
+        case Uint16ToHex:
+        {
+            break;
+        }
+        case Int16ToHex:
+        {
+            break;
+        }
+        case Uint32ToHex:
+        {
+            break;
+        }
+        case Int32ToHex:
+        {
+            break;
+        }
+        case Uint64ToHex:
+        {
+            break;
+        }
+        case Int64ToHex:
+        {
+            break;
+        }
+        case FloatToHex:
+        {
+            break;
+        }
+        case DoubleToHex:
+        {
+            break;
+        }
+        default:
+        {
+            resultData = "";
+            break;
+        }
     }
-    else if (_resultBox->currentData() == INT8)
-    {
-        _source->setPlainText(expandToFullType(sourceData, INT8));
-        resultData = convertHexToInt8(sourceData);
-    }
-    else if (_resultBox->currentData() == UINT16)
-    {
-        _source->setPlainText(expandToFullType(sourceData, UINT16));
-        resultData = convertHexToUint16(sourceData);
-    }
-    else if (_resultBox->currentData() == INT16)
-    {
-        _source->setPlainText(expandToFullType(sourceData, INT16));
-        resultData = convertHexToInt16(sourceData);
-    }
-    else if (_resultBox->currentData() == UINT32)
-    {
-        _source->setPlainText(expandToFullType(sourceData, UINT32));
-        resultData = convertHexToUint32(sourceData);
-    }
-    else if (_resultBox->currentData() == INT32)
-    {
-        _source->setPlainText(expandToFullType(sourceData, INT32));
-        resultData = convertHexToInt32(sourceData);
-    }
-    else if (_resultBox->currentData() == UINT64)
-    {
-        _source->setPlainText(expandToFullType(sourceData, UINT64));
-        resultData = convertHexToUint64(sourceData);
-    }
-    else if (_resultBox->currentData() == INT64)
-    {
-        _source->setPlainText(expandToFullType(sourceData, INT64));
-        resultData = convertHexToInt64(sourceData);
-    }
-    else if (_resultBox->currentData() == FLOAT)
-    {
-        _source->setPlainText(expandToFullType(sourceData, FLOAT));
-        resultData = convertHexToFloat(sourceData);
-    }
-    else if (_resultBox->currentData() == DOUBLE)
-    {
-        _source->setPlainText(expandToFullType(sourceData, DOUBLE));
-        resultData = convertHexToDouble(sourceData);
-    }
-    else
-        resultData = "";
 
     // Результат в правое окно
     _result->setPlainText(resultData.toLatin1());
 }
-void Converter::swap(){
 
+void Converter::swap(){
+    if(direction == DIRECT)
+    {
+        direction = INDIRECT;
+        fillComboBoxs(_resultBox, _sourceBox);
+    }
+    else
+    {
+        direction = DIRECT;
+        fillComboBoxs(_sourceBox, _resultBox);
+    }
+    updateConversionType();
+    QString temp = _source->toPlainText();
+    _source->setPlainText(_result->toPlainText());
+    _result->setPlainText(temp);
 }
 
 void Converter::clear(){
@@ -217,52 +415,143 @@ void Converter::clear(){
 }
 
 void Converter::resultTypeChanges (void){
-    if(_resultBox->currentData() == HEX)
-    {
+    updateConversionType();
+    switch (convertionId) {
+        case hexToAscii:
+        {
+            validator->setRegularExpression(*hexArray);
+            break;
+        }
+        case hexToUint8:
+        {
+            QString temp = _source->toPlainText();
+            temp.chop(temp.count()-2);
+            _source->setPlainText(temp);
+            validator->setRegularExpression(*hex1Byte);
+            break;
+        }
+        case hexToInt8:
+        {
+            QString temp = _source->toPlainText();
+            temp.chop(temp.count()-2);
+            _source->setPlainText(temp);
+            validator->setRegularExpression(*hex1Byte);
+            break;
+        }
+        case hexToUint16:
+        {
+            QString temp = _source->toPlainText();
+            temp.chop(temp.count()-5);
+            _source->setPlainText(temp);
+            validator->setRegularExpression(*hex2Byte);
+            break;
+        }
+        case hexToInt16:
+        {
+            QString temp = _source->toPlainText();
+            temp.chop(temp.count()-5);
+            _source->setPlainText(temp);
+            validator->setRegularExpression(*hex2Byte);
+            break;
+        }
+        case hexToUint32:
+        {
+            QString temp = _source->toPlainText();
+            temp.chop(temp.count()-11);
+            _source->setPlainText(temp);
+            validator->setRegularExpression(*hex4Byte);
+            break;
+        }
+        case hexToInt32:
+        {
+            QString temp = _source->toPlainText();
+            temp.chop(temp.count()-11);
+            _source->setPlainText(temp);
+            validator->setRegularExpression(*hex4Byte);
+            break;
+        }
+        case hexToUint64:
+        {
+            QString temp = _source->toPlainText();
+            temp.chop(temp.count()-23);
+            _source->setPlainText(temp);
+            validator->setRegularExpression(*hex8Byte);
+            break;
+        }
+        case hexToInt64:
+        {
+            QString temp = _source->toPlainText();
+            temp.chop(temp.count()-23);
+            _source->setPlainText(temp);
+            validator->setRegularExpression(*hex8Byte);
+            break;
+        }
+        case hexToFloat:
+        {
+            QString temp = _source->toPlainText();
+            temp.chop(temp.count()-11);
+            _source->setPlainText(temp);
+            validator->setRegularExpression(*hex4Byte);
+            break;
+        }
+        case hexToDouble:
+        {
+            QString temp = _source->toPlainText();
+            temp.chop(temp.count()-23);
+            _source->setPlainText(temp);
+            validator->setRegularExpression(*hex8Byte);
+            break;
+        }
+        case AsciiToHex:
+        {
 
+            break;
+        }
+        case Uint8ToHex:
+        {
+            break;
+        }
+        case Int8ToHex:
+        {
+            break;
+        }
+        case Uint16ToHex:
+        {
+            break;
+        }
+        case Int16ToHex:
+        {
+            break;
+        }
+        case Uint32ToHex:
+        {
+            break;
+        }
+        case Int32ToHex:
+        {
+            break;
+        }
+        case Uint64ToHex:
+        {
+            break;
+        }
+        case Int64ToHex:
+        {
+            break;
+        }
+        case FloatToHex:
+        {
+            break;
+        }
+        case DoubleToHex:
+        {
+            break;
+        }
+        default:
+        {
+            break;
+        }
     }
-    else if (_resultBox->currentData() == ASCII)
-    {
-        validator->setRegularExpression(*hexArray);
-    }
-    else if (_resultBox->currentData() == UINT8 ||
-             _resultBox->currentData() == INT8)
-    {
-        QString temp = _source->toPlainText();
-        temp.chop(temp.count()-2);
-        _source->setPlainText(temp);
-        validator->setRegularExpression(*hex1Byte);
-    }
-    else if (_resultBox->currentData() == UINT16 ||
-             _resultBox->currentData() == INT16)
-    {
-        QString temp = _source->toPlainText();
-        temp.chop(temp.count()-5);
-        _source->setPlainText(temp);
-        validator->setRegularExpression(*hex2Byte);
-    }
-    else if (_resultBox->currentData() == UINT32 ||
-             _resultBox->currentData() == INT32 ||
-             _resultBox->currentData() == FLOAT){
-        QString temp = _source->toPlainText();
-        temp.chop(temp.count()-11);
-        _source->setPlainText(temp);
-        validator->setRegularExpression(*hex4Byte);
-    }
-    else if (_resultBox->currentData() == UINT64 ||
-             _resultBox->currentData() == INT64 ||
-             _resultBox->currentData() == DOUBLE)
-    {
-        QString temp = _source->toPlainText();
-        temp.chop(temp.count()-23);
-        _source->setPlainText(temp);
-        validator->setRegularExpression(*hex8Byte);
-    }
-    else
-    {
-
-    }
-
 }
 
 void Converter::validateSource(void){
@@ -286,7 +575,7 @@ void Converter::validateSource(void){
         cursorPosition = position;
     }
     // Выполним группировку побайтово
-    setDelimitersInHexString(_source);
+    //setDelimitersInHexString(_source);
 }
 
 
@@ -323,7 +612,7 @@ void Converter::setDelimitersInHexString(QPlainTextEdit *textEdit){
     textEdit->setTextCursor(cursor);
 }
 
-QString Converter::expandToFullType(QString &source, ConvertTypes type)
+QString Converter::expandToFullType(QString &source, TypeName type)
 {
     QString fullType;
     if(type == UINT8 || type == INT8)
