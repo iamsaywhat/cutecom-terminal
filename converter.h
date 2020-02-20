@@ -23,10 +23,10 @@ public:
                        QComboBox      *sourceBox,
                        QComboBox      *resultBox);
     ~Converter();
+
+
     static void setDelimitersInHexString(QPlainTextEdit *textEdit);
     static void setDelimitersInHexString(QString &currentText);
-
-
 
     static QByteArray parseStringForHex(QString &string);
 
@@ -54,7 +54,6 @@ public:
     static QString convertFloatToHex(QString source);
     static QString convertDoubleToHex(QString source);
 
-
     static void swapEndian(uint8_t &value);
     static void swapEndian(int8_t &value);
     static void swapEndian(uint16_t &value);
@@ -75,15 +74,15 @@ private:
     QComboBox       *_sourceBox;
     QComboBox       *_resultBox;
 
-    QRegularExpression *hexArray   = new QRegularExpression ("[0-9A-Fa-f ]+");
-    QRegularExpression *hex8Byte   = new QRegularExpression ("[0-9A-Fa-f ]{23}");
-    QRegularExpression *hex4Byte   = new QRegularExpression ("[0-9A-Fa-f ]{11}");
-    QRegularExpression *hex2Byte   = new QRegularExpression ("[0-9A-Fa-f ]{5}");
-    QRegularExpression *hex1Byte   = new QRegularExpression ("[0-9A-Fa-f ]{2}");
-    QRegularExpression *asciiSyms  = new QRegularExpression ("[\\x00-\\xFF]+"); // Обычный до 7F, расширенная IBM cp866 до 77
-    QRegularExpression *doubleSyms = new QRegularExpression ("^-?(?:0|[1-9][0-9]*)\\.?[0-9]+$");
-    QRegularExpression *uint8RegEx = new QRegularExpression ("[0-9]+");
-    QRegularExpression *int8RegEx  = new QRegularExpression ("^-?[0-9]+$");
+    QRegularExpression *hexArrayRegEx        = new QRegularExpression ("[0-9A-Fa-f ]+");
+    QRegularExpression *hex8ByteRegEx        = new QRegularExpression ("[0-9A-Fa-f ]{23}");
+    QRegularExpression *hex4ByteRegEx        = new QRegularExpression ("[0-9A-Fa-f ]{11}");
+    QRegularExpression *hex2ByteRegEx        = new QRegularExpression ("[0-9A-Fa-f ]{5}");
+    QRegularExpression *hex1ByteRegEx        = new QRegularExpression ("[0-9A-Fa-f ]{2}");
+    QRegularExpression *asciiRegEx           = new QRegularExpression ("[\\x00-\\xFF]+"); // Обычный до 7F, расширенная IBM cp866 до 77
+    QRegularExpression *floatingPointRegExp  = new QRegularExpression ("^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?(?:e[+-]?[1-9][0-9]+)?$");
+    QRegularExpression *unsignedIntegerRegEx = new QRegularExpression ("^[1-9][0-9]+$");
+    QRegularExpression *signedIntegerRegEx   = new QRegularExpression ("^-?[1-9][0-9]+$");
 
     QRegularExpressionValidator *validator = new QRegularExpressionValidator;
 
@@ -139,7 +138,7 @@ private:
     ConversionDirect direction;
     ConversionType convertionId;
 
-    QString expandToFullType(QString &source, TypeName type);
+    static QString expandToFullType(QString &source, TypeName type);
     void fillComboBoxs (QComboBox* left, QComboBox* right);
     void updateConversionType(void);
     void validateHexInput(void);
