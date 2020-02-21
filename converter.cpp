@@ -1,5 +1,5 @@
 #include "converter.h"
-#include <QtEndian>
+#include <QTextCodec>
 
 #define DEBUG
 
@@ -23,75 +23,31 @@ Converter::Converter(QObject        *parent,
     _sourceBox = sourceBox;
     _resultBox = resultBox;
 
-    result->setReadOnly(true);
-
-    fillComboBoxs(sourceBox, resultBox);
-
-    convertButton->setText("Convert");
+    result->setReadOnly(true);            // Запрещаем редактировать область результата
+    convertButton->setText("Convert");    // Именуем кнопки
     swapButton->setText("Swap");
     clearButton->setText("Clear");
 
-    connect(resultBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &Converter::resultTypeChanges);
-    connect(sourceBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &Converter::resultTypeChanges);
-    connect(source, &QPlainTextEdit::textChanged, this,  &Converter::validateSource);
-    connect(convertButton, &QPushButton::clicked, this, &Converter::convert);
-    connect(swapButton, &QPushButton::clicked, this, &Converter::swap);
-    connect(clearButton, &QPushButton::clicked, this, &Converter::clear);
+    direction = DIRECT;                   // Исходное напрвление преобразования - прямое
+    fillComboBoxs(sourceBox, resultBox);  // Заполняем combobox'ы
+    updateConversionType();               // Запускаем обновление id текущего преобразования
+    resultTypeChanges();                  // Здесь установится нужный валидатор
 
+    connect(resultBox,     QOverload<int>::of(&QComboBox::currentIndexChanged), this, &Converter::resultTypeChanges);
+    connect(sourceBox,     QOverload<int>::of(&QComboBox::currentIndexChanged), this, &Converter::resultTypeChanges);
+    connect(source,        &QPlainTextEdit::textChanged,                        this, &Converter::validateSource);
+    connect(convertButton, &QPushButton::clicked,                               this, &Converter::convert);
+    connect(swapButton,    &QPushButton::clicked,                               this, &Converter::swap);
+    connect(clearButton,   &QPushButton::clicked,                               this, &Converter::clear);
 
-    direction = DIRECT;
-    updateConversionType();
-    validator->setRegularExpression(*hexArrayRegEx);
-
-//    validator->setRegularExpression(*floatingPointRegExp);
-//    validator->setRegularExpression(*asciiSyms);
-
-
-
-//    qDebug()<< "double" << hex<< doubleValue;
-//    qDebug()<< "float" << hex<< floatValue;
-//    qDebug()<< "uint64" << uint64Value;
-//    qDebug()<< "int64" << int64Value;
-//    qDebug()<< "uint32" << hex<< uint32Value;
-//    qDebug()<< "int32" << hex<< int32Value;
-//    qDebug()<< "uint16" << hex<< uint16Value;
-//    qDebug()<< "int16" << hex<< int16Value;
-//    qDebug()<< "uint8" << hex<< uint8Value;
-//    qDebug()<< "int8" << hex << int8Value;
-    QString str("Hello world!");
-    qDebug() << "like string" << str;
-    qDebug() << "like byteArray" << str.toLatin1();
-    QByteArray array = str.toLatin1();
-    qDebug() << "converted" << convertAsciiToHex(array);
-
-    qDebug() << convertUint8ToHex ("255");
-    qDebug() << convertUint8ToHex ("-50");
-    qDebug() << convertInt8ToHex ("255");
-    qDebug() << convertInt8ToHex ("-50");
-
-    qDebug() << convertUint16ToHex("65535");
-    qDebug() << convertUint16ToHex("-1");
-    qDebug() << convertInt16ToHex("-32767");
-    qDebug() << convertInt16ToHex("32767");
-
-    qDebug() << convertUint32ToHex("4294967295");
-    qDebug() << convertUint32ToHex("-1");
-    qDebug() << convertInt32ToHex("-2147483647");
-    qDebug() << convertInt32ToHex("2147483647");
-
-    qDebug() << convertUint64ToHex("18446744073709551615");
-    qDebug() << convertUint64ToHex("-1");
-    qDebug() << convertInt64ToHex("-9223372036854775808");
-    qDebug() << convertInt64ToHex("9223372036854775807");
-
-    qDebug() << convertFloatToHex("3.40282e038");
-    qDebug() << convertFloatToHex("-1");
-    qDebug() << convertDoubleToHex("0.25654e38");
-    qDebug() << convertDoubleToHex("0.58448e-38");
-    qDebug() << convertDoubleToHex("0.58448*10^38");
-
-    qDebug() << convertInt64ToHex("76979769799887789");
-
+    QString fa("я русский");
+    _result->setPlainText(fa);
+    QByteArray fb("я русский");
+    qDebug() << fb;
+    QByteArray ar;
+    for(int i = 0; i <0x100; i++)
+        ar.append(i);
+    qDebug() << ar.toHex();
 }
 
 Converter::~Converter(void) {
@@ -130,106 +86,59 @@ void Converter::updateConversionType(){
     // Прямое направление преобзования
     if(direction == DIRECT)
     {
-        if(_sourceBox->currentData() == HEX)
-        {
+        if(_sourceBox->currentData() == HEX){
             if(_resultBox->currentData() == ASCII)
-            {
-                convertionId = hexToAscii;
-            }
+                convertionId = HexToAscii;
             else if (_resultBox->currentData() == UINT8)
-            {
-                convertionId = hexToUint8;
-            }
+                convertionId = HexToUint8;
             else if (_resultBox->currentData() == INT8)
-            {
-                convertionId = hexToInt8;
-            }
+                convertionId = HexToInt8;
             else if (_resultBox->currentData() == UINT16)
-            {
-                convertionId = hexToUint16;
-            }
+                convertionId = HexToUint16;
             else if (_resultBox->currentData() == INT16)
-            {
-                convertionId = hexToInt16;
-            }
+                convertionId = HexToInt16;
             else if (_resultBox->currentData() == UINT32)
-            {
-                convertionId = hexToUint32;
-            }
+                convertionId = HexToUint32;
             else if (_resultBox->currentData() == INT32)
-            {
-                convertionId = hexToInt32;
-            }
+                convertionId = HexToInt32;
             else if (_resultBox->currentData() == UINT64)
-            {
-                convertionId = hexToUint64;
-            }
+                convertionId = HexToUint64;
             else if (_resultBox->currentData() == INT64)
-            {
-                convertionId = hexToInt64;
-            }
+                convertionId = HexToInt64;
             else if (_resultBox->currentData() == FLOAT)
-            {
-                convertionId = hexToFloat;
-            }
+                convertionId = HexToFloat;
             else if (_resultBox->currentData() == DOUBLE)
-            {
-                convertionId = hexToDouble;
-            }
+                convertionId = HexToDouble;
             else
                 convertionId = Unknown;
         }
     }
     // Обратный тип преобразований
-    else
-    {
-        if(_resultBox->currentData() == HEX)
-        {
+    else{
+        if(_resultBox->currentData() == HEX){
             // Прямое направление преобзования
             if(_sourceBox->currentData() == ASCII)
-            {
                 convertionId = AsciiToHex;
-            }
             else if (_sourceBox->currentData() == UINT8)
-            {
                 convertionId = Uint8ToHex;
-            }
             else if (_sourceBox->currentData() == INT8)
-            {
                 convertionId = Int8ToHex;
-            }
             else if (_sourceBox->currentData() == UINT16)
-            {
                 convertionId = Uint16ToHex;
-            }
             else if (_sourceBox->currentData() == INT16)
-            {
                 convertionId = Int16ToHex;
-            }
             else if (_sourceBox->currentData() == UINT32)
-            {
                 convertionId = Uint32ToHex;
-            }
             else if (_sourceBox->currentData() == INT32)
-            {
                 convertionId = Int32ToHex;
-            }
             else if (_sourceBox->currentData() == UINT64)
-            {
                 convertionId = Uint64ToHex;
-            }
             else if (_sourceBox->currentData() == INT64)
-            {
                 convertionId = Int64ToHex;
-            }
             else if (_sourceBox->currentData() == FLOAT)
-            {
                 convertionId = FloatToHex;
-            }
             else if (_sourceBox->currentData() == DOUBLE)
-            {
                 convertionId = DoubleToHex;
-            }
             else
                 convertionId = Unknown;
         }
@@ -240,135 +149,89 @@ void Converter::convert(void){
     QString sourceData(_source->toPlainText());
     QString resultData;
     switch (convertionId) {
-        case hexToAscii:
-        {
+        case HexToAscii:
             resultData = convertHexToAscii(sourceData);
             break;
-        }
-        case hexToUint8:
-        {
+        case HexToUint8:
             _source->setPlainText(expandToFullType(sourceData, UINT8));
             resultData = convertHexToUint8(sourceData);
             break;
-        }
-        case hexToInt8:
-        {
+        case HexToInt8:
             _source->setPlainText(expandToFullType(sourceData, INT8));
             resultData = convertHexToInt8(sourceData);
             break;
-        }
-        case hexToUint16:
-        {
+        case HexToUint16:
             _source->setPlainText(expandToFullType(sourceData, UINT16));
             resultData = convertHexToUint16(sourceData);
             break;
-        }
-        case hexToInt16:
-        {
+        case HexToInt16:
             _source->setPlainText(expandToFullType(sourceData, INT16));
             resultData = convertHexToInt16(sourceData);
             break;
-        }
-        case hexToUint32:
-        {
+        case HexToUint32:
             _source->setPlainText(expandToFullType(sourceData, UINT32));
             resultData = convertHexToUint32(sourceData);
             break;
-        }
-        case hexToInt32:
-        {
+        case HexToInt32:
             _source->setPlainText(expandToFullType(sourceData, INT32));
             resultData = convertHexToInt32(sourceData);
             break;
-        }
-        case hexToUint64:
-        {
+        case HexToUint64:
             _source->setPlainText(expandToFullType(sourceData, UINT64));
             resultData = convertHexToUint64(sourceData);
             break;
-        }
-        case hexToInt64:
-        {
+        case HexToInt64:
             _source->setPlainText(expandToFullType(sourceData, INT64));
             resultData = convertHexToInt64(sourceData);
             break;
-        }
-        case hexToFloat:
-        {
+        case HexToFloat:
             _source->setPlainText(expandToFullType(sourceData, FLOAT));
             resultData = convertHexToFloat(sourceData);
             break;
-        }
-        case hexToDouble:
-        {
+        case HexToDouble:
             _source->setPlainText(expandToFullType(sourceData, DOUBLE));
             resultData = convertHexToDouble(sourceData);
             break;
-        }
         case AsciiToHex:
-        {
             resultData = convertAsciiToHex(sourceData);
             break;
-        }
         case Uint8ToHex:
-        {
             resultData = convertUint8ToHex(sourceData);
             break;
-        }
         case Int8ToHex:
-        {
             resultData = convertInt8ToHex(sourceData);
             break;
-        }
         case Uint16ToHex:
-        {
             resultData = convertUint16ToHex(sourceData);
             break;
-        }
         case Int16ToHex:
-        {
             resultData = convertInt16ToHex(sourceData);
             break;
-        }
         case Uint32ToHex:
-        {
             resultData = convertUint32ToHex(sourceData);
             break;
-        }
         case Int32ToHex:
-        {
             resultData = convertInt32ToHex(sourceData);
             break;
-        }
         case Uint64ToHex:
-        {
             resultData = convertUint64ToHex(sourceData);
             break;
-        }
         case Int64ToHex:
-        {
             resultData = convertInt64ToHex(sourceData);
             break;
-        }
         case FloatToHex:
-        {
             resultData = convertFloatToHex(sourceData);
             break;
-        }
         case DoubleToHex:
-        {
             resultData = convertDoubleToHex(sourceData);
             break;
-        }
         default:
-        {
             resultData = "";
             break;
-        }
     }
 
     // Результат в правое окно
-    _result->setPlainText(resultData.toLatin1());
+    _result->setPlainText(resultData);
 }
 
 void Converter::swap(){
@@ -401,12 +264,10 @@ void Converter::clear(){
 void Converter::resultTypeChanges (void){
     updateConversionType();
     switch (convertionId) {
-        case hexToAscii:
-        {
+        case HexToAscii:
             validator->setRegularExpression(*hexArrayRegEx);
             break;
-        }
-        case hexToUint8:
+        case HexToUint8:
         {
             QString temp = _source->toPlainText();
             temp.chop(temp.count()-2);
@@ -414,7 +275,7 @@ void Converter::resultTypeChanges (void){
             validator->setRegularExpression(*hex1ByteRegEx);
             break;
         }
-        case hexToInt8:
+        case HexToInt8:
         {
             QString temp = _source->toPlainText();
             temp.chop(temp.count()-2);
@@ -422,7 +283,7 @@ void Converter::resultTypeChanges (void){
             validator->setRegularExpression(*hex1ByteRegEx);
             break;
         }
-        case hexToUint16:
+        case HexToUint16:
         {
             QString temp = _source->toPlainText();
             temp.chop(temp.count()-5);
@@ -430,7 +291,7 @@ void Converter::resultTypeChanges (void){
             validator->setRegularExpression(*hex2ByteRegEx);
             break;
         }
-        case hexToInt16:
+        case HexToInt16:
         {
             QString temp = _source->toPlainText();
             temp.chop(temp.count()-5);
@@ -438,7 +299,7 @@ void Converter::resultTypeChanges (void){
             validator->setRegularExpression(*hex2ByteRegEx);
             break;
         }
-        case hexToUint32:
+        case HexToUint32:
         {
             QString temp = _source->toPlainText();
             temp.chop(temp.count()-11);
@@ -446,7 +307,7 @@ void Converter::resultTypeChanges (void){
             validator->setRegularExpression(*hex4ByteRegEx);
             break;
         }
-        case hexToInt32:
+        case HexToInt32:
         {
             QString temp = _source->toPlainText();
             temp.chop(temp.count()-11);
@@ -454,7 +315,7 @@ void Converter::resultTypeChanges (void){
             validator->setRegularExpression(*hex4ByteRegEx);
             break;
         }
-        case hexToUint64:
+        case HexToUint64:
         {
             QString temp = _source->toPlainText();
             temp.chop(temp.count()-23);
@@ -462,7 +323,7 @@ void Converter::resultTypeChanges (void){
             validator->setRegularExpression(*hex8ByteRegEx);
             break;
         }
-        case hexToInt64:
+        case HexToInt64:
         {
             QString temp = _source->toPlainText();
             temp.chop(temp.count()-23);
@@ -470,7 +331,7 @@ void Converter::resultTypeChanges (void){
             validator->setRegularExpression(*hex8ByteRegEx);
             break;
         }
-        case hexToFloat:
+        case HexToFloat:
         {
             QString temp = _source->toPlainText();
             temp.chop(temp.count()-11);
@@ -478,7 +339,7 @@ void Converter::resultTypeChanges (void){
             validator->setRegularExpression(*hex4ByteRegEx);
             break;
         }
-        case hexToDouble:
+        case HexToDouble:
         {
             QString temp = _source->toPlainText();
             temp.chop(temp.count()-23);
@@ -487,64 +348,40 @@ void Converter::resultTypeChanges (void){
             break;
         }
         case AsciiToHex:
-        {
             validator->setRegularExpression(*asciiRegEx);
             break;
-        }
         case Uint8ToHex:
-        {
             validator->setRegularExpression(*unsignedIntegerRegEx);
             break;
-        }
         case Int8ToHex:
-        {
             validator->setRegularExpression(*signedIntegerRegEx);
             break;
-        }
         case Uint16ToHex:
-        {
             validator->setRegularExpression(*unsignedIntegerRegEx);
             break;
-        }
         case Int16ToHex:
-        {
             validator->setRegularExpression(*signedIntegerRegEx);
             break;
-        }
         case Uint32ToHex:
-        {
             validator->setRegularExpression(*unsignedIntegerRegEx);
             break;
-        }
         case Int32ToHex:
-        {
             validator->setRegularExpression(*signedIntegerRegEx);
             break;
-        }
         case Uint64ToHex:
-        {
             validator->setRegularExpression(*unsignedIntegerRegEx);
             break;
-        }
         case Int64ToHex:
-        {
             validator->setRegularExpression(*signedIntegerRegEx);
             break;
-        }
         case FloatToHex:
-        {
             validator->setRegularExpression(*floatingPointRegExp);
             break;
-        }
         case DoubleToHex:
-        {
             validator->setRegularExpression(*floatingPointRegExp);
             break;
-        }
         default:
-        {
             break;
-        }
     }
 }
 
@@ -552,7 +389,7 @@ void Converter::validateSource(void){
     if(_sourceBox->currentData() == HEX)
         validateHexInput();
     else if(_sourceBox->currentData() == ASCII)
-        validateHexInput();
+        validateAsciiInput();
     else if((_sourceBox->currentData() == UINT8)  |
             (_sourceBox->currentData() == INT8)   |
             (_sourceBox->currentData() == UINT16) |
@@ -570,14 +407,13 @@ void Converter::validateSource(void){
 void Converter::validateHexInput(void){
     static QString previousText("");
     static int cursorPosition;
-
     QString currentText(_source->toPlainText());
     QTextCursor cursor = _source->textCursor();
     int position = cursor.position();
 
     if(currentText == previousText)
         return;
-    if (validator->validate(currentText, position) == QValidator::Invalid) {
+    if (validator->validate(currentText, position) == QValidator::Invalid){
         _source->setPlainText(previousText);
         cursor.setPosition(cursorPosition);
         _source->setTextCursor(cursor);
@@ -588,26 +424,70 @@ void Converter::validateHexInput(void){
         cursorPosition = position;
     }
     // Выполним группировку побайтово
-    setDelimitersInHexString(_source);
+    setDelimitersInHexString(_source, 2, ' ');
 }
 
-void Converter::validateFloatingPointInput(){
+void Converter::validateAsciiInput(void){
     static QString previousText("");
     static int cursorPosition;
-
     QString currentText(_source->toPlainText());
+    /* Регулярное выражение работает с кириллицей в юникоде
+     * поэтому сконвертируем строку в юникод используя QTextCodec */
+    QTextCodec *codec  = QTextCodec::codecForLocale();
+    currentText = codec->toUnicode(currentText.toLocal8Bit());
+
     QTextCursor cursor = _source->textCursor();
     int position = cursor.position();
 
-    if(_source->toPlainText() == previousText)
+    if(currentText == previousText)
         return;
-    if (validator->validate(currentText, position) == QValidator::Invalid) {
+    if (validator->validate(currentText, position) == QValidator::Invalid){
         _source->setPlainText(previousText);
         cursor.setPosition(cursorPosition);
         _source->setTextCursor(cursor);
         qDebug() << "Validator failed";
     }
     else {
+        previousText = _source->toPlainText();
+        cursorPosition = position;
+    }
+}
+
+void Converter::validateFloatingPointInput(){
+    bool validatorStatus = true;
+    bool translateStatus = true;
+    static QString previousText("");
+    static int cursorPosition;
+    QString currentText(_source->toPlainText());
+    QTextCursor cursor = _source->textCursor();
+    int position = cursor.position();
+
+    if(currentText == previousText)
+        return;
+    if (validator->validate(currentText, position) == QValidator::Invalid)
+        validatorStatus = false;
+    if (_sourceBox->currentData() == FLOAT)
+        currentText.toFloat(&translateStatus);
+    else if (_sourceBox->currentData() == DOUBLE)
+        currentText.toDouble(&translateStatus);
+
+    /* translationStatus будет ложен, в том числе, если число не удалось привести
+     * к формату, из-за выхода из диапазона допустимых значений, поэтому пределы форматов
+     * отдельно не контролируем, но нужно учесть случаи, когда пользователь хочет ввести число
+     * в научной нотации - вводит 'e' и при проверке QString::toDouble мы получим ложный
+     * translateStatus. То же самое касается пустой строки, '-' в начале числа и '-'/'+' после 'e'. Поэтому эти
+     * исключительные случаи выносим в условие оценки валидности. */
+    if(!validatorStatus ||
+      (!translateStatus && currentText!=""
+                        && currentText[currentText.count()-1]!='e'
+                        && currentText[currentText.count()-1]!='-'
+                        && currentText[currentText.count()-1]!='+')){
+        _source->setPlainText(previousText);
+        cursor.setPosition(cursorPosition);
+        _source->setTextCursor(cursor);
+        qDebug() << "Validator failed";
+    }
+    else{
         previousText = _source->toPlainText();
         cursorPosition = position;
     }
@@ -628,26 +508,22 @@ void Converter::validateIntegerInput()
         return;
     if (validator->validate(currentText, position) == QValidator::Invalid)
         validatorStatus = false;
-    if(_sourceBox->currentData() == UINT8)
-    {
+    if(_sourceBox->currentData() == UINT8){
         uint32_t value = currentText.toUInt(&translateStatus, 10);
         if(value > 0xFF)
             rangeStatus = false;
     }
-    else if(_sourceBox->currentData() == INT8)
-    {
+    else if(_sourceBox->currentData() == INT8){
         int32_t value = currentText.toInt(&translateStatus, 10);
         if(value < -128 || value >= 128)
             rangeStatus = false;
     }
-    else if(_sourceBox->currentData() == UINT16)
-    {
+    else if(_sourceBox->currentData() == UINT16){
         uint32_t value = currentText.toUInt(&translateStatus, 10);
         if(value > 0xFFFF)
             rangeStatus = false;
     }
-    else if(_sourceBox->currentData() == INT16)
-    {
+    else if(_sourceBox->currentData() == INT16){
         int32_t value = currentText.toInt(&translateStatus, 10);
         if(value < -32768 || value >= 32768)
             rangeStatus = false;
@@ -661,26 +537,25 @@ void Converter::validateIntegerInput()
     else if(_sourceBox->currentData() == INT64)
         currentText.toLongLong(&translateStatus, 10);
 
-
-    if(!validatorStatus || !rangeStatus ||
-      (!translateStatus && currentText!="-" && currentText!=""))
-    // translateStatus ложен, если строка пуста или например вводится только знак минус,
-    // который пропускает валидатор, чтобы отличать такие ситуации translateStatus смешиваем
-    // по И с проверкой строки на "пусто" и "минус"
-    {
+    /* translateStatus ложен, если строка пуста или например вводится только знак минус,
+     * который пропускает валидатор, чтобы отличать такие ситуации translateStatus смешиваем
+     * по И с проверкой строки на "пусто" и "минус" */
+    if(!validatorStatus ||
+           !rangeStatus ||
+      (!translateStatus && currentText!="-"
+                        && currentText!="")){
         _source->setPlainText(previousText);
         cursor.setPosition(cursorPosition);
         _source->setTextCursor(cursor);
         qDebug() << "Validator failed";
     }
-    else
-    {
+    else{
         previousText = _source->toPlainText();
         cursorPosition = position;
     }
 }
 
-void Converter::setDelimitersInHexString(QPlainTextEdit *textEdit){
+void Converter::setDelimitersInHexString(QPlainTextEdit *textEdit, int groupSize, char delimiter){
     QString resultText;
     QString currentText(textEdit->toPlainText());
     int pairCounter = 0;
@@ -691,12 +566,12 @@ void Converter::setDelimitersInHexString(QPlainTextEdit *textEdit){
     // по два разделяя их пробелом в новой строке и
     // пропуская лишние пробелы.
     for(int count = 0; count < currentText.count(); count++){
-        if(currentText[count] != ' ') {
+        if(currentText[count] != delimiter) {
             resultText.append(currentText[count]);
             pairCounter++;
         }
-        if(pairCounter >= 2 && count < currentText.count()-1){
-            resultText.append(' ');
+        if(pairCounter >= groupSize && count < currentText.count()-1){
+            resultText.append(delimiter);
             pairCounter = 0;
         }
     }
@@ -713,19 +588,19 @@ void Converter::setDelimitersInHexString(QPlainTextEdit *textEdit){
     textEdit->setTextCursor(cursor);
 }
 
-void Converter::setDelimitersInHexString(QString &currentText){
+void Converter::setDelimitersInHexString(QString &currentText, int groupSize, char delimiter){
     QString resultText;
     int pairCounter = 0;
-    // Будем перебирать по байту и группировать символы
-    // по два разделяя их пробелом в новой строке и
-    // пропуская лишние пробелы.
+    /* Будем перебирать по байту и группировать символы
+     * по два разделяя их пробелом в новой строке и
+     * пропуская лишние пробелы. */
     for(int count = 0; count < currentText.count(); count++){
-        if(currentText[count] != ' ') {
+        if(currentText[count] != delimiter) {
             resultText.append(currentText[count]);
             pairCounter++;
         }
-        if(pairCounter >= 2 && count < currentText.count()-1){
-            resultText.append(' ');
+        if(pairCounter >= groupSize && count < currentText.count()-1){
+            resultText.append(delimiter);
             pairCounter = 0;
         }
     }
@@ -756,39 +631,21 @@ QString Converter::expandToFullType(QString &source, TypeName type)
 }
 
 
-QByteArray Converter::parseStringForHex(QString &string){
-    QString clearSource;
+QByteArray Converter::parseStringForHex(bool *status, QString &string, char delimiter){
     QByteArray result;
-    // Удалим все разделители
-    for(int i = 0; i < string.count(); i++)
-    {
-        if(string[i] != ' ')
-            clearSource.append(string[i]);
-    }
-    // И дополним нулем последний байт, если необходимо
-    if(clearSource.count()%2 != 0)
-        clearSource.insert(clearSource.count()-1, '0');
-
-    // Будем брать по два байта из очищенной строки и преобразовывать
-    for(int i = 0, j = 0; i < clearSource.count(); i+=2, j++)
-    {
-        QString temp(clearSource[i]);
-        temp.append(clearSource[i+1]);
-        result.insert(j, static_cast<char>(temp.toInt(nullptr, 16)));
-    }
+    QStringList clearSource = string.split(delimiter);
+    for (int i = 0; i < clearSource.count(); i++)
+        result.append(static_cast<char>(clearSource[i].toInt(status, 16)));
     return result;
-
-    // можно сделать через QString::split();
-    // QString::toUint
 }
 
 
 QString Converter::convertHexToAscii(QString &source){
-    return parseStringForHex(source);
+    return QString::fromLocal8Bit(parseStringForHex(nullptr, source, ' '));
 }
 
 QString Converter::convertHexToUint8(QString &source){
-    QByteArray result = parseStringForHex(source);
+    QByteArray result = parseStringForHex(nullptr, source, ' ');
     uint8_t value = *(reinterpret_cast<uint8_t *>(result.data()));
     swapEndian(value);
 
@@ -796,7 +653,7 @@ QString Converter::convertHexToUint8(QString &source){
 }
 
 QString Converter::convertHexToInt8 (QString &source){
-    QByteArray result = parseStringForHex(source);
+    QByteArray result = parseStringForHex(nullptr, source, ' ');
     int8_t value = *(reinterpret_cast<int8_t *>(result.data()));
     swapEndian(value);
 
@@ -804,7 +661,7 @@ QString Converter::convertHexToInt8 (QString &source){
 }
 
 QString Converter::convertHexToUint16 (QString &source){
-    QByteArray result = parseStringForHex(source);
+    QByteArray result = parseStringForHex(nullptr, source, ' ');
     uint16_t value = *(reinterpret_cast<uint16_t *>(result.data()));
     swapEndian(value);
 
@@ -812,7 +669,7 @@ QString Converter::convertHexToUint16 (QString &source){
 }
 
 QString Converter::convertHexToInt16 (QString &source){
-    QByteArray result = parseStringForHex(source);
+    QByteArray result = parseStringForHex(nullptr, source, ' ');
     int16_t value = *(reinterpret_cast<int16_t *>(result.data()));
     swapEndian(value);
 
@@ -820,7 +677,7 @@ QString Converter::convertHexToInt16 (QString &source){
 }
 
 QString Converter::convertHexToUint32 (QString &source){
-    QByteArray result = parseStringForHex(source);
+    QByteArray result = parseStringForHex(nullptr, source, ' ');
     uint32_t value = *(reinterpret_cast<uint32_t *>(result.data()));
     swapEndian(value);
 
@@ -828,7 +685,7 @@ QString Converter::convertHexToUint32 (QString &source){
 }
 
 QString Converter::convertHexToInt32 (QString &source){
-    QByteArray result = parseStringForHex(source);
+    QByteArray result = parseStringForHex(nullptr, source, ' ');
     int32_t value = *(reinterpret_cast<int32_t *>(result.data()));
     swapEndian(value);
 
@@ -836,7 +693,7 @@ QString Converter::convertHexToInt32 (QString &source){
 }
 
 QString Converter::convertHexToUint64 (QString &source){
-    QByteArray result = parseStringForHex(source);
+    QByteArray result = parseStringForHex(nullptr, source, ' ');
     uint64_t value = *(reinterpret_cast<uint64_t *>(result.data()));
     swapEndian(value);
 
@@ -844,7 +701,7 @@ QString Converter::convertHexToUint64 (QString &source){
 }
 
 QString Converter::convertHexToInt64 (QString &source){
-    QByteArray result = parseStringForHex(source);
+    QByteArray result = parseStringForHex(nullptr, source, ' ');
     int64_t value = *(reinterpret_cast<int64_t *>(result.data()));
     swapEndian(value);
 
@@ -852,181 +709,169 @@ QString Converter::convertHexToInt64 (QString &source){
 }
 
 QString Converter::convertHexToFloat (QString &source){
-    QByteArray result = parseStringForHex(source);
+    QByteArray result = parseStringForHex(nullptr, source, ' ');
     float value = *(reinterpret_cast<float *>(result.data()));
     swapEndian(value);
 
-    return QString::number(value);
+    return QString::number(static_cast<double>(value));
 }
 
 QString Converter::convertHexToDouble (QString &source){
-    QByteArray result = parseStringForHex(source);
+    QByteArray result = parseStringForHex(nullptr, source, ' ');
     double value = *(reinterpret_cast<double *>(result.data()));
     swapEndian(value);
 
     return QString::number(value);
 }
 
-QString Converter::convertAsciiToHex (QString source){
+QString Converter::convertAsciiToHex (QString &source){
     QString result = "";
-    for(int i = 0; i < source.count(); i++)
-    {
+    for(int i = 0; i < source.count(); i++){
         result+=QString::number(static_cast<unsigned char>(source.toLatin1()[i]),16).rightJustified(2, '0');
         if(i < source.count()-1)
             result.append(" ");
     }
-    result = result.toUpper();
-    return result;
+    return result.toUpper();
 }
 
-QString Converter::convertUint8ToHex (QString source){
+QString Converter::convertUint8ToHex (QString &source){
     bool status;
     uint32_t value = static_cast<uint32_t>(source.toUInt(&status, 10));
     if(status && value > 0xFF)
         status = false;
-    if(status)
-    {
+    if(status){
         QString result(QString::number(value, 16).rightJustified(2, '0'));
-        setDelimitersInHexString(result);
+        setDelimitersInHexString(result, 2, ' ');
         expandToFullType(result, UINT8);
-        return result;
+        return result.toUpper();
     }
     else
-        return "error";
+        return "ERROR";
 }
 
-QString Converter::convertInt8ToHex(QString source){
+QString Converter::convertInt8ToHex(QString &source){
     bool status;
     int32_t value = source.toInt(&status, 10);
     qDebug() << value << hex << value;
     if(status && (value < -128 || value >= 128))
         status = false;
-    if(status)
-    {
+    if(status){
         QString result(QString::number(static_cast<uint8_t>(value), 16).rightJustified(2, '0'));
-        setDelimitersInHexString(result);
+        setDelimitersInHexString(result, 2, ' ');
         expandToFullType(result, INT8);
-        return result;
+        return result.toUpper();
     }
     else
-        return "error";
+        return "ERROR";
 }
 
-QString Converter::convertUint16ToHex(QString source){
+QString Converter::convertUint16ToHex(QString &source){
     bool status;
     uint32_t value = static_cast<uint32_t>(source.toUInt(&status, 10));
     if(status && value > 0xFFFF)
         status = false;
-    if(status)
-    {
+    if(status){
         QString result(QString::number(value, 16).rightJustified(4, '0'));
-        setDelimitersInHexString(result);
+        setDelimitersInHexString(result, 2, ' ');
         expandToFullType(result, UINT16);
-        return result;
+        return result.toUpper();
     }
     else
-        return "error";
+        return "ERROR";
 }
-QString Converter::convertInt16ToHex(QString source){
+QString Converter::convertInt16ToHex(QString &source){
     bool status;
     int32_t value = source.toInt(&status, 10);
     if(status && (value < -32768 || value >= 32768))
         status = false;
-    if(status)
-    {
+    if(status){
         QString result(QString::number(static_cast<uint16_t>(value), 16).rightJustified(4, '0'));
-        setDelimitersInHexString(result);
+        setDelimitersInHexString(result, 2, ' ');
         expandToFullType(result, INT16);
-        return result;
+        return result.toUpper();
     }
     else
-        return "error";
+        return "ERROR";
 }
-QString Converter::convertUint32ToHex(QString source){
+QString Converter::convertUint32ToHex(QString &source){
     bool status;
     uint32_t value = static_cast<uint32_t>(source.toUInt(&status, 10));
-    if(status)
-    {
+    if(status){
         QString result(QString::number(value, 16).rightJustified(8, '0'));
-        setDelimitersInHexString(result);
+        setDelimitersInHexString(result, 2, ' ');
         expandToFullType(result, UINT32);
-        return result;
+        return result.toUpper();
     }
     else
-        return "error";
+        return "ERROR";
 }
-QString Converter::convertInt32ToHex(QString source){
+QString Converter::convertInt32ToHex(QString &source){
     bool status;
     uint32_t value = static_cast<uint32_t>(source.toInt(&status, 10));
-    if(status)
-    {
+    if(status){
         QString result(QString::number(value, 16).rightJustified(8, '0'));
-        setDelimitersInHexString(result);
+        setDelimitersInHexString(result, 2, ' ');
         expandToFullType(result, INT32);
-        return result;
+        return result.toUpper();
     }
     else
-        return "error";
+        return "ERROR";
 }
-QString Converter::convertUint64ToHex(QString source){
+QString Converter::convertUint64ToHex(QString &source){
     bool status;
     uint64_t value = static_cast<uint64_t>(source.toULongLong(&status, 10));
-    if(status)
-    {
+    if(status){
         QString result(QString::number(value, 16).rightJustified(16, '0'));
-        setDelimitersInHexString(result);
+        setDelimitersInHexString(result, 2, ' ');
         expandToFullType(result, UINT64);
-        return result;
+        return result.toUpper();
     }
     else
-        return "error";
+        return "ERROR";
 }
-QString Converter::convertInt64ToHex(QString source){
+QString Converter::convertInt64ToHex(QString &source){
     bool status;
     uint64_t value = static_cast<uint64_t>(source.toLongLong(&status, 10));
-    if(status)
-    {
+    if(status){
         QString result(QString::number(value, 16).rightJustified(16, '0'));
-        setDelimitersInHexString(result);
+        setDelimitersInHexString(result, 2, ' ');
         expandToFullType(result, INT64);
-        return result;
+        return result.toUpper();
     }
     else
-        return "error";
+        return "ERROR";
 }
-QString Converter::convertFloatToHex(QString source){
+QString Converter::convertFloatToHex(QString &source){
     union{
         float    floatValue;
         uint32_t integerValue;
     }convertionUnion;
     bool status;
     convertionUnion.floatValue = source.toFloat(&status);
-    if(status)
-    {
+    if(status){
         QString result(QString::number(convertionUnion.integerValue, 16));
-        setDelimitersInHexString(result);
+        setDelimitersInHexString(result, 2, ' ');
         expandToFullType(result, FLOAT);
-        return result;
+        return result.toUpper();
     }
     else
-        return "error";
+        return "ERROR";
 }
-QString Converter::convertDoubleToHex(QString source){
+QString Converter::convertDoubleToHex(QString &source){
     union{
         double   doubleValue;
         uint64_t integerValue;
     }convertionUnion;
     bool status;
     convertionUnion.doubleValue = source.toDouble(&status);
-    if(status)
-    {
+    if(status){
         QString result(QString::number(convertionUnion.integerValue, 16));
-        setDelimitersInHexString(result);
+        setDelimitersInHexString(result, 2, ' ');
         expandToFullType(result, DOUBLE);
-        return result;
+        return result.toUpper();
     }
     else
-        return "error";
+        return "ERROR";
 }
 
 void Converter::swapEndian(uint8_t &value){
