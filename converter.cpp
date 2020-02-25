@@ -7,6 +7,19 @@
     #include <QDebug>
 #endif
 
+QByteArray Converter::_currentCodec = "IBM866";
+
+bool Converter::setCurrentCodec(QByteArray codec){
+    bool status = QTextCodec::availableCodecs().contains(codec);
+    if(status)
+        _currentCodec = codec;
+    return status;
+}
+
+QByteArray Converter::currentCodec(void){
+    return _currentCodec;
+}
+
 Converter::Converter(QObject        *parent,
                      QPlainTextEdit *source,
                      QPlainTextEdit *result,
@@ -40,8 +53,7 @@ Converter::Converter(QObject        *parent,
     connect(swapButton,    &QPushButton::clicked,                               this, &Converter::swap);
     connect(clearButton,   &QPushButton::clicked,                               this, &Converter::clear);
 
-    qDebug() << QTextCodec::availableCodecs().indexOf("IBM866");
-
+    qDebug() << QTextCodec::availableCodecs();
 }
 
 Converter::~Converter(void) {
@@ -432,8 +444,12 @@ void Converter::validateAsciiInput(void){
     if(currentText == previousText)
         return;
 
-
-    currentText = convertFromUnicode(currentText, "IBM 866");
+    /* Так как валидатор разрешает только символы не более одного байта,
+     * а кириллица в юникоде двухбайтовая, нужно провести некоторое
+     * соответствие кодировок, а только потом проверить строку валидатором.
+     * Строго говоря currentText преобразования из юникода будет содержать
+     * кракозябру (QString - это всегда юникод), но зато c соответсвующим hex-кодом*/
+    currentText = convertFromUnicode(currentText);
 
     if (validator->validate(currentText, position) == QValidator::Invalid){
         _source->setPlainText(previousText);
@@ -635,7 +651,7 @@ QByteArray Converter::parseStringForHex(bool *status, QString &string, char deli
 
 QString Converter::convertHexToAscii(QString &source){
     QByteArray temp = parseStringForHex(nullptr, source, ' ');
-    return convertToUnicode(temp, "IBM 866");
+    return convertToUnicode(temp);
 }
 
 QString Converter::convertHexToUint8(QString &source){
@@ -721,7 +737,7 @@ QString Converter::convertHexToDouble (QString &source){
 QString Converter::convertAsciiToHex (QString &source){
     QString result = "";
 
-    source = convertFromUnicode(source, "IBM 866");
+    source = convertFromUnicode(source);
 
     for(int i = 0; i < source.count(); i++){
         result+=QString::number(static_cast<unsigned char>(source.toLatin1()[i]),16).rightJustified(2, '0');
@@ -942,11 +958,11 @@ void Converter::swapEndian(double &value){
     value = convertionUnion.doubleValue;
 }
 
-QString Converter::convertFromUnicode (QString &text, QString codec){
-    QTextCodec *textCodec = QTextCodec::codecForName(codec.toLatin1());
+QString Converter::convertFromUnicode (QString &text){
+    QTextCodec *textCodec = QTextCodec::codecForName(currentCodec());
     return QString::fromLatin1(textCodec->fromUnicode(text));
 }
-QString Converter::convertToUnicode (QByteArray &text, QString codec){
-    QTextCodec *textCodec = QTextCodec::codecForName(codec.toLatin1());
+QString Converter::convertToUnicode (QByteArray &text){
+    QTextCodec *textCodec = QTextCodec::codecForName(currentCodec());
     return  textCodec->toUnicode(text);
 }

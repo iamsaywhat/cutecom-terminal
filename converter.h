@@ -11,6 +11,7 @@
 class Converter : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QByteArray _currentCodec READ currentCodec WRITE setCurrentCodec NOTIFY currentCodecChanged)
 
 public:
     explicit Converter(QObject        *parent,
@@ -63,12 +64,16 @@ public:
     static void swapEndian(float &value);
     static void swapEndian(double &value);
     // Преобразования кодировок через юникод
-    static QString convertFromUnicode (QString &text, QString codec);
-    static QString convertToUnicode (QByteArray &text, QString codec);
+    static QString convertFromUnicode (QString &text);
+    static QString convertToUnicode (QByteArray &text);
+    static bool setCurrentCodec(QByteArray);
+    static QByteArray currentCodec(void);
 public slots:
     void convert();
     void swap();
     void clear();
+signals:
+    void currentCodecChanged(void);
 private:
     // Указатели на ключеные элементы gui
     QPlainTextEdit  *_source;
@@ -137,7 +142,8 @@ private:
         DIRECT,
         INDIRECT
     };
-
+    // Текущий текстовый кодек
+    static QByteArray _currentCodec;
     // Состояния конвертера
     ConversionDirect direction;     // Текущее направление преобразования
     ConversionType   convertionId;  // Текущий ID преобразования
