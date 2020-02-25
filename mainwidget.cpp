@@ -9,6 +9,7 @@
 #include <QScrollBar>
 #include <QString>
 
+
 #include "decorator.h"
 
 MainWidget::MainWidget(QWidget *parent)
@@ -191,7 +192,12 @@ void MainWidget::applyColorSchemeToTable(Decorator *scheme){
 }
 
 void MainWidget::applyColorSchemeToConverter(Decorator *scheme){
-
+    scheme->setBasicColorsToWidget(ui->converterSource, scheme->secondColor(), scheme->textColor());
+    scheme->setBasicColorsToWidget(ui->converterResult, scheme->secondColor(), scheme->textColor());
+    scheme->setComboBoxColors(ui->converterSourceBox);
+    scheme->setComboBoxColors(ui->converterResultBox);
+    scheme->setScrollBarColors(ui->converterResultBox->view()->verticalScrollBar(), scheme->secondColor(), scheme->baseColor());
+    scheme->setScrollBarColors(ui->converterSourceBox->view()->verticalScrollBar(), scheme->secondColor(), scheme->baseColor());
 }
 
 void MainWidget::applyColorSchemeToSettings(Decorator *scheme){
@@ -234,6 +240,8 @@ void MainWidget::applyColorScheme(Decorator *scheme){
     applyColorSchemetoConsole(scheme);
     /* Виджет таблицы */
     applyColorSchemeToTable(scheme);
+    // Конвертер
+    applyColorSchemeToConverter(scheme);
     /* Виджет настроек */
     applyColorSchemeToSettings(scheme);
 }

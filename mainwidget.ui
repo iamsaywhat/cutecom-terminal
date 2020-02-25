@@ -280,7 +280,11 @@ g</string>
           </layout>
          </item>
          <item row="1" column="0">
-          <widget class="QPlainTextEdit" name="converterSource"/>
+          <widget class="QPlainTextEdit" name="converterSource">
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+          </widget>
          </item>
          <item row="0" column="2">
           <widget class="QComboBox" name="converterResultBox"/>
@@ -316,8 +320,8 @@ g</string>
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>203</width>
-                <height>649</height>
+                <width>99</width>
+                <height>211</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_5">
@@ -416,8 +420,8 @@ g</string>
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>409</width>
-                <height>649</height>
+                <width>183</width>
+                <height>254</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_4">
