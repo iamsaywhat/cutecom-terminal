@@ -40,14 +40,8 @@ Converter::Converter(QObject        *parent,
     connect(swapButton,    &QPushButton::clicked,                               this, &Converter::swap);
     connect(clearButton,   &QPushButton::clicked,                               this, &Converter::clear);
 
-    QString fa("я русский");
-    _result->setPlainText(fa);
-    QByteArray fb("я русский");
-    qDebug() << fb;
-    QByteArray ar;
-    for(int i = 0; i <0x100; i++)
-        ar.append(i);
-    qDebug() << ar.toHex();
+    qDebug() << QTextCodec::availableCodecs().indexOf("IBM866");
+
 }
 
 Converter::~Converter(void) {
@@ -431,16 +425,16 @@ void Converter::validateAsciiInput(void){
     static QString previousText("");
     static int cursorPosition;
     QString currentText(_source->toPlainText());
-    /* Регулярное выражение работает с кириллицей в юникоде
-     * поэтому сконвертируем строку в юникод используя QTextCodec */
-    QTextCodec *codec  = QTextCodec::codecForLocale();
-    currentText = codec->toUnicode(currentText.toLocal8Bit());
 
     QTextCursor cursor = _source->textCursor();
     int position = cursor.position();
 
     if(currentText == previousText)
         return;
+
+
+    currentText = convertFromUnicode(currentText, "IBM 866");
+
     if (validator->validate(currentText, position) == QValidator::Invalid){
         _source->setPlainText(previousText);
         cursor.setPosition(cursorPosition);
@@ -639,9 +633,9 @@ QByteArray Converter::parseStringForHex(bool *status, QString &string, char deli
     return result;
 }
 
-
 QString Converter::convertHexToAscii(QString &source){
-    return QString::fromLocal8Bit(parseStringForHex(nullptr, source, ' '));
+    QByteArray temp = parseStringForHex(nullptr, source, ' ');
+    return convertToUnicode(temp, "IBM 866");
 }
 
 QString Converter::convertHexToUint8(QString &source){
@@ -726,6 +720,9 @@ QString Converter::convertHexToDouble (QString &source){
 
 QString Converter::convertAsciiToHex (QString &source){
     QString result = "";
+
+    source = convertFromUnicode(source, "IBM 866");
+
     for(int i = 0; i < source.count(); i++){
         result+=QString::number(static_cast<unsigned char>(source.toLatin1()[i]),16).rightJustified(2, '0');
         if(i < source.count()-1)
@@ -943,4 +940,13 @@ void Converter::swapEndian(double &value){
     convertionUnion.integerValue = (convertionUnion.integerValue & 0x00000000FFFFFFFF)<< 32 |
                                    (convertionUnion.integerValue & 0xFFFFFFFF00000000) >> 32;
     value = convertionUnion.doubleValue;
+}
+
+QString Converter::convertFromUnicode (QString &text, QString codec){
+    QTextCodec *textCodec = QTextCodec::codecForName(codec.toLatin1());
+    return QString::fromLatin1(textCodec->fromUnicode(text));
+}
+QString Converter::convertToUnicode (QByteArray &text, QString codec){
+    QTextCodec *textCodec = QTextCodec::codecForName(codec.toLatin1());
+    return  textCodec->toUnicode(text);
 }

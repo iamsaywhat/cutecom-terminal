@@ -62,6 +62,9 @@ public:
     static void swapEndian(int64_t &value);
     static void swapEndian(float &value);
     static void swapEndian(double &value);
+    // Преобразования кодировок через юникод
+    static QString convertFromUnicode (QString &text, QString codec);
+    static QString convertToUnicode (QByteArray &text, QString codec);
 public slots:
     void convert();
     void swap();
@@ -134,6 +137,7 @@ private:
         DIRECT,
         INDIRECT
     };
+
     // Состояния конвертера
     ConversionDirect direction;     // Текущее направление преобразования
     ConversionType   convertionId;  // Текущий ID преобразования
