@@ -276,7 +276,7 @@ void TableConsole::send(void)
     /* Берём текст с поля ввода */
     QString message(field->text());
     /* Если в поле ввода пусто, или порт не открыт, ничего не делаем */
-    if(message == "" || serial->getConnectionStatus() == CLOSED)
+    if(message == "" || serial->getConnectionStatus() == SerialGui::CLOSED)
         return;
 
     QByteArray buffer = convertAsciiToHex(message);

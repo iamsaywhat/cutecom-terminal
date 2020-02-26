@@ -45,7 +45,7 @@ ConsoleWidget::~ConsoleWidget()
 void ConsoleWidget::send (void)
 {
     QString Msg(Message->text());
-    if(Msg == "" || Serial->getConnectionStatus() == CLOSED)   /* Если в поле ввода пусто,  */
+    if(Msg == "" || Serial->getConnectionStatus() == SerialGui::CLOSED)   /* Если в поле ввода пусто,  */
         return;                                                /* или порт закрыт, ничего не делаем */
 
     Serial->write(Msg.toLocal8Bit());            /* Отправляем данные преобразованные в QByteArray */

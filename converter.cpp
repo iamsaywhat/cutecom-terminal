@@ -46,14 +46,13 @@ Converter::Converter(QObject        *parent,
     updateConversionType();               // Запускаем обновление id текущего преобразования
     resultTypeChanges();                  // Здесь установится нужный валидатор
 
+
     connect(resultBox,     QOverload<int>::of(&QComboBox::currentIndexChanged), this, &Converter::resultTypeChanges);
     connect(sourceBox,     QOverload<int>::of(&QComboBox::currentIndexChanged), this, &Converter::resultTypeChanges);
     connect(source,        &QPlainTextEdit::textChanged,                        this, &Converter::validateSource);
     connect(convertButton, &QPushButton::clicked,                               this, &Converter::convert);
     connect(swapButton,    &QPushButton::clicked,                               this, &Converter::swap);
     connect(clearButton,   &QPushButton::clicked,                               this, &Converter::clear);
-
-    qDebug() << QTextCodec::availableCodecs();
 }
 
 Converter::~Converter(void) {

@@ -20,64 +20,69 @@
 #include <QComboBox>
 #include <QPushButton>
 
-typedef enum{
-    CLOSED,
-    OPEN
-}ConnectionStatusType;
-
 class SerialGui : public QSerialPort, public QSerialPortInfo
 {
     Q_OBJECT
 
 public:
-    explicit SerialGui(QComboBox*   _Ports,              // ComboBox c доступными Com портами
-                          QComboBox*   _Baudrate,           // ComboBox с настройками скорости
-                          QComboBox*   _Parity,             // ComboBox с настройками паритета
-                          QComboBox*   _Databits,           // ComboBox с настройками бит данных
-                          QComboBox*   _Stopbits,           // ComboBox с настройками стоп-бит
-                          QComboBox*   _Flowcontrol,        // ComboBox с настройками контроля
-                          QPushButton* _ConnectDisconnect); // Кнопка подключения/отключения
+    explicit SerialGui(QComboBox*   ports,              // ComboBox c доступными Com портами
+                       QComboBox*   baudrate,           // ComboBox с настройками скорости
+                       QComboBox*   parity,             // ComboBox с настройками паритета
+                       QComboBox*   dataBits,           // ComboBox с настройками бит данных
+                       QComboBox*   stopBits,           // ComboBox с настройками стоп-бит
+                       QComboBox*   flowControl,        // ComboBox с настройками контроля
+                       QPushButton* connectButton);     // Кнопка подключения/отключения
      ~SerialGui();
+    enum ConnectionStatus{
+        CLOSED,
+        OPEN
+    };
 
-    /* Узнать состояние подключения */
-    ConnectionStatusType getConnectionStatus (void);
-    QByteArray getData(void);
-
+    // Подключение к порту
+    void openPort (void);
+    // Отключение от порта
+    void closePort (void);
+    // Обновить список доступных портов
+    void updatePortsList(QComboBox *comboBox);
+    void fillBaudrateList(QComboBox *comboBox);
+    void fillParityList(QComboBox *comboBox);
+    void fillDataBitsList(QComboBox *comboBox);
+    void fillStopBitsList(QComboBox *comboBox);
+    void fillFlowControlList(QComboBox *comboBox);
+    // Узнать состояние подключения
+    ConnectionStatus getConnectionStatus (void);
+    QByteArray       getData(void);
 
 private:
-    QComboBox*      Ports;                 // Указатель на ComboBox c доступными Com портами
-    QComboBox*      Baudrate;              // Указатель на ComboBox с настройками скорости
-    QComboBox*      Parity;                // Указатель на ComboBox с настройками паритета
-    QComboBox*      Databits;              // Указатель на ComboBox с настройками бит данных
-    QComboBox*      Stopbits;              // Указатель на ComboBox с настройками стоп-бит
-    QComboBox*      Flowcontrol;           // Указатель на ComboBox с настройками контроля
-    QPushButton*    ConnectDisconnect;     // Указатель на Кнопка подключения/отключения
-    QIntValidator*  Baudrate_Validator;    // Валидатор вводимых данных в поле Custom Baudrate;
+    QComboBox*      _ports;                 // Указатель на ComboBox c доступными Com портами
+    QComboBox*      _baudrate;              // Указатель на ComboBox с настройками скорости
+    QComboBox*      _parity;                // Указатель на ComboBox с настройками паритета
+    QComboBox*      _dataBits;              // Указатель на ComboBox с настройками бит данных
+    QComboBox*      _stopBits;              // Указатель на ComboBox с настройками стоп-бит
+    QComboBox*      _flowControl;           // Указатель на ComboBox с настройками контроля
+    QPushButton*    _connectButton;         // Указатель на Кнопка подключения/отключения
+    QIntValidator*  baudrateValidator;      // Валидатор вводимых данных в поле Custom Baudrate;
+    QByteArray      receiveBuffer;          // Буфер под хранение последних принятых данных
 
-    QByteArray      receiveBuffer;         /*  Буфер под хранение последних принятых данных */
+    const char  indexCustomBaudrate = 8;             // Индекс элемента пользовательского Baudrate (Custom)
+    ConnectionStatus connectionStatus = CLOSED;      // Статус подключения
 
-    const char  BaudrateCustom_indx = 8;             /* Индекс элемента пользовательского Baudrate (Custom) */
-    ConnectionStatusType connectionStatus = CLOSED;  /* Статус подключения */
 
-    /* Подключение к порту */
-    void openPort (void);
-    /* Отключение от порта */
-    void closePort (void);
+
     /* Переношу методы родителя в приватную секцию,
-    чтобы пользователь мог подключаться только посредством кнопки*/
+    чтобы пользователь мог подключаться только посредством кнопки */
     using QSerialPort::open;
     using QSerialPort::close;
-
 private slots:
-    /* Слот обслуживания custom baudrate */
+    // Слот обслуживания custom baudrate
     void setCustomBaudrate (void);
-    /* Слот обслуживания кнопки Connect */
+    // Слот обслуживания кнопки Connect
     void slotConnection (void);
-    /* Cлот приёма данных */
+    // Cлот приёма данных */
     void receiveData(void);
 
 signals:
-    /* Сигнал о получении новых данных */
+    // Сигнал о получении новых данных
     void receivedNewData(void);
 };
 

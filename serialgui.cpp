@@ -7,98 +7,61 @@
 #include <QMessageBox>
 
 
-SerialGui::SerialGui(QComboBox*   _Ports,              // ComboBox c доступными Com портами
-                           QComboBox*   _Baudrate,           // ComboBox с настройками скорости
-                           QComboBox*   _Parity,             // ComboBox с настройками паритета
-                           QComboBox*   _Databits,           // ComboBox с настройками бит данных
-                           QComboBox*   _Stopbits,           // ComboBox с настройками стоп-бит
-                           QComboBox*   _Flowcontrol,        // ComboBox с настройками контроля
-                           QPushButton* _ConnectDisconnect)  // Кнопка подключения/отключения
+SerialGui::SerialGui(QComboBox*   ports,              // ComboBox c доступными Com портами
+                     QComboBox*   baudrate,           // ComboBox с настройками скорости
+                     QComboBox*   parity,             // ComboBox с настройками паритета
+                     QComboBox*   dataBits,           // ComboBox с настройками бит данных
+                     QComboBox*   stopBits,           // ComboBox с настройками стоп-бит
+                     QComboBox*   flowControl,        // ComboBox с настройками контроля
+                     QPushButton* connectButton)      // Кнопка подключения/отключения
 {
     // Создаём валидатор данных пользовательского бодрейта
-    Baudrate_Validator = (new QIntValidator(0, 4000000, this));
+    baudrateValidator = (new QIntValidator(0, 4000000, this));
 
     // Фиксируем внутри класса указатели на элементы управления
-    Ports             = _Ports;
-    Baudrate          = _Baudrate;
-    Parity            = _Parity;
-    Databits          = _Databits;
-    Stopbits          = _Stopbits;
-    Flowcontrol       = _Flowcontrol;
-    ConnectDisconnect = _ConnectDisconnect;
+    _ports             = ports;
+    _baudrate          = baudrate;
+    _parity            = parity;
+    _dataBits          = dataBits;
+    _stopBits          = stopBits;
+    _flowControl       = flowControl;
+    _connectButton     = connectButton;
 
-    // Посмотрим список имеющихся COM портов и разместим их список в соответствующем боксе
-    foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
-        Ports->addItem(info.portName());
-
-    // Размещаем в селекторе доступный бодрейт
-    Baudrate->addItem(QStringLiteral("1200"),    QSerialPort::Baud1200);
-    Baudrate->addItem(QStringLiteral("2400"),    QSerialPort::Baud2400);
-    Baudrate->addItem(QStringLiteral("4800"),    QSerialPort::Baud4800);
-    Baudrate->addItem(QStringLiteral("9600"),    QSerialPort::Baud9600);
-    Baudrate->addItem(QStringLiteral("19200"),   QSerialPort::Baud19200);
-    Baudrate->addItem(QStringLiteral("38400"),   QSerialPort::Baud38400);
-    Baudrate->addItem(QStringLiteral("57600"),   QSerialPort::Baud57600);
-    Baudrate->addItem(QStringLiteral("115200"),  QSerialPort::Baud115200);
-    Baudrate->addItem(QStringLiteral("Custom"));
-
-    // Размещаем настройки паритета
-    Parity->addItem(QStringLiteral("None"),  QSerialPort::NoParity);
-    Parity->addItem(QStringLiteral("Even"),  QSerialPort::EvenParity);
-    Parity->addItem(QStringLiteral("Odd"),   QSerialPort::OddParity);
-    Parity->addItem(QStringLiteral("Mark"),  QSerialPort::MarkParity);
-    Parity->addItem(QStringLiteral("Space"), QSerialPort::SpaceParity);
-
-    // Размещаем настройки бит данных
-    Databits->addItem(QStringLiteral("5"), QSerialPort::QSerialPort::Data5);
-    Databits->addItem(QStringLiteral("6"), QSerialPort::QSerialPort::Data6);
-    Databits->addItem(QStringLiteral("7"), QSerialPort::QSerialPort::Data7);
-    Databits->addItem(QStringLiteral("8"), QSerialPort::QSerialPort::Data8);
-
-    // Размещаем настройки стоп-бит
-    Stopbits->addItem(QStringLiteral("1"),   QSerialPort::OneStop);
-#ifdef Q_OS_WIN
-    Stopbits->addItem(QStringLiteral("1.5"), QSerialPort::OneAndHalfStop);
-#endif
-    Stopbits->addItem(QStringLiteral("2"),   QSerialPort::TwoStop);
-
-    // Размещаем настройки контроля
-    Flowcontrol->addItem(QStringLiteral("None"),     QSerialPort::NoFlowControl);
-    Flowcontrol->addItem(QStringLiteral("RTS/CTS"),  QSerialPort::HardwareControl);
-    Flowcontrol->addItem(QStringLiteral("XON/XOFF"), QSerialPort::SoftwareControl);
+    updatePortsList(_ports);           // Обновим список доступных портов
+    fillBaudrateList(_baudrate);       // Размещаем настрокий бодрейта
+    fillBaudrateList(_parity);         // Размещаем настройки паритета
+    fillDataBitsList(_dataBits);       // Размещаем настройки бит данных
+    fillStopBitsList(_stopBits);       // Размещаем настройки стоп-бит
+    fillFlowControlList(_flowControl); // Размещаем настройки контроля
 
     // Настройками по-умолчанию будем считать следующие
-    Baudrate->setCurrentIndex(7);      // 115200
-    Databits->setCurrentIndex(3);      // 8 - бит
-    Stopbits->setCurrentIndex(0);      // 1 - стопбит
-    Flowcontrol->setCurrentIndex(0);   // None
+    _baudrate->setCurrentIndex(7);      // 115200
+    _dataBits->setCurrentIndex(3);      // 8 - бит
+    _stopBits->setCurrentIndex(0);      // 1 - стопбит
+    _flowControl->setCurrentIndex(0);   // None
 
     // Добавляем свойство кнопки Checkable
-    ConnectDisconnect->setCheckable(true);
+    _connectButton->setCheckable(true);
     // Размещаем на ней соответствующий текст
-    ConnectDisconnect->setText("Connect");
+    _connectButton->setText("Connect");
 
     // Запрещаем автодобавление пользовательского бодрейта по нажатию enter
-    Baudrate->setInsertPolicy(QComboBox::NoInsert);
+    _baudrate->setInsertPolicy(QComboBox::NoInsert);
 
-    // Подключаем сигнал при изменении селектора бодрейта на слот работы с custom значением
-    connect(Baudrate, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SerialGui::setCustomBaudrate);
-
-    // Подключаем клик по кнопке ConnectDisconnect на слот OpenOrClose
-    connect(ConnectDisconnect, &QPushButton::clicked, this, &SerialGui::slotConnection);
-    /* */
+    connect(_baudrate, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SerialGui::setCustomBaudrate);
+    connect(_connectButton, &QPushButton::clicked, this, &SerialGui::slotConnection);
     connect(this, &QSerialPort::readyRead, this, &SerialGui::receiveData);
 }
 
 SerialGui::~SerialGui ()
 {
-    delete Baudrate_Validator;
+    delete baudrateValidator;
 }
 
 /*********************************************************************************
  * getStatus - Получить статус подключения
 *********************************************************************************/
-ConnectionStatusType SerialGui::getConnectionStatus (void)
+SerialGui::ConnectionStatus SerialGui::getConnectionStatus (void)
 {
     return connectionStatus;
 }
@@ -109,29 +72,25 @@ ConnectionStatusType SerialGui::getConnectionStatus (void)
 void SerialGui::openPort(void)
 {
     // Устанавливаем настройки - Выбор порта
-    setPortName(Ports->currentText());
+    setPortName(_ports->currentText());
 
     // Выбор Бодрейта
-    if(Baudrate->currentIndex() == BaudrateCustom_indx)
-    {
+    if(_baudrate->currentIndex() == indexCustomBaudrate)
         // Если на момент нажания кнопки открыть выбран Custom baudrate
-        setBaudRate (static_cast<QSerialPort::BaudRate>(Baudrate->currentText().toInt()));
-    }
+        setBaudRate (static_cast<QSerialPort::BaudRate>(_baudrate->currentText().toInt()));
     else
-    {
-        setBaudRate (static_cast<QSerialPort::BaudRate>(Baudrate->itemData(Baudrate->currentIndex()).toInt()));
-    }
+        setBaudRate (static_cast<QSerialPort::BaudRate>(_baudrate->itemData(_baudrate->currentIndex()).toInt()));
 
     // Прочие настройки порта
-    setDataBits   (static_cast<QSerialPort::DataBits>   (Databits->itemData(Databits->currentIndex()).toInt()));
-    setParity     (static_cast<QSerialPort::Parity>     (Parity->itemData(Parity->currentIndex()).toInt()));
-    setStopBits   (static_cast<QSerialPort::StopBits>   (Stopbits->itemData(Stopbits->currentIndex()).toInt()));
-    setFlowControl(static_cast<QSerialPort::FlowControl>(Flowcontrol->itemData(Flowcontrol->currentIndex()).toInt()));
+    setDataBits   (static_cast<QSerialPort::DataBits>   (_dataBits->itemData(_dataBits->currentIndex()).toInt()));
+    setParity     (static_cast<QSerialPort::Parity>     (_parity->itemData(_parity->currentIndex()).toInt()));
+    setStopBits   (static_cast<QSerialPort::StopBits>   (_stopBits->itemData(_stopBits->currentIndex()).toInt()));
+    setFlowControl(static_cast<QSerialPort::FlowControl>(_flowControl->itemData(_flowControl->currentIndex()).toInt()));
 
     if(!open(QSerialPort::ReadWrite))
     {
         // Подключение не удалось, сбрасываем флаг Checked
-        ConnectDisconnect->setChecked(false);
+        _connectButton->setChecked(false);
         qDebug() << "\nError: COM is not available!";
         // Сбросим флаг статуса открытия порта
         connectionStatus = CLOSED;
@@ -140,7 +99,7 @@ void SerialGui::openPort(void)
     else
     {
         // Заменяем текст на кнопке
-        ConnectDisconnect->setText("Disconnect");
+        _connectButton->setText("Disconnect");
         // Выведем сообщение в дебагер
         qDebug() << "\nConnected to:" << QSerialPort::portName()
                  << "\nBaudrate:"     << baudRate()
@@ -152,12 +111,12 @@ void SerialGui::openPort(void)
         connectionStatus = OPEN;
 
         // Блокируем ComboBoxes
-        Ports->setEnabled(false);
-        Baudrate->setEnabled(false);
-        Parity->setEnabled(false);
-        Databits->setEnabled(false);
-        Stopbits->setEnabled(false);
-        Flowcontrol->setEnabled(false);
+        _ports->setEnabled(false);
+        _baudrate->setEnabled(false);
+        _parity->setEnabled(false);
+        _dataBits->setEnabled(false);
+        _stopBits->setEnabled(false);
+        _flowControl->setEnabled(false);
     }
 }
 
@@ -167,7 +126,7 @@ void SerialGui::openPort(void)
 void SerialGui::closePort(void)
 {
     // Заменяем текст на кнопке
-    ConnectDisconnect->setText("Connect");
+    _connectButton->setText("Connect");
     // Отключаемся
     close();
     // Выведем сообщение в дебагер
@@ -176,26 +135,82 @@ void SerialGui::closePort(void)
     connectionStatus = CLOSED;
 
     // Разблокируем ComboBoxes
-    Ports->setEnabled(true);
-    Baudrate->setEnabled(true);
-    Parity->setEnabled(true);
-    Databits->setEnabled(true);
-    Stopbits->setEnabled(true);
-    Flowcontrol->setEnabled(true);
+    _ports->setEnabled(true);
+    _baudrate->setEnabled(true);
+    _parity->setEnabled(true);
+    _dataBits->setEnabled(true);
+    _stopBits->setEnabled(true);
+    _flowControl->setEnabled(true);
 }
-
-
+/*********************************************************************************
+ * updatePortsList - Обновление в списка доступных портов
+**********************************************************************************/
+void SerialGui::updatePortsList(QComboBox *comboBox){
+    /* Перед обновлением списка портов запоминаем текущий порт,
+     * чтобы после того установить его же как текущий, несмотря на то,
+     * что мог измениться его индекс в списке. Если порт был перехвачен
+     * (отсутствует в списке), то ничего не произойдет и текущим станет
+     * первый в списке порт */
+    QString currentText = comboBox->currentText();
+    comboBox->clear();
+    // Смотрим список доступных портов и пишем его в comboBox
+    foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()){
+        if(!info.isBusy())
+            comboBox->addItem(info.portName());
+    }
+    comboBox->setCurrentText(currentText);
+}
+void SerialGui::fillBaudrateList(QComboBox *comboBox){
+    comboBox->clear();
+    comboBox->addItem(QStringLiteral("1200"),    QSerialPort::Baud1200);
+    comboBox->addItem(QStringLiteral("2400"),    QSerialPort::Baud2400);
+    comboBox->addItem(QStringLiteral("4800"),    QSerialPort::Baud4800);
+    comboBox->addItem(QStringLiteral("9600"),    QSerialPort::Baud9600);
+    comboBox->addItem(QStringLiteral("19200"),   QSerialPort::Baud19200);
+    comboBox->addItem(QStringLiteral("38400"),   QSerialPort::Baud38400);
+    comboBox->addItem(QStringLiteral("57600"),   QSerialPort::Baud57600);
+    comboBox->addItem(QStringLiteral("115200"),  QSerialPort::Baud115200);
+    comboBox->addItem(QStringLiteral("Custom"));
+}
+void SerialGui::fillParityList(QComboBox *comboBox){
+    comboBox->clear();
+    comboBox->addItem(QStringLiteral("None"),  QSerialPort::NoParity);
+    comboBox->addItem(QStringLiteral("Even"),  QSerialPort::EvenParity);
+    comboBox->addItem(QStringLiteral("Odd"),   QSerialPort::OddParity);
+    comboBox->addItem(QStringLiteral("Mark"),  QSerialPort::MarkParity);
+    comboBox->addItem(QStringLiteral("Space"), QSerialPort::SpaceParity);
+}
+void SerialGui::fillDataBitsList(QComboBox *comboBox){
+    comboBox->clear();
+    comboBox->addItem(QStringLiteral("5"), QSerialPort::QSerialPort::Data5);
+    comboBox->addItem(QStringLiteral("6"), QSerialPort::QSerialPort::Data6);
+    comboBox->addItem(QStringLiteral("7"), QSerialPort::QSerialPort::Data7);
+    comboBox->addItem(QStringLiteral("8"), QSerialPort::QSerialPort::Data8);
+}
+void SerialGui::fillStopBitsList(QComboBox *comboBox){
+    comboBox->clear();
+    comboBox->addItem(QStringLiteral("1"),   QSerialPort::OneStop);
+    comboBox->addItem(QStringLiteral("1.5"), QSerialPort::OneAndHalfStop);
+    comboBox->addItem(QStringLiteral("2"),   QSerialPort::TwoStop);
+}
+void SerialGui::fillFlowControlList(QComboBox *comboBox){
+    comboBox->clear();
+    comboBox->addItem(QStringLiteral("None"),     QSerialPort::NoFlowControl);
+    comboBox->addItem(QStringLiteral("RTS/CTS"),  QSerialPort::HardwareControl);
+    comboBox->addItem(QStringLiteral("XON/XOFF"), QSerialPort::SoftwareControl);
+}
 /*********************************************************************************
 * OpenOrClose - Слот обслуживания кнопки Connect
 *********************************************************************************/
 void SerialGui::slotConnection(void)
 {
     // Если Checked не установлен, значит выполняем подключение
-    if(ConnectDisconnect->isChecked())
+    if(_connectButton->isChecked())
         openPort();
     // Если Checked установлен - отключаемся
-    else
+    else {
         closePort();
+        updatePortsList(_ports);}
 }
 
 /*********************************************************************************
@@ -204,28 +219,28 @@ void SerialGui::slotConnection(void)
 void SerialGui::setCustomBaudrate(void)
 {
     // Если выбран Custom
-    if (Baudrate->currentIndex() == BaudrateCustom_indx)
+    if (_baudrate->currentIndex() == indexCustomBaudrate)
     {
         // Делаем изменяемым
-        Baudrate->setEditable(true);
+        _baudrate->setEditable(true);
         // Убираем текст
-        Baudrate->clearEditText();
+        _baudrate->clearEditText();
         // Привязываем к полю ввода валидатор данных
-        Baudrate->lineEdit()->setValidator(Baudrate_Validator);
+        _baudrate->lineEdit()->setValidator(baudrateValidator);
     }
     // Если выбран любой другой пункт
     else
-        Baudrate->setEditable(false);
+        _baudrate->setEditable(false);
 }
 
 
 void SerialGui::receiveData(void)
 {
-    /* По рекомендациям втыкаем ожидание перед считыванием */
+    // По рекомендациям втыкаем ожидание перед считыванием
     waitForReadyRead(1);
-    /* Принимаем данные и сразу преобразуем в строку */
+    // Принимаем данные и сразу преобразуем в строку
     receiveBuffer = readAll();
-    /* Испускаем сигнал о наличии новых данных */
+    // Испускаем сигнал о наличии новых данных
     emit receivedNewData();
 }
 

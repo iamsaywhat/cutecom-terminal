@@ -2,6 +2,7 @@
 #define MAINWIDGET_H
 
 #include <QWidget>
+#include "framelesswindow.h"
 #include <QSerialPort>
 #include "consolemode/consolewidget.h"
 #include "hexmode/tableconsole.h"
@@ -20,7 +21,7 @@ class MainWidget : public QWidget
     Q_OBJECT
 
 public:
-    MainWidget(QWidget *parent = nullptr);
+    MainWidget(FramelessWindow *parent = nullptr);
     ~MainWidget();
 
     void setPropertiesToMainWidget(void);
@@ -35,6 +36,8 @@ public:
     void applyColorSchemeToTable(Decorator *scheme);
     void applyColorSchemeToConverter(Decorator *scheme);
     void applyColorSchemeToSettings(Decorator *scheme);
+
+    void setAppFont();
 
 private:
     Ui::MainWidget    *ui;
@@ -58,6 +61,8 @@ private:
         settingsIndexLogs       = 4,
         settingsIndexBinds      = 5,
     };
+
+    QFont *appFont = new QFont("Terminus", 8, QFont::Thin);
 };
 #endif // MAINWIDGET_H
 

@@ -8,105 +8,93 @@
 #include <QWidget>
 #include <QScrollBar>
 #include <QString>
+#include <QThread>
 
 
-#include "decorator.h"
-
-MainWidget::MainWidget(QWidget *parent)
+MainWidget::MainWidget(FramelessWindow *parent)
     : QWidget(parent)
     , ui(new Ui::MainWidget)
 {
     ui->setupUi(this);
 
-    /* Выполняем связку класса работы с портом окном настроек */
-    serial = new SerialGui(ui->boxPorts,                   /* ComboBox c доступными Com портами */
-                           ui->boxBaudrate,                /* ComboBox с настройками скорости */
-                           ui->boxParity,                  /* ComboBox с настройками паритета */
-                           ui->boxData,                    /* ComboBox с настройками бит данных */
-                           ui->boxStopBits,                /* ComboBox с настройками стоп-бит */
-                           ui->boxFlowControl,             /* ComboBox с настройками контроля */
-                           ui->buttonConnectDisconnect);   /* Кнопка подключения/отключения */
-    /* Выполняем связку класса работы с консолью с формами */
+    // Выполняем связку класса работы с портом окном настроек
+    serial = new SerialGui(ui->boxPorts,                   // ComboBox c доступными Com портами
+                           ui->boxBaudrate,                // ComboBox с настройками скорости
+                           ui->boxParity,                  // ComboBox с настройками паритета
+                           ui->boxData,                    // ComboBox с настройками бит данных
+                           ui->boxStopBits,                // ComboBox с настройками стоп-бит
+                           ui->boxFlowControl,             // ComboBox с настройками контроля
+                           ui->buttonConnectDisconnect);   // Кнопка подключения/отключения
+    // Выполняем связку класса работы с консолью с формами
     console = new ConsoleWidget(this,
-                                serial,                    /* Указатель на SerialSettings экземпляр */
-                                ui->consoleField,          /* Указатель на QPlainTextEdit форму*/
-                                ui->inputConsoleField,     /* Указатель на QLineEdit форму */
-                                ui->sendConsoleButton,     /* Указатель на QPushButton форму*/
-                                ui->clearConsoleButton);   /* Указатель на QPushButton форму*/
-    /* Создаём и связываем табличную консоль с формой */
+                                serial,                    // Указатель на SerialSettings экземпляр
+                                ui->consoleField,          // Указатель на QPlainTextEdit форму
+                                ui->inputConsoleField,     // Указатель на QLineEdit форму
+                                ui->sendConsoleButton,     // Указатель на QPushButton форму
+                                ui->clearConsoleButton);   // Указатель на QPushButton форму
+    // Создаём и связываем табличную консоль с формой
     tableConsole = new TableConsole(this,
-                                    serial,                /* Указатель на SerialSettings экземпляр */
-                                    ui->tableField,        /* Указатель на QTableView форму */
-                                    ui->inputTableField,   /* Указатель на QLineEdit форму */
-                                    ui->sendTableButton,   /* Указатель на QPushButton форму*/
-                                    ui->clearTableButton); /* Указатель на QPushButton форму*/
+                                    serial,                // Указатель на SerialSettings экземпляр
+                                    ui->tableField,        // Указатель на QTableView форму
+                                    ui->inputTableField,   // Указатель на QLineEdit форму
+                                    ui->sendTableButton,   // Указатель на QPushButton форму
+                                    ui->clearTableButton); // Указатель на QPushButton форму
     converter = new Converter(this,
-                              ui->converterSource,
-                              ui->converterResult,
-                              ui->converterConvertButton,
-                              ui->converterSwapButton,
-                              ui->converterClearButton,
-                              ui->converterSourceBox,
-                              ui->converterResultBox);
+                              ui->converterSource,         // QPlainText для ввода
+                              ui->converterResult,         // QplainText для вывода результата
+                              ui->converterConvertButton,  // Кнопка выполнения конвертации
+                              ui->converterSwapButton,     // Кнопка изменения направления преобразования
+                              ui->converterClearButton,    // Кнопка очистки обоих QPlainText
+                              ui->converterSourceBox,      // QComboBox селектор исходного формата
+                              ui->converterResultBox);     // QComboBox селектор формата вывода
+
+    this->setMinimumSize(600, 300);
 
     darkTheme = new Decorator(0x1a1c20, 0x2b2d33, 0x33363d, 0xdcddde, 0x3d563d);
 
-    /* Включаем сетку на таблице */
+    // Включаем сетку на таблице
     ui->tableField->setShowGrid(true);
 
-    /* Внешний вид приложения */
+    // Внешний вид приложения
     setPropertiesToMainWidget();
     setPropertiesToConsole();
     setPropertiesToTable();
     setPropertiesToConverter();
     setPropertiesToSettingsWidget();
     applyColorScheme(darkTheme);
+    setAppFont();
 
-
-    /* Подключение кнопок закрыть, свернуть, развернуть окно, так как стандартные скрыты */
+    // Подключение кнопок закрыть, свернуть, развернуть окно, так как стандартные скрыты
     connect(ui->closeButton,    &QToolButton::clicked, parent, &QWidget::close);
     connect(ui->minimizeButton, &QToolButton::clicked, parent, &QWidget::showMinimized);
-    connect(ui->maximazeButton, &QToolButton::clicked, [parent](){
-        // При нажатии на кнопку максимизации/нормализации окна
-        // Делаем проверку на то, в каком состоянии находится окно и переключаем его режим
-        if (!parent->isMaximized())
-        {
-            //ui->maximazeButton->setStyleSheet(StyleHelper::getRestoreStyleSheet());
-
-            /* Здесь важный нюанс: при разворачивании окна - необходимо поля centralwidget
-             * (на уровень выше interfaceWidget) убрать, чтобы окно полноценно развернулось
-             * в полный экран, однако, при этом исчезает тень, которую в полноэкранном режиме
-             * и не должно быть видно, но при минимизации окна нужно вернуть */
-            parent->layout()->setMargin(0);
-            parent->showMaximized();
-        }
-        else
-        {
-            // Заметьте, каждый раз устанавливаем новый стиль в эту кнопку
-            //ui->maximazeButton->setStyleSheet(StyleHelper::getMaximizeStyleSheet());
-            /* Здесь при минимизации возвращаем поля в исходный вид,
-             * чтобы тень отобразилась */
-            parent->layout()->setMargin(10);
-            parent->showNormal();
-        }
-    });
+    connect(ui->maximazeButton, &QToolButton::clicked, [parent](){ parent->maximizeFramelessWindow();});
 
 
-    /* Дополнительные функциональные кнопки */
-    connect(ui->showConnectionButton,    &QPushButton::clicked, [this](){ui->workspaceWidget->setCurrentIndex(quickIndexSettings);
-                                                                         ui->rightStackedPanel->setCurrentIndex(settingsIndexConnection);});
-    connect(ui->switchToConsoleButton,   &QPushButton::clicked, [this](){ui->workspaceWidget->setCurrentIndex(quickIndexConsole);});
-    connect(ui->switchToTableButton,     &QPushButton::clicked, [this](){ui->workspaceWidget->setCurrentIndex(quickIndexTable);});
-    connect(ui->switchToConverterButton, &QPushButton::clicked, [this](){ui->workspaceWidget->setCurrentIndex(quickIndexConverter);});
-    connect(ui->showSettingsButton,      &QPushButton::clicked, [this](){ui->workspaceWidget->setCurrentIndex(quickIndexSettings);});
-
-    /* Подключения для меню настроек */
-    connect(ui->connectionContentsButton, &QPushButton::clicked, [this](){ui->rightStackedPanel->setCurrentIndex(settingsIndexConnection);});
-    connect(ui->generalContentButton,     &QPushButton::clicked, [this](){ui->rightStackedPanel->setCurrentIndex(settingsIndexGeneral);});
-    connect(ui->consoleContentButton,     &QPushButton::clicked, [this](){ui->rightStackedPanel->setCurrentIndex(settingsIndexConsole);});
-    connect(ui->tableContentButton,       &QPushButton::clicked, [this](){ui->rightStackedPanel->setCurrentIndex(settingsIndexTable);});
-    connect(ui->logsContentButton,        &QPushButton::clicked, [this](){ui->rightStackedPanel->setCurrentIndex(settingsIndexLogs);});
-    connect(ui->bindsContentButton,       &QPushButton::clicked, [this](){ui->rightStackedPanel->setCurrentIndex(settingsIndexBinds);});
+    // Дополнительные функциональные кнопки
+    connect(ui->showConnectionButton,    &QPushButton::clicked,
+            [this](){ui->workspaceWidget->setCurrentIndex(quickIndexSettings);
+                     ui->rightStackedPanel->setCurrentIndex(settingsIndexConnection);});
+    connect(ui->switchToConsoleButton,   &QPushButton::clicked,
+            [this](){ui->workspaceWidget->setCurrentIndex(quickIndexConsole);});
+    connect(ui->switchToTableButton,     &QPushButton::clicked,
+            [this](){ui->workspaceWidget->setCurrentIndex(quickIndexTable);});
+    connect(ui->switchToConverterButton, &QPushButton::clicked,
+            [this](){ui->workspaceWidget->setCurrentIndex(quickIndexConverter);});
+    connect(ui->showSettingsButton,      &QPushButton::clicked,
+            [this](){ui->workspaceWidget->setCurrentIndex(quickIndexSettings);});
+    // Подключения для меню настроек
+    connect(ui->connectionContentsButton, &QPushButton::clicked,
+            [this](){ui->rightStackedPanel->setCurrentIndex(settingsIndexConnection);});
+    connect(ui->generalContentButton,     &QPushButton::clicked,
+            [this](){ui->rightStackedPanel->setCurrentIndex(settingsIndexGeneral);});
+    connect(ui->consoleContentButton,     &QPushButton::clicked,
+            [this](){ui->rightStackedPanel->setCurrentIndex(settingsIndexConsole);});
+    connect(ui->tableContentButton,       &QPushButton::clicked,
+            [this](){ui->rightStackedPanel->setCurrentIndex(settingsIndexTable);});
+    connect(ui->logsContentButton,        &QPushButton::clicked,
+            [this](){ui->rightStackedPanel->setCurrentIndex(settingsIndexLogs);});
+    connect(ui->bindsContentButton,       &QPushButton::clicked,
+            [this](){ui->rightStackedPanel->setCurrentIndex(settingsIndexBinds);});
 }
 
 MainWidget::~MainWidget()
@@ -116,6 +104,7 @@ MainWidget::~MainWidget()
     delete tableConsole;
     delete console;
     delete serial;
+    delete appFont;
     delete ui;
 }
 
@@ -192,12 +181,18 @@ void MainWidget::applyColorSchemeToTable(Decorator *scheme){
 }
 
 void MainWidget::applyColorSchemeToConverter(Decorator *scheme){
-    scheme->setBasicColorsToWidget(ui->converterSource, scheme->secondColor(), scheme->textColor());
-    scheme->setBasicColorsToWidget(ui->converterResult, scheme->secondColor(), scheme->textColor());
+    scheme->setBasicColorsToWidget(ui->converterPage, scheme->secondColor(), scheme->textColor());
+    scheme->setBasicColorsToWidget(ui->converterSource, scheme->baseColor(), scheme->textColor());
+    scheme->setBasicColorsToWidget(ui->converterResult, scheme->baseColor(), scheme->textColor());
+    scheme->setScrollBarColors(ui->converterSource->verticalScrollBar(),scheme->secondColor(), scheme->baseColor());
+    scheme->setScrollBarColors(ui->converterResult->verticalScrollBar(),scheme->secondColor(), scheme->baseColor());
     scheme->setComboBoxColors(ui->converterSourceBox);
     scheme->setComboBoxColors(ui->converterResultBox);
     scheme->setScrollBarColors(ui->converterResultBox->view()->verticalScrollBar(), scheme->secondColor(), scheme->baseColor());
     scheme->setScrollBarColors(ui->converterSourceBox->view()->verticalScrollBar(), scheme->secondColor(), scheme->baseColor());
+    scheme->setStandartButtonColors(ui->converterConvertButton, scheme->secondColor(), scheme->textColor(), scheme->thirdColor(), scheme->baseColor());
+    scheme->setStandartButtonColors(ui->converterSwapButton, scheme->secondColor(), scheme->textColor(), scheme->thirdColor(), scheme->baseColor());
+    scheme->setStandartButtonColors(ui->converterClearButton, scheme->secondColor(), scheme->textColor(), scheme->thirdColor(), scheme->baseColor());
 }
 
 void MainWidget::applyColorSchemeToSettings(Decorator *scheme){
@@ -230,23 +225,24 @@ void MainWidget::applyColorSchemeToSettings(Decorator *scheme){
     scheme->setComboBoxColors(ui->boxStopBits);
     scheme->setComboBoxColors(ui->boxFlowControl);
     scheme->setStandartButtonColors(ui->buttonConnectDisconnect, scheme->baseColor(), scheme->textColor(), scheme->thirdColor(), scheme->secondColor());
-
 }
 
 void MainWidget::applyColorScheme(Decorator *scheme){
-    /* Основная рамка */
+    // Основная рамка
     applyColorSchemeToMainWidget(scheme);
-    /* Виджет консоли */
+    // Виджет консоли
     applyColorSchemetoConsole(scheme);
-    /* Виджет таблицы */
+    // Виджет таблицы
     applyColorSchemeToTable(scheme);
     // Конвертер
     applyColorSchemeToConverter(scheme);
-    /* Виджет настроек */
+    // Виджет настроек
     applyColorSchemeToSettings(scheme);
 }
 
-
+void MainWidget::setAppFont(){
+    QApplication::setFont(*appFont);
+}
 
 //void MainWidget::applySettingsStylesheet(void) {
 //    ///////////////////////////////////////////////////////////////////////////////////
