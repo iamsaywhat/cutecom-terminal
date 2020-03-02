@@ -1,11 +1,12 @@
 #include "serialgui.h"
-
-#include <QString>
-#include <QtDebug>
-#include <QIntValidator>
+#include <QDebug>
 #include <QLineEdit>
-#include <QMessageBox>
 
+//#define DEBUG
+
+#ifdef DEBUG
+#include <QDebug>
+#endif
 
 SerialGui::SerialGui(QComboBox*   ports,              // ComboBox c доступными Com портами
                      QComboBox*   baudrate,           // ComboBox с настройками скорости
@@ -15,9 +16,9 @@ SerialGui::SerialGui(QComboBox*   ports,              // ComboBox c доступ
                      QComboBox*   flowControl,        // ComboBox с настройками контроля
                      QPushButton* connectButton)      // Кнопка подключения/отключения
 {
-    // Создаём валидатор данных пользовательского бодрейта
-    baudrateValidator = (new QIntValidator(0, 4000000, this));
-
+#ifdef DEBUG
+    qDebug() << "From SerialGui::SerialGui";
+#endif
     // Фиксируем внутри класса указатели на элементы управления
     _ports             = ports;
     _baudrate          = baudrate;
@@ -26,90 +27,67 @@ SerialGui::SerialGui(QComboBox*   ports,              // ComboBox c доступ
     _stopBits          = stopBits;
     _flowControl       = flowControl;
     _connectButton     = connectButton;
-
+    // Заполняем элементы GUI
     updatePortsList(_ports);           // Обновим список доступных портов
     fillBaudrateList(_baudrate);       // Размещаем настрокий бодрейта
     fillBaudrateList(_parity);         // Размещаем настройки паритета
     fillDataBitsList(_dataBits);       // Размещаем настройки бит данных
     fillStopBitsList(_stopBits);       // Размещаем настройки стоп-бит
     fillFlowControlList(_flowControl); // Размещаем настройки контроля
-
     // Настройками по-умолчанию будем считать следующие
-    _baudrate->setCurrentIndex(7);      // 115200
-    _dataBits->setCurrentIndex(3);      // 8 - бит
-    _stopBits->setCurrentIndex(0);      // 1 - стопбит
-    _flowControl->setCurrentIndex(0);   // None
-
-    // Добавляем свойство кнопки Checkable
-    _connectButton->setCheckable(true);
+    _baudrate->setCurrentText("115200");
+    _dataBits->setCurrentText("8");
+    _stopBits->setCurrentText("1");
+    _flowControl->setCurrentText("None");
     // Размещаем на ней соответствующий текст
     _connectButton->setText("Connect");
-
     // Запрещаем автодобавление пользовательского бодрейта по нажатию enter
     _baudrate->setInsertPolicy(QComboBox::NoInsert);
 
+    // Создаём валидатор данных пользовательского бодрейта
+    baudrateValidator = (new QIntValidator(0, 4000000, this));
+    otherThread = new QThread;
+    port = new Serial;
+    port->moveToThread(otherThread);
+
+    // Стандартные подключения для управления потоком
+    connect(otherThread, &QThread::started, port, &Serial::process);
+    connect(port, &Serial::finished, otherThread, &QThread::quit);
+    connect(otherThread, &QThread::finished, port, &Serial::deleteLater);
+    connect(port, &Serial::finished, otherThread, &QThread::deleteLater);
+    // Для взаимодействия с базовым классом из другого потока
+    connect(this, &SerialGui::send, port, &Serial::sendData);
+    connect(port, &Serial::receivedData, this, &SerialGui::receivedData);
+    connect(port, &Serial::isConnected, this, &SerialGui::portStatusChanged);
+    connect(this, &SerialGui::open, port, &Serial::open);
+    connect(this, &SerialGui::close, port, &Serial::close);
+    connect(this, &SerialGui::setSettings, port, &Serial::setSettings);
+    connect(port, &Serial::errorInfo, this, &SerialGui::error);
+    // События от Gui
     connect(_baudrate, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SerialGui::setCustomBaudrate);
-    connect(_connectButton, &QPushButton::clicked, this, &SerialGui::slotConnection);
-    connect(this, &QSerialPort::readyRead, this, &SerialGui::receiveData);
+    connect(_connectButton, &QPushButton::clicked, this, &SerialGui::openOrCloseByButton);
+
+    // Запускаем поток
+    otherThread->start();
+
+#ifdef DEBUG
+    qDebug() << "From SerialGui::SerialGui: port in" << port->thread();
+    qDebug() << "From SerialGui::SerialGui: i am in " << this->thread();
+#endif
 }
 
-SerialGui::~SerialGui ()
-{
+SerialGui::~SerialGui(){
+#ifdef DEBUG
+    qDebug("From SerialGui::~SerialGui");
+#endif
     delete baudrateValidator;
 }
 
-/*********************************************************************************
- * getStatus - Получить статус подключения
-*********************************************************************************/
-SerialGui::ConnectionStatus SerialGui::getConnectionStatus (void)
-{
-    return connectionStatus;
-}
-
-/*********************************************************************************
- * openPort - Подключение к порту
-*********************************************************************************/
-void SerialGui::openPort(void)
-{
-    // Устанавливаем настройки - Выбор порта
-    setPortName(_ports->currentText());
-
-    // Выбор Бодрейта
-    if(_baudrate->currentIndex() == indexCustomBaudrate)
-        // Если на момент нажания кнопки открыть выбран Custom baudrate
-        setBaudRate (static_cast<QSerialPort::BaudRate>(_baudrate->currentText().toInt()));
-    else
-        setBaudRate (static_cast<QSerialPort::BaudRate>(_baudrate->itemData(_baudrate->currentIndex()).toInt()));
-
-    // Прочие настройки порта
-    setDataBits   (static_cast<QSerialPort::DataBits>   (_dataBits->itemData(_dataBits->currentIndex()).toInt()));
-    setParity     (static_cast<QSerialPort::Parity>     (_parity->itemData(_parity->currentIndex()).toInt()));
-    setStopBits   (static_cast<QSerialPort::StopBits>   (_stopBits->itemData(_stopBits->currentIndex()).toInt()));
-    setFlowControl(static_cast<QSerialPort::FlowControl>(_flowControl->itemData(_flowControl->currentIndex()).toInt()));
-
-    if(!open(QSerialPort::ReadWrite))
-    {
-        // Подключение не удалось, сбрасываем флаг Checked
-        _connectButton->setChecked(false);
-        qDebug() << "\nError: COM is not available!";
-        // Сбросим флаг статуса открытия порта
-        connectionStatus = CLOSED;
-        QMessageBox::warning(nullptr, "Warning", "Selected COM is not availalable!");
-    }
-    else
-    {
+void SerialGui::portStatusChanged(bool status){
+    if(status){
+        connectionStatus = OPEN;
         // Заменяем текст на кнопке
         _connectButton->setText("Disconnect");
-        // Выведем сообщение в дебагер
-        qDebug() << "\nConnected to:" << QSerialPort::portName()
-                 << "\nBaudrate:"     << baudRate()
-                 << "\nData bit:"     << dataBits()
-                 << "\nParity:"       << parity()
-                 << "\nStop bits:"    << stopBits()
-                 << "\nFlow control:" << flowControl();
-        // Установим флаг статуса открытия порта
-        connectionStatus = OPEN;
-
         // Блокируем ComboBoxes
         _ports->setEnabled(false);
         _baudrate->setEnabled(false);
@@ -118,30 +96,68 @@ void SerialGui::openPort(void)
         _stopBits->setEnabled(false);
         _flowControl->setEnabled(false);
     }
+    else {
+        connectionStatus = CLOSED;
+        // Заменяем текст на кнопке
+        _connectButton->setText("Connect");
+        // Разблокируем ComboBoxes
+        _ports->setEnabled(true);
+        _baudrate->setEnabled(true);
+        _parity->setEnabled(true);
+        _dataBits->setEnabled(true);
+        _stopBits->setEnabled(true);
+        _flowControl->setEnabled(true);
+    }
+}
+
+SerialGui::ConnectionStatus SerialGui::getConnectionStatus (void){
+    return connectionStatus;
+}
+
+void SerialGui::receivedData(QByteArray data){
+#ifdef DEBUG
+    qDebug() << "Received data: " << data;
+#endif
+   received(data);
+}
+
+void SerialGui::openOrCloseByButton(void){
+#ifdef DEBUG
+        qDebug("From SerialGui::openOrCloseByButton");
+#endif
+    if(!(connectionStatus == OPEN)){
+        Serial::Settings settings;
+        settings.name        = _ports->currentText();
+        settings.baudrate    = static_cast<QSerialPort::BaudRate>
+                                    (_baudrate->currentText().toInt());
+        settings.parity      = static_cast<QSerialPort::Parity>
+                                    (_parity->itemData(_parity->currentIndex()).toInt());
+        settings.dataBits    = static_cast<QSerialPort::DataBits>
+                                    (_dataBits->itemData(_dataBits->currentIndex()).toInt());
+        settings.stopBits    = static_cast<QSerialPort::StopBits>
+                                    (_stopBits->itemData(_stopBits->currentIndex()).toInt());
+        settings.flowControl = static_cast<QSerialPort::FlowControl>
+                                    (_flowControl->itemData(_flowControl->currentIndex()).toInt());
+        emit setSettings(settings);
+        emit open();
+    }
+    else
+        emit close();
 }
 
 /*********************************************************************************
- * closePort - Отключение порта
-**********************************************************************************/
-void SerialGui::closePort(void)
-{
-    // Заменяем текст на кнопке
-    _connectButton->setText("Connect");
-    // Отключаемся
-    close();
-    // Выведем сообщение в дебагер
-    qDebug() << "\nDisconnected from:" << QSerialPort::portName();
-    // Сбросим флаг статуса открытия порта
-    connectionStatus = CLOSED;
-
-    // Разблокируем ComboBoxes
-    _ports->setEnabled(true);
-    _baudrate->setEnabled(true);
-    _parity->setEnabled(true);
-    _dataBits->setEnabled(true);
-    _stopBits->setEnabled(true);
-    _flowControl->setEnabled(true);
+ * setCustomBaudrate - Слот обслуживания custom baudrate
+*********************************************************************************/
+void SerialGui::setCustomBaudrate(void){
+    if (_baudrate->currentIndex() == indexCustomBaudrate){       // Если выбран Custom
+        _baudrate->setEditable(true);                            // Делаем изменяемым
+        _baudrate->clearEditText();                              // Убираем текст
+        _baudrate->lineEdit()->setValidator(baudrateValidator);  // Привязываем к полю ввода валидатор данных
+    }  
+    else                                                         // Если выбран любой другой пункт
+        _baudrate->setEditable(false);
 }
+
 /*********************************************************************************
  * updatePortsList - Обновление в списка доступных портов
 **********************************************************************************/
@@ -198,53 +214,4 @@ void SerialGui::fillFlowControlList(QComboBox *comboBox){
     comboBox->addItem(QStringLiteral("None"),     QSerialPort::NoFlowControl);
     comboBox->addItem(QStringLiteral("RTS/CTS"),  QSerialPort::HardwareControl);
     comboBox->addItem(QStringLiteral("XON/XOFF"), QSerialPort::SoftwareControl);
-}
-/*********************************************************************************
-* OpenOrClose - Слот обслуживания кнопки Connect
-*********************************************************************************/
-void SerialGui::slotConnection(void)
-{
-    // Если Checked не установлен, значит выполняем подключение
-    if(_connectButton->isChecked())
-        openPort();
-    // Если Checked установлен - отключаемся
-    else {
-        closePort();
-        updatePortsList(_ports);}
-}
-
-/*********************************************************************************
- * setCustomBaudrate - Слот обслуживания custom baudrate
-*********************************************************************************/
-void SerialGui::setCustomBaudrate(void)
-{
-    // Если выбран Custom
-    if (_baudrate->currentIndex() == indexCustomBaudrate)
-    {
-        // Делаем изменяемым
-        _baudrate->setEditable(true);
-        // Убираем текст
-        _baudrate->clearEditText();
-        // Привязываем к полю ввода валидатор данных
-        _baudrate->lineEdit()->setValidator(baudrateValidator);
-    }
-    // Если выбран любой другой пункт
-    else
-        _baudrate->setEditable(false);
-}
-
-
-void SerialGui::receiveData(void)
-{
-    // По рекомендациям втыкаем ожидание перед считыванием
-    waitForReadyRead(1);
-    // Принимаем данные и сразу преобразуем в строку
-    receiveBuffer = readAll();
-    // Испускаем сигнал о наличии новых данных
-    emit receivedNewData();
-}
-
-QByteArray SerialGui::getData(void)
-{
-    return receiveBuffer;
 }

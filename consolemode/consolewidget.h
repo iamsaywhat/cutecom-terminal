@@ -14,25 +14,25 @@ class ConsoleWidget : public QObject
 
 public:
     explicit ConsoleWidget(QObject*        parent,
-                           SerialGui*      Serial,
-                           QPlainTextEdit* Workspace,
-                           QLineEdit *     Message,
-                           QPushButton*    SendButton,
-                           QPushButton*    ClearButton);
+                           SerialGui*      serial,
+                           QPlainTextEdit* workspace,
+                           QLineEdit *     message,
+                           QPushButton*    sendButton,
+                           QPushButton*    clearButton);
     ~ConsoleWidget();
 private:
-    SerialGui*      Serial;
-    QPlainTextEdit* Workspace;
-    QLineEdit *     Message;
-    QPushButton*    SendButton;
-    QPushButton*    ClearButton;
+    SerialGui*      _serial;
+    QPlainTextEdit* _workspace;
+    QLineEdit *     _message;
+    QPushButton*    _sendButton;
+    QPushButton*    _clearButton;
 
 public slots:
 
 private slots:
     void send(void);
     void clear(void);
-    void receive(void);
+    void receive(QByteArray);
 };
 
 #endif // CONSOLEWIDGET_H

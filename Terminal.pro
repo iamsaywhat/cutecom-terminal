@@ -24,6 +24,7 @@ SOURCES += \
     hexmode/tableconsole.cpp \
     main.cpp \
     mainwidget.cpp \
+    serial.cpp \
     serialgui.cpp
 
 HEADERS += \
@@ -34,6 +35,7 @@ HEADERS += \
     hexmode/delegate.h \
     hexmode/tableconsole.h \
     mainwidget.h \
+    serial.h \
     serialgui.h
 
 FORMS += \

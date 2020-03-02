@@ -27,8 +27,8 @@ public:
 
     /* Типы сообщения */
     typedef enum{
-        INCOMING,   /* Исходящее */
-        OUTGOING    /* Входящее */
+        INCOMING,   // Исходящее
+        OUTGOING    // Входящее
     }DirectionType;
 
     /* Отобразить новую информациию */
@@ -46,17 +46,17 @@ public:
     QString convertHexToAscii(QByteArray source);
 
 private:
-    SerialGui*          serial;
-    QTableView*         table;       /* Таблица */
-    TextEditDelegate*   delegate;    /* Делегат для особого отображения содержимого */
-    QStandardItemModel* model;       /* Модель данных для таблицы */
-    QLineEdit*          field;       /* Поле ввода исходящего сообщения */
-    QPushButton*        sendButton;  /* Кнопка отправки нового сообщения */
-    QPushButton*        clearButton; /* Кнопка очистки содержимого */
+    TextEditDelegate*   delegate;     // Делегат для особого отображения содержимого
+    QStandardItemModel* model;        // Модель данных для таблицы
+    SerialGui*          _serial;      // Com-порт
+    QTableView*         _table;       // Таблица
+    QLineEdit*          _field;       // Поле ввода исходящего сообщения
+    QPushButton*        _sendButton;  // Кнопка отправки нового сообщения
+    QPushButton*        _clearButton; // Кнопка очистки содержимого
 
     /* Здесь храним индексы видимых строк таблицы */
-    int _firstVisibleRow = 0; /* Индекс верхней отображаемой строки */
-    int _lastVisibleRow = 0;  /* Индекс нижней отображаемой строки */
+    int _firstVisibleRow = 0;  // Индекс верхней отображаемой строки
+    int _lastVisibleRow = 0;   // Индекс нижней отображаемой строки
 
     /* Индексы столбцов */
     const uint8_t indexNumberColumn    = 0;
@@ -79,7 +79,7 @@ private slots:
 public slots:
     void clear(void);
     void send(void);
-    void receive(void);
+    void receive(QByteArray);
 };
 
 #endif // TABLECONSOLE_H
