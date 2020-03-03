@@ -19,18 +19,17 @@ class TableConsole : public QObject
 public:
     explicit TableConsole(QObject*           parent,
                           SerialGui*         serial,
-                          QTableView*        tableView,
-                          QLineEdit*         lineEdit,
+                          QTableView*        table,
+                          QLineEdit*         input,
                           QPushButton*       sendButton,
                           QPushButton*       clearButton);
     ~TableConsole();
 
     /* Типы сообщения */
-    typedef enum{
+    enum DirectionType{
         INCOMING,   // Исходящее
         OUTGOING    // Входящее
-    }DirectionType;
-
+    };
     /* Отобразить новую информациию */
     void appendData(DirectionType direction, QString* data);
     void appendData(DirectionType direction, QByteArray* data);
@@ -50,7 +49,7 @@ private:
     QStandardItemModel* model;        // Модель данных для таблицы
     SerialGui*          _serial;      // Com-порт
     QTableView*         _table;       // Таблица
-    QLineEdit*          _field;       // Поле ввода исходящего сообщения
+    QLineEdit*          _input;       // Поле ввода исходящего сообщения
     QPushButton*        _sendButton;  // Кнопка отправки нового сообщения
     QPushButton*        _clearButton; // Кнопка очистки содержимого
 

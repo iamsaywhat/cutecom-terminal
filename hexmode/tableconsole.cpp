@@ -6,15 +6,15 @@
 
 TableConsole::TableConsole(QObject*           parent,
                            SerialGui*         serial,
-                           QTableView*        tableView,
-                           QLineEdit*         lineEdit,
+                           QTableView*        table,
+                           QLineEdit*         input,
                            QPushButton*       sendButton,
-                           QPushButton*       clearButton)  : QObject(parent)
+                           QPushButton*       clearButton) : QObject(parent)
 {
     /* Берем указатели на элементы gui и рабочий serialport */
     _serial      = serial;           // Указатель на внешний экземпляр com-порта
-    _table       = tableView;        // Указатель на QTableView форму GUI
-    _field       = lineEdit;         // Указатель на QLineEdit форму GUI
+    _table       = table;        // Указатель на QTableView форму GUI
+    _input       = input;         // Указатель на QLineEdit форму GUI
     _sendButton  = sendButton;       // Указатель на QPushButton форму GUI
     _clearButton = clearButton;      // Указатель на QPushButton форму GUI
     /* Добавляем текст на кнопки */
@@ -22,7 +22,7 @@ TableConsole::TableConsole(QObject*           parent,
     clearButton->setText("Clear");
     /* Назначаем HEX валидатор на поле ввода */
     QRegularExpression hexMatcher("[0-9A-Fa-f ]+");
-    _field->setValidator(new QRegularExpressionValidator(hexMatcher, this));
+    _input->setValidator(new QRegularExpressionValidator(hexMatcher, this));
     /* Настройки QTableView */
     model = new QStandardItemModel(0,4);  // Создаём модель и пока только декларируем 4 столбца
     QStringList horizontalHeaders;        // Задаём заголовки столбцов
@@ -54,7 +54,7 @@ TableConsole::TableConsole(QObject*           parent,
             this, &TableConsole::clear);
     connect(sendButton, &QPushButton::clicked,                           // Клик по send-кнопке будет инициировать отправку
             this, &TableConsole::send);                                  // и отображение введенного сообщения
-    connect(_field, &QLineEdit::textChanged,                             // Каждый введенный символ запускает автоустановщик
+    connect(_input, &QLineEdit::textChanged,                             // Каждый введенный символ запускает автоустановщик
             this, &TableConsole::slotTextDelimiter);                     // разделителей между байтами
     connect(serial, &SerialGui::received,                                // QSerialPort будет уведомлять о принятых данных
             this, &TableConsole::receive);                               // и вызывать slot обработки входящих данных
@@ -243,14 +243,14 @@ void TableConsole::clear(void)
 
 void TableConsole::send(void){
     /* Берём текст с поля ввода */
-    QString message(_field->text());
+    QString message(_input->text());
     /* Если в поле ввода пусто, или порт не открыт, ничего не делаем */
     if(message == "" || _serial->getConnectionStatus() == SerialGui::CLOSED)
         return;
     QByteArray buffer = convertAsciiToHex(message);
     qDebug() << "Send: " << message;
     _serial->send(buffer);
-    _field->clear();
+    _input->clear();
     appendData(TableConsole::INCOMING, &message);
 }
 
@@ -263,7 +263,7 @@ void TableConsole::receive(QByteArray data){
 void TableConsole::slotTextDelimiter(void){
     QString result;
     /* Берём текст с поля ввода */
-    QString message(_field->text());
+    QString message(_input->text());
     /* Будем перебирать по байту и группировать символы
      * по два разделяя их пробелом в новой строке и
      * пропуская лишние пробелы. */
@@ -278,7 +278,7 @@ void TableConsole::slotTextDelimiter(void){
         }
     }
     /* В поле просто выбрасываем уже сгруппированную строку */
-    _field->setText(result);
+    _input->setText(result);
 }
 
 

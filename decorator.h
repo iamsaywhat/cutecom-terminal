@@ -44,6 +44,7 @@ public:
     void applyToAppLabel(QLabel *label);
     void applyToConsoleWidget(QPlainTextEdit *display, QLineEdit *input, QPushButton *sendButton, QPushButton *clearButton);
     void applyToTableWidget(QTableView *taleView, QLineEdit *lineEdit, QPushButton *sendButton, QPushButton *clearButton);
+    void applyToConverterWidget(QPlainTextEdit*, QPlainTextEdit*, QComboBox*, QComboBox*, QPushButton*, QPushButton*, QPushButton*);
 
     void setBasicColorsToWidget(QWidget *widget, int backgroundColor, int textColor);
     void setScrollBarColors(QScrollBar *scrollBar, int handleColor, int pageColor);

@@ -97,8 +97,7 @@ MainWidget::MainWidget(FramelessWindow *parent)
             [this](){ui->rightStackedPanel->setCurrentIndex(settingsIndexBinds);});
 }
 
-MainWidget::~MainWidget()
-{
+MainWidget::~MainWidget(){
     delete darkTheme;
     delete converter;
     delete tableConsole;
@@ -156,8 +155,22 @@ void MainWidget::setPropertiesToSettingsWidget(void){
     ui->rightPanelContents->layout()->setMargin(0);
     ui->rightStackedPanel->layout()->setMargin(0);
     ui->pageDelimiterLayout->setSpacing(0);
+
     /* Настройка правой панели */
     ui->labelSectionConnection->setText("Connection");
+
+    ui->labelSectionGeneral->setText("General");
+    ui->labelTheme->setText("Theme:");
+    ui->labelLanguage->setText("Language:");
+    ui->labelCodec->setText("Text codec:");
+
+    ui->labelSectionConsole->setText("Console");
+    ui->labelConsoleEcho->setText("Echo:");
+    ui->checkboxConsoleEcho->setText("");
+
+    ui->labelSectionTable->setText("Table");
+    ui->labelTableEcho->setText("Echo:");
+    ui->checkboxTableEcho->setText("");
 }
 
 void MainWidget::applyColorSchemeToMainWidget(Decorator *scheme){
@@ -182,17 +195,8 @@ void MainWidget::applyColorSchemeToTable(Decorator *scheme){
 
 void MainWidget::applyColorSchemeToConverter(Decorator *scheme){
     scheme->setBasicColorsToWidget(ui->converterPage, scheme->secondColor(), scheme->textColor());
-    scheme->setBasicColorsToWidget(ui->converterSource, scheme->baseColor(), scheme->textColor());
-    scheme->setBasicColorsToWidget(ui->converterResult, scheme->baseColor(), scheme->textColor());
-    scheme->setScrollBarColors(ui->converterSource->verticalScrollBar(),scheme->secondColor(), scheme->baseColor());
-    scheme->setScrollBarColors(ui->converterResult->verticalScrollBar(),scheme->secondColor(), scheme->baseColor());
-    scheme->setComboBoxColors(ui->converterSourceBox);
-    scheme->setComboBoxColors(ui->converterResultBox);
-    scheme->setScrollBarColors(ui->converterResultBox->view()->verticalScrollBar(), scheme->secondColor(), scheme->baseColor());
-    scheme->setScrollBarColors(ui->converterSourceBox->view()->verticalScrollBar(), scheme->secondColor(), scheme->baseColor());
-    scheme->setStandartButtonColors(ui->converterConvertButton, scheme->secondColor(), scheme->textColor(), scheme->thirdColor(), scheme->baseColor());
-    scheme->setStandartButtonColors(ui->converterSwapButton, scheme->secondColor(), scheme->textColor(), scheme->thirdColor(), scheme->baseColor());
-    scheme->setStandartButtonColors(ui->converterClearButton, scheme->secondColor(), scheme->textColor(), scheme->thirdColor(), scheme->baseColor());
+    scheme->applyToConverterWidget(ui->converterSource, ui->converterResult, ui->converterSourceBox, ui->converterResultBox,
+                                   ui->converterConvertButton, ui->converterSwapButton, ui->converterClearButton);
 }
 
 void MainWidget::applyColorSchemeToSettings(Decorator *scheme){
@@ -225,6 +229,10 @@ void MainWidget::applyColorSchemeToSettings(Decorator *scheme){
     scheme->setComboBoxColors(ui->boxStopBits);
     scheme->setComboBoxColors(ui->boxFlowControl);
     scheme->setStandartButtonColors(ui->buttonConnectDisconnect, scheme->baseColor(), scheme->textColor(), scheme->thirdColor(), scheme->secondColor());
+
+    scheme->setComboBoxColors(ui->comboBoxTheme);
+    scheme->setComboBoxColors(ui->comboBoxLanguage);
+    scheme->setComboBoxColors(ui->comboBoxCodec);
 }
 
 void MainWidget::applyColorScheme(Decorator *scheme){

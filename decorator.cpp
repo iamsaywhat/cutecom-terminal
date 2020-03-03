@@ -87,6 +87,20 @@ void Decorator::applyToTableWidget(QTableView *table, QLineEdit *input, QPushBut
     sendButton->setStyleSheet(getStandartButtonStyleSheet(baseColor(), textColor(), thirdColor(), secondColor()));
     clearButton->setStyleSheet(getStandartButtonStyleSheet(baseColor(), textColor(), thirdColor(), secondColor()));
 }
+void Decorator::applyToConverterWidget(QPlainTextEdit* source, QPlainTextEdit* result, QComboBox* sourceBox,
+                                       QComboBox* resultBox,   QPushButton* convert,   QPushButton* swap, QPushButton* clear){
+   source->setStyleSheet(getConsoleStyleSheet(baseColor(), textColor(), selectionColor(), selectionTextColor()));
+   result->setStyleSheet(getConsoleStyleSheet(baseColor(), textColor(), selectionColor(), selectionTextColor()));
+   setScrollBarColors(source->verticalScrollBar(), secondColor(), baseColor());
+   setScrollBarColors(result->verticalScrollBar(), secondColor(), baseColor());
+   setComboBoxColors(sourceBox);
+   setComboBoxColors(resultBox);
+   setScrollBarColors(resultBox->view()->verticalScrollBar(), secondColor(), baseColor());
+   setScrollBarColors(sourceBox->view()->verticalScrollBar(), secondColor(), baseColor());
+   setStandartButtonColors(convert, secondColor(), textColor(), thirdColor(), baseColor());
+   setStandartButtonColors(swap, secondColor(), textColor(), thirdColor(), baseColor());
+   setStandartButtonColors(clear, secondColor(), textColor(), thirdColor(), baseColor());
+}
 void Decorator::setBasicColorsToWidget(QWidget *widget, int backgroundColor, int textColor){
     widget->setStyleSheet(getSipmleWidgetStyleSheet(backgroundColor, textColor));
 }
@@ -159,8 +173,8 @@ QString Decorator::getStandartButtonStyleSheet (int backgroundColor,
                 "color:            #%2;"
                 "padding-left:     20px;"
                 "padding-right:    20px;"
-                "padding-top:      10px;"
-                "padding-bottom:   10px;"
+                "padding-top:      6px;"
+                "padding-bottom:   6px;"
                 "border:           none; "
            "}"
            "QPushButton:hover { "
@@ -186,7 +200,10 @@ QString Decorator::getInputFieldStyleSheet (int backgroundColor,
                     "border:                     none;"
                     "selection-background-color: #%3;"
                     "selection-color:            #%4;"
-                    "padding:                    10px;"
+                    "padding-left:               10px;"
+                    "padding-right:              5px;"
+                    "padding-top:                5px;"
+                    "padding-bottom:             5px;"
                 "}"
                 );
     return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16)).
