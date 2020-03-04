@@ -25,7 +25,8 @@ SOURCES += \
     main.cpp \
     mainwidget.cpp \
     serial.cpp \
-    serialgui.cpp
+    serialgui.cpp \
+    settingscontroller.cpp
 
 HEADERS += \
     consolemode/consolewidget.h \
@@ -36,7 +37,8 @@ HEADERS += \
     hexmode/tableconsole.h \
     mainwidget.h \
     serial.h \
-    serialgui.h
+    serialgui.h \
+    settingscontroller.h
 
 FORMS += \
     mainwidget.ui

@@ -434,7 +434,7 @@ g</string>
                   </sizepolicy>
                  </property>
                  <property name="currentIndex">
-                  <number>3</number>
+                  <number>1</number>
                  </property>
                  <widget class="QWidget" name="connectionPage">
                   <layout class="QGridLayout" name="gridLayout_6">

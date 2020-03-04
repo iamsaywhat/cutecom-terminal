@@ -2,6 +2,7 @@
 #include <QAbstractItemView>
 #include <QListView>
 
+
 Decorator::Decorator(int base, int second, int third, int text, int selection)
 {
     /* Пути к иконкам */
@@ -23,6 +24,7 @@ Decorator::Decorator(int base, int second, int third, int text, int selection)
     setSelectionColor(selection);
 
     /* Остальные цвета по-умолчанию такие */
+    setName("unnamed");
     setSelectionTextColor(textColor());
     setCloseHoverColor(0xea4445);
     setClosePressedColor(0xac4042);
@@ -30,6 +32,63 @@ Decorator::Decorator(int base, int second, int third, int text, int selection)
     setMaximizePressedColor(secondColor());
     setMinimizeHoverColor(thirdColor());
     setMinimizePressedColor(secondColor());
+}
+
+Decorator::Decorator(void)
+{
+    /* Пути к иконкам */
+    appIconlUrl       = new QString(":/icons/resources/label.png");
+    closeIconUrl      = new QString(":/icons/resources/close.png");
+    maximizeIconUrl   = new QString(":/icons/resources/maximize.png");
+    minimizeIconUrl   = new QString(":/icons/resources/minimize.png");
+    connectionIconUrl = new QString(":/icons/resources/connect.png");
+    consoleIconUrl    = new QString(":/icons/resources/consolemode.png");
+    tableIconUrl      = new QString(":/icons/resources/tablemode.png");
+    converterIconUrl  = new QString(":/icons/resources/converter.png");
+    settingsIconUrl   = new QString(":/icons/resources/settings.png");
+
+    /* Устанавливаем основные цвета */
+    setBaseColor(0xFFFFFF);
+    setSecondColor(0xFFFFFF);
+    setThirdColor(0xFFFFFF);
+    setTextColor(0xFFFFFF);
+    setSelectionColor(0xFFFFFF);
+
+    /* Остальные цвета по-умолчанию такие */
+    setName("unnamed");
+    setSelectionTextColor(textColor());
+    setCloseHoverColor(0xea4445);
+    setClosePressedColor(0xac4042);
+    setMaximizeHoverColor(thirdColor());
+    setMaximizePressedColor(secondColor());
+    setMinimizeHoverColor(thirdColor());
+    setMinimizePressedColor(secondColor());
+}
+Decorator::Decorator(const Decorator &decorator){
+    /* Пути к иконкам */
+    appIconlUrl       = new QString(":/icons/resources/label.png");
+    closeIconUrl      = new QString(":/icons/resources/close.png");
+    maximizeIconUrl   = new QString(":/icons/resources/maximize.png");
+    minimizeIconUrl   = new QString(":/icons/resources/minimize.png");
+    connectionIconUrl = new QString(":/icons/resources/connect.png");
+    consoleIconUrl    = new QString(":/icons/resources/consolemode.png");
+    tableIconUrl      = new QString(":/icons/resources/tablemode.png");
+    converterIconUrl  = new QString(":/icons/resources/converter.png");
+    settingsIconUrl   = new QString(":/icons/resources/settings.png");
+
+    setName(decorator.name());
+    setBaseColor(decorator.baseColor());
+    setTextColor(decorator.textColor());
+    setThirdColor(decorator.thirdColor());
+    setSecondColor(decorator.secondColor());
+    setSelectionColor(decorator.selectionColor());
+    setSelectionTextColor(decorator.selectionTextColor());
+    setCloseHoverColor(decorator.closeHoverColor());
+    setClosePressedColor(decorator.closePressedColor());
+    setMaximizeHoverColor(decorator.maximizeHoverColor());
+    setMaximizePressedColor(decorator.maximizePressedColor());
+    setMinimizeHoverColor(decorator.minimizeHoverColor());
+    setMinimizePressedColor(decorator.minimizePressedColor());
 }
 
 Decorator::~Decorator(){
@@ -44,6 +103,22 @@ Decorator::~Decorator(){
     delete settingsIconUrl;
 }
 
+Decorator& Decorator::operator=(const Decorator &source){
+    setName(source.name());
+    setBaseColor(source.baseColor());
+    setTextColor(source.textColor());
+    setThirdColor(source.thirdColor());
+    setSecondColor(source.secondColor());
+    setSelectionColor(source.selectionColor());
+    setSelectionTextColor(source.selectionTextColor());
+    setCloseHoverColor(source.closeHoverColor());
+    setClosePressedColor(source.closePressedColor());
+    setMaximizeHoverColor(source.maximizeHoverColor());
+    setMaximizePressedColor(source.maximizePressedColor());
+    setMinimizeHoverColor(source.minimizeHoverColor());
+    setMinimizePressedColor(source.minimizePressedColor());
+    return *this;
+}
 
 void Decorator::applyToCloseButton(QToolButton *button){
     button->setStyleSheet(getWindowButtonStyleSheet(*closeIconUrl, baseColor(), closeHoverColor(), closePressedColor()));

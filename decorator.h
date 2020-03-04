@@ -28,10 +28,14 @@ class Decorator : public QObject
     Q_PROPERTY(int maximizePressedColor READ maximizePressedColor WRITE setMaximizePressedColor NOTIFY maximizePressedColorChanged)
     Q_PROPERTY(int minimizeHoverColor   READ minimizeHoverColor   WRITE setMinimizeHoverColor   NOTIFY minimizeHoverColorChanged)
     Q_PROPERTY(int minimizePressedColor READ minimizePressedColor WRITE setMinimizePressedColor NOTIFY minimizePressedColorChanged)
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
 
 public:
     Decorator(int base, int second, int third, int text, int selection);
-    ~Decorator();
+    Decorator(const Decorator &decorator);
+    Decorator(void);
+    ~Decorator(void);
+    Decorator &operator=(const Decorator &source);
 
     void applyToCloseButton(QToolButton *button);
     void applyToMaximizeButton(QToolButton *button);
@@ -52,18 +56,19 @@ public:
     void setComboBoxColors(QComboBox *comboBox);
     void setStandartButtonColors(QPushButton *button, int backgroundColor, int textColor, int hoverBackgroundColor, int pressedBackgroundColor);
 
-    int baseColor(void)            {return _baseColor;}
-    int secondColor(void)          {return _secondColor;}
-    int thirdColor(void)           {return _thirdColor;}
-    int textColor(void)            {return _textColor;}
-    int selectionColor(void)       {return _selectionColor;}
-    int selectionTextColor(void)   {return _selectionTextColor;}
-    int closeHoverColor(void)      {return _closeHoverColor;}
-    int closePressedColor(void)    {return _closePressedColor;}
-    int maximizeHoverColor(void)   {return _maximizeHoverColor;}
-    int maximizePressedColor(void) {return _maximizePressedColor;}
-    int minimizeHoverColor(void)   {return _minimizeHoverColor;}
-    int minimizePressedColor(void) {return _minimizePressedColor;}
+    int baseColor(void) const            {return _baseColor;}
+    int secondColor(void) const          {return _secondColor;}
+    int thirdColor(void) const           {return _thirdColor;}
+    int textColor(void) const            {return _textColor;}
+    int selectionColor(void) const       {return _selectionColor;}
+    int selectionTextColor(void) const   {return _selectionTextColor;}
+    int closeHoverColor(void) const      {return _closeHoverColor;}
+    int closePressedColor(void) const    {return _closePressedColor;}
+    int maximizeHoverColor(void) const   {return _maximizeHoverColor;}
+    int maximizePressedColor(void) const {return _maximizePressedColor;}
+    int minimizeHoverColor(void) const   {return _minimizeHoverColor;}
+    int minimizePressedColor(void) const {return _minimizePressedColor;}
+    QString name(void) const             {return _name;}
 
     void setBaseColor(int value)            {_baseColor = 0xffffff&value;}
     void setSecondColor(int value)          {_secondColor = 0xffffff&value;}
@@ -77,8 +82,10 @@ public:
     void setMaximizePressedColor(int value) {_maximizePressedColor = 0xffffff&value;}
     void setMinimizeHoverColor(int value)   {_minimizeHoverColor = 0xffffff&value;}
     void setMinimizePressedColor(int value) {_minimizePressedColor = 0xffffff&value;}
+    void setName(QString text)              {_name = text;}
 
 private:
+    QString _name;
     int _baseColor;
     int _secondColor;
     int _thirdColor;
@@ -153,6 +160,11 @@ signals:
     void maximizePressedColorChanged(void);
     void minimizeHoverColorChanged(void);
     void minimizePressedColorChanged(void);
+    void nameChanged(void);
 };
 
+Q_DECLARE_METATYPE(Decorator)
+
 #endif // DECORATOR_H
+
+

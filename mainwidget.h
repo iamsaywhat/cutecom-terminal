@@ -9,6 +9,7 @@
 #include "serialgui.h"
 #include "decorator.h"
 #include "converter.h"
+#include "settingscontroller.h"
 
 
 
@@ -28,9 +29,8 @@ public:
     void setPropertiesToConsole(void);
     void setPropertiesToTable(void);
     void setPropertiesToConverter(void);
-    void setPropertiesToSettingsWidget(void);
 
-    void applyColorScheme(Decorator *scheme);
+    void applyColorScheme(int indexOfTheme);
     void applyColorSchemeToMainWidget(Decorator *scheme);
     void applyColorSchemetoConsole(Decorator *scheme);
     void applyColorSchemeToTable(Decorator *scheme);
@@ -39,13 +39,23 @@ public:
 
     void setAppFont();
 
+    void fillLanguageList();
+    void fillCodecList();
+    void fillThemeList();
+
 private:
-    Ui::MainWidget    *ui;
-    SerialGui         *serial;
-    ConsoleWidget     *console;
-    TableConsole      *tableConsole;
-    Converter         *converter;
-    Decorator         *darkTheme;
+    Ui::MainWidget     *ui;
+    SerialGui          *serial;
+    ConsoleWidget      *console;
+    TableConsole       *tableConsole;
+    Converter          *converter;
+    SettingsController *settings;
+    QStringList        *codecList;
+    QStringList        *languageList;
+    QList<Decorator*>  *themeList;
+
+    Decorator          *darkTheme;
+    Decorator          *fakeTheme;
 
     enum quickMenu {
         quickIndexConsole   = 0,
@@ -53,16 +63,8 @@ private:
         quickIndexConverter = 2,
         quickIndexSettings  = 3,
     };
-    enum settingsMenu {
-        settingsIndexConnection = 0,
-        settingsIndexGeneral    = 1,
-        settingsIndexConsole    = 2,
-        settingsIndexTable      = 3,
-        settingsIndexLogs       = 4,
-        settingsIndexBinds      = 5,
-    };
 
-    QFont *appFont = new QFont("Terminus", 8, QFont::Thin);
+    QFont *appFont = new QFont("Terminus", 10, QFont::Bold);
 };
 #endif // MAINWIDGET_H
 

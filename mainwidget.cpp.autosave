@@ -215,9 +215,6 @@ void MainWidget::applyColorSchemeToSettings(Decorator *scheme){
     scheme->setComboBoxColors(ui->comboBoxLanguage);
     scheme->setComboBoxColors(ui->comboBoxCodec);
 }
-
-
-
 void MainWidget::setAppFont(){
     QApplication::setFont(*appFont);
 }
