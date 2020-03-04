@@ -58,6 +58,8 @@ TableConsole::TableConsole(QObject*           parent,
             this, &TableConsole::slotTextDelimiter);                     // разделителей между байтами
     connect(serial, &SerialGui::received,                                // QSerialPort будет уведомлять о принятых данных
             this, &TableConsole::receive);                               // и вызывать slot обработки входящих данных
+
+    setEchoMode(true);
 }
 
 
@@ -248,10 +250,10 @@ void TableConsole::send(void){
     if(message == "" || _serial->getConnectionStatus() == SerialGui::CLOSED)
         return;
     QByteArray buffer = convertAsciiToHex(message);
-    qDebug() << "Send: " << message;
     _serial->send(buffer);
     _input->clear();
-    appendData(TableConsole::INCOMING, &message);
+    if (_echo)
+        appendData(TableConsole::INCOMING, &message);
 }
 
 void TableConsole::receive(QByteArray data){
@@ -315,4 +317,11 @@ QString TableConsole::convertHexToAscii(QByteArray source){
     }
     result = result.toUpper();
     return result;
+}
+bool TableConsole::echoMode(void){
+    return _echo;
+}
+void TableConsole::setEchoMode(bool state){
+    _echo = state;
+    emit echoModeChanged(state);
 }

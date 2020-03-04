@@ -22,6 +22,7 @@ ConsoleWidget::ConsoleWidget(QObject*        parent,
     _sendButton->setShortcut(Qt::Key_Return);  // Привязываем кнопки клавиатуры к кнопкам UI
     _sendButton->setText("Send");              // Разместим текст на кнопках
     _clearButton->setText("Clear");
+    setEchoMode(true);
     /* Выполняем функциональные подключения */
     connect(_sendButton, &QPushButton::clicked, this, &ConsoleWidget::send);
     connect(_clearButton,&QPushButton::clicked, this, &ConsoleWidget::clear);
@@ -41,9 +42,11 @@ void ConsoleWidget::send (void){
     _serial->send(data.toLocal8Bit());             // Отправляем данные преобразованные в QByteArray
     _input->clear();                               // Поле ввода очищаем
     _console->moveCursor(QTextCursor::End);        // Смещаем курсор текста гарантированно в конец
-    _console->textCursor().insertText(">> ");
-    _console->textCursor().insertText(data);
-    _console->textCursor().insertText("\n");
+    if(_echo) {
+        _console->textCursor().insertText(">> ");
+        _console->textCursor().insertText(data);
+        _console->textCursor().insertText("\n");
+    }
 }
 
 void ConsoleWidget::clear (void){
@@ -54,4 +57,11 @@ void ConsoleWidget::receive(QByteArray data){
     _console->moveCursor(QTextCursor::End);            // Смещаем курсор текста гарантированно в конец
     _console->textCursor().insertText(QString::fromLatin1(data));        // Печатаем то, что пришло
     _console->textCursor().insertText("\n");           // Переведем курсор на следующую строку
+}
+bool ConsoleWidget::echoMode(void){
+    return _echo;
+}
+void ConsoleWidget::setEchoMode(bool state){
+    _echo = state;
+    emit echoModeChanged(state);
 }

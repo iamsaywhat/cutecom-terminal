@@ -15,6 +15,7 @@
 class TableConsole : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool echoMode READ echoMode WRITE setEchoMode NOTIFY echoModeChanged)
 
 public:
     explicit TableConsole(QObject*           parent,
@@ -24,6 +25,7 @@ public:
                           QPushButton*       sendButton,
                           QPushButton*       clearButton);
     ~TableConsole();
+    bool echoMode (void);
 
     /* Типы сообщения */
     enum DirectionType{
@@ -52,6 +54,7 @@ private:
     QLineEdit*          _input;       // Поле ввода исходящего сообщения
     QPushButton*        _sendButton;  // Кнопка отправки нового сообщения
     QPushButton*        _clearButton; // Кнопка очистки содержимого
+    bool                _echo;
 
     /* Здесь храним индексы видимых строк таблицы */
     int _firstVisibleRow = 0;  // Индекс верхней отображаемой строки
@@ -70,6 +73,7 @@ private:
 
 signals:
     void dataWasAppend(void);
+    void echoModeChanged(bool);
 
 private slots:
     void slotAutoresize(void);
@@ -79,6 +83,7 @@ public slots:
     void clear(void);
     void send(void);
     void receive(QByteArray);
+    void setEchoMode(bool);
 };
 
 #endif // TABLECONSOLE_H

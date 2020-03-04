@@ -98,6 +98,8 @@ MainWidget::MainWidget(FramelessWindow *parent)
     connect(settings, &SettingsController::currentThemeChanged, this, &MainWidget::applyColorScheme);
     //connect(settings, &SettingsController::currentLanguageChanged, this, &MainWidget::);
     //connect(settings, &SettingsController::currentTextCodecChanged, this, &MainWidget);
+    connect(settings, &SettingsController::consoleEchoChanged, console, &ConsoleWidget::setEchoMode);
+    connect(settings, &SettingsController::tableEchoChanged, tableConsole, &TableConsole::setEchoMode);
 }
 
 MainWidget::~MainWidget(){
@@ -135,15 +137,12 @@ void MainWidget::setPropertiesToMainWidget(void){
     ui->switchToTableButton->setText("");
     ui->switchToConverterButton->setText("");
 }
-
 void MainWidget::setPropertiesToConsole(void){
 
 }
-
 void MainWidget::setPropertiesToTable(void){
 
 }
-
 void MainWidget::setPropertiesToConverter(void){
 
 }
@@ -215,9 +214,6 @@ void MainWidget::applyColorSchemeToSettings(Decorator *scheme){
     scheme->setComboBoxColors(ui->comboBoxLanguage);
     scheme->setComboBoxColors(ui->comboBoxCodec);
 }
-
-
-
 void MainWidget::setAppFont(){
     QApplication::setFont(*appFont);
 }

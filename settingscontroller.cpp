@@ -5,9 +5,11 @@
 #include <QComboBox>
 #include <QCheckBox>
 
+
 SettingsController::SettingsController(QObject *parent, Ui::MainWidget* gui) : QObject(parent)
 {
     SettingsController::gui = gui;
+    setProperties();
 
     // Переключение между вкладками
     connect(gui->connectionContentsButton, &QPushButton::clicked,
@@ -31,11 +33,20 @@ SettingsController::SettingsController(QObject *parent, Ui::MainWidget* gui) : Q
             this, &SettingsController::currentLanguageChanged);
     // Вкладка Connection
     connect(gui->checkboxConsoleEcho, &QCheckBox::stateChanged,
-            this, &SettingsController::consoleEchoChanged);
+            [=](int state){ if(state == Qt::CheckState::Checked)
+                                emit this->consoleEchoChanged(true);
+                            else
+                                emit this->consoleEchoChanged(false);});
     // Вкладка Table
     connect(gui->checkboxTableEcho, &QCheckBox::stateChanged,
-            this, &SettingsController::tableEchoChanged);
-    setProperties();
+            [=](int state){ if(state == Qt::CheckState::Checked)
+                                emit this->tableEchoChanged(true);
+                            else
+                                emit this->tableEchoChanged(false);});
+
+
+    gui->checkboxConsoleEcho->setCheckState(Qt::CheckState::Checked);
+    gui->checkboxTableEcho->setCheckState(Qt::CheckState::Checked);
 }
 SettingsController::~SettingsController(){
 

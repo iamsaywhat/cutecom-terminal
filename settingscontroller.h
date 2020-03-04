@@ -39,8 +39,8 @@ signals:
     void currentThemeChanged(int index);
     void currentLanguageChanged(int index);
     void currentTextCodecChanged(int index);
-    void consoleEchoChanged();
-    void tableEchoChanged();
+    void consoleEchoChanged(bool state);
+    void tableEchoChanged(bool state);
 
 public slots:
 };
