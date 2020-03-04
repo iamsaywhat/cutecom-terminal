@@ -20,6 +20,8 @@ TableConsole::TableConsole(QObject*           parent,
     /* Добавляем текст на кнопки */
     sendButton->setText("Send");
     clearButton->setText("Clear");
+    // Включаем сетку на таблице
+    _table->setShowGrid(false);
     /* Назначаем HEX валидатор на поле ввода */
     QRegularExpression hexMatcher("[0-9A-Fa-f ]+");
     _input->setValidator(new QRegularExpressionValidator(hexMatcher, this));

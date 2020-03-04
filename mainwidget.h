@@ -39,6 +39,8 @@ public:
 
     void setAppFont();
 
+    void setAppTextCodec(int index);
+
     void fillLanguageList();
     void fillCodecList();
     void fillThemeList();

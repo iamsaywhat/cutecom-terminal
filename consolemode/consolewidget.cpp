@@ -3,6 +3,7 @@
 #include <QString>
 #include <QByteArray>
 #include <QTime>
+#include "converter.h"
 
 ConsoleWidget::ConsoleWidget(QObject*        parent,
                              SerialGui*      serial,
@@ -39,7 +40,8 @@ void ConsoleWidget::send (void){
        _serial->getConnectionStatus() == SerialGui::CLOSED)   // Если в поле ввода пусто,
         return;                                               // или порт закрыт, ничего не делаем
 
-    _serial->send(data.toLocal8Bit());             // Отправляем данные преобразованные в QByteArray
+    _serial->send(Converter::convertFromUnicode(data).toLatin1());                // Отправляем данные преобразованные в QByteArray
+    //_serial->send(data.toLocal8Bit());           // Отправляем данные преобразованные в QByteArray
     _input->clear();                               // Поле ввода очищаем
     _console->moveCursor(QTextCursor::End);        // Смещаем курсор текста гарантированно в конец
     if(_echo) {
@@ -54,8 +56,10 @@ void ConsoleWidget::clear (void){
 }
 
 void ConsoleWidget::receive(QByteArray data){
+    QString temp = Converter::convertToUnicode(data);
     _console->moveCursor(QTextCursor::End);            // Смещаем курсор текста гарантированно в конец
-    _console->textCursor().insertText(QString::fromLatin1(data));        // Печатаем то, что пришло
+    _console->textCursor().insertText(temp);        // Печатаем то, что пришло
+    //_console->textCursor().insertText(QString::fromLatin1(data));        // Печатаем то, что пришло
     _console->textCursor().insertText("\n");           // Переведем курсор на следующую строку
 }
 bool ConsoleWidget::echoMode(void){

@@ -9,6 +9,7 @@
 #include <QScrollBar>
 #include <QString>
 #include <QThread>
+#include <QTextCodec>
 
 
 MainWidget::MainWidget(FramelessWindow *parent)
@@ -55,9 +56,6 @@ MainWidget::MainWidget(FramelessWindow *parent)
 
     this->setMinimumSize(600, 300);
 
-    // Включаем сетку на таблице
-    ui->tableField->setShowGrid(false);
-
     // Внешний вид приложения
     setPropertiesToMainWidget();
     setPropertiesToConsole();
@@ -97,9 +95,11 @@ MainWidget::MainWidget(FramelessWindow *parent)
     //
     connect(settings, &SettingsController::currentThemeChanged, this, &MainWidget::applyColorScheme);
     //connect(settings, &SettingsController::currentLanguageChanged, this, &MainWidget::);
-    //connect(settings, &SettingsController::currentTextCodecChanged, this, &MainWidget);
+    connect(settings, &SettingsController::currentTextCodecChanged, this, &MainWidget::setAppTextCodec);
     connect(settings, &SettingsController::consoleEchoChanged, console, &ConsoleWidget::setEchoMode);
     connect(settings, &SettingsController::tableEchoChanged, tableConsole, &TableConsole::setEchoMode);
+
+    qDebug() << QTextCodec::availableCodecs();
 }
 
 MainWidget::~MainWidget(){
@@ -146,13 +146,44 @@ void MainWidget::setPropertiesToTable(void){
 void MainWidget::setPropertiesToConverter(void){
 
 }
+void MainWidget::setAppFont(){
+    QApplication::setFont(*appFont);
+}
+void MainWidget::setAppTextCodec(int index){
+    QString codecName = this->codecList->at(index);
+    converter->setCurrentCodec(codecName.toLatin1());
+}
+void MainWidget::fillLanguageList(){
+    languageList->append("English");
+    languageList->append("Русский");
+    settings->setLanguageList(languageList);
+}
+void MainWidget::fillCodecList(){
+    codecList->append("CP866");
+    codecList->append("windows-1251");
+    settings->setCodecList(codecList);
+}
+void MainWidget::fillThemeList(){
+    darkTheme = new Decorator(0x1a1c20, 0x2b2d33, 0x33363d, 0xdcddde, 0x3d563d);
+    darkTheme->setName("Gray");
+    themeList->append(darkTheme);
 
+    fakeTheme = new Decorator(0x1a8456, 0x2b2d33, 0x31363d, 0xdcddde, 0x3d563d);
+    fakeTheme->setName("HUUI");
+    themeList->append(fakeTheme);
+
+    QStringList list;
+    foreach (const Decorator *temp, *themeList)
+        list.append(temp->name());
+    settings->setThemeList(&list);
+}
 void MainWidget::applyColorScheme(int indexOfTheme){
     applyColorSchemeToMainWidget(themeList->at(indexOfTheme));   // Основная рамка
     applyColorSchemetoConsole(themeList->at(indexOfTheme));      // Виджет консоли
     applyColorSchemeToTable(themeList->at(indexOfTheme));        // Виджет таблицы
     applyColorSchemeToConverter(themeList->at(indexOfTheme));    // Конвертер
     applyColorSchemeToSettings(themeList->at(indexOfTheme));     // Виджет настроек
+    this->setAutoFillBackground(true);                           // Этот флаг слетает, нужно восстановить
 }
 void MainWidget::applyColorSchemeToMainWidget(Decorator *scheme){
     scheme->setBasicColorsToWidget  (this, scheme->baseColor(), scheme->textColor());
@@ -214,31 +245,5 @@ void MainWidget::applyColorSchemeToSettings(Decorator *scheme){
     scheme->setComboBoxColors(ui->comboBoxLanguage);
     scheme->setComboBoxColors(ui->comboBoxCodec);
 }
-void MainWidget::setAppFont(){
-    QApplication::setFont(*appFont);
-}
-void MainWidget::fillLanguageList(){
-    languageList->append("English");
-    languageList->append("Русский");
-    settings->setLanguageList(languageList);
-}
-void MainWidget::fillCodecList(){
-    codecList->append("IBM866");
-    codecList->append("Windows-hui");
-    settings->setCodecList(codecList);
-}
-void MainWidget::fillThemeList(){
-    darkTheme = new Decorator(0x1a1c20, 0x2b2d33, 0x33363d, 0xdcddde, 0x3d563d);
-    darkTheme->setName("Gray");
-    themeList->append(darkTheme);
 
-    fakeTheme = new Decorator(0x1a8456, 0x2b2d33, 0x31363d, 0xdcddde, 0x3d563d);
-    fakeTheme->setName("HUUI");
-    themeList->append(fakeTheme);
-
-    QStringList list;
-    foreach (const Decorator *temp, *themeList)
-        list.append(temp->name());
-    settings->setThemeList(&list);
-}
 
