@@ -15,23 +15,32 @@
 
 class Decorator : public QObject
 {
-    Q_OBJECT
-    Q_PROPERTY(int baseColor            READ baseColor            WRITE setBaseColor            NOTIFY baseColorChanged)
-    Q_PROPERTY(int secondColor          READ secondColor          WRITE setSecondColor          NOTIFY secondColorChanged)
-    Q_PROPERTY(int thirdColor           READ thirdColor           WRITE setThirdColor           NOTIFY thirdColorChanged)
-    Q_PROPERTY(int textColor            READ textColor            WRITE setTextColor            NOTIFY textColorChanged)
-    Q_PROPERTY(int selectionColor       READ selectionColor       WRITE setSelectionColor       NOTIFY selectionColorChanged)
-    Q_PROPERTY(int selectionTextColor   READ selectionTextColor   WRITE setSelectionTextColor   NOTIFY selectionTextColorChanged)
-    Q_PROPERTY(int closeHoverColor      READ closeHoverColor      WRITE setCloseHoverColor      NOTIFY closeHoverColorChanged)
-    Q_PROPERTY(int closePressedColor    READ closePressedColor    WRITE setClosePressedColor    NOTIFY closePressedColorChanged)
-    Q_PROPERTY(int maximizeHoverColor   READ maximizeHoverColor   WRITE setMaximizeHoverColor   NOTIFY maximizeHoverColorChanged)
-    Q_PROPERTY(int maximizePressedColor READ maximizePressedColor WRITE setMaximizePressedColor NOTIFY maximizePressedColorChanged)
-    Q_PROPERTY(int minimizeHoverColor   READ minimizeHoverColor   WRITE setMinimizeHoverColor   NOTIFY minimizeHoverColorChanged)
-    Q_PROPERTY(int minimizePressedColor READ minimizePressedColor WRITE setMinimizePressedColor NOTIFY minimizePressedColorChanged)
-    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
 
+    Q_OBJECT    
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(IconMode iconMode READ iconMode WRITE setIconMode NOTIFY iconModeChanged)
+    Q_PROPERTY(Color baseColor READ baseColor WRITE setBaseColor NOTIFY baseColorChanged)
+    Q_PROPERTY(Color secondColor READ secondColor WRITE setSecondColor NOTIFY secondColorChanged)
+    Q_PROPERTY(Color thirdColor READ thirdColor WRITE setThirdColor NOTIFY thirdColorChanged)
+    Q_PROPERTY(Color closeHoverColor      READ closeHoverColor      WRITE setCloseHoverColor      NOTIFY closeHoverColorChanged)
+    Q_PROPERTY(Color closePressedColor    READ closePressedColor    WRITE setClosePressedColor    NOTIFY closePressedColorChanged)
+    Q_PROPERTY(Color maximizeHoverColor   READ maximizeHoverColor   WRITE setMaximizeHoverColor   NOTIFY maximizeHoverColorChanged)
+    Q_PROPERTY(Color maximizePressedColor READ maximizePressedColor WRITE setMaximizePressedColor NOTIFY maximizePressedColorChanged)
+    Q_PROPERTY(Color minimizeHoverColor   READ minimizeHoverColor   WRITE setMinimizeHoverColor   NOTIFY minimizeHoverColorChanged)
+    Q_PROPERTY(Color minimizePressedColor READ minimizePressedColor WRITE setMinimizePressedColor NOTIFY minimizePressedColorChanged)
 public:
-    Decorator(int base, int second, int third, int text, int selection);
+    enum IconMode{
+        Light,
+        Dark,
+    };
+    struct Color{
+        int background;
+        int text;
+        int selectionColor;
+        int selectedText;
+    };
+
+    Decorator(QString name, IconMode iconmode, Color base, Color second, Color third);
     Decorator(const Decorator &decorator);
     Decorator(void);
     ~Decorator(void);
@@ -50,103 +59,73 @@ public:
     void applyToTableWidget(QTableView *taleView, QLineEdit *lineEdit, QPushButton *sendButton, QPushButton *clearButton);
     void applyToConverterWidget(QPlainTextEdit*, QPlainTextEdit*, QComboBox*, QComboBox*, QPushButton*, QPushButton*, QPushButton*);
 
-    void setBasicColorsToWidget(QWidget *widget, int backgroundColor, int textColor);
-    void setScrollBarColors(QScrollBar *scrollBar, int handleColor, int pageColor);
-    void setSettingsButtonsColors(QPushButton *button, int background, int backgroundHover, int backgroundPressed);
+    void setBasicColorsToWidget(QWidget *widget, Color color);
+    void setScrollBarColors(QScrollBar *scrollBar, Color handleColor, Color pageColor);
+    void setSettingsButtonsColors(QPushButton *button, Color background, Color backgroundHover, Color backgroundPressed);
     void setComboBoxColors(QComboBox *comboBox);
-    void setStandartButtonColors(QPushButton *button, int backgroundColor, int textColor, int hoverBackgroundColor, int pressedBackgroundColor);
+    void setStandartButtonColors(QPushButton *button, Color baseColor, Color hoverColor, Color pressedColor);
 
-    int baseColor(void) const            {return _baseColor;}
-    int secondColor(void) const          {return _secondColor;}
-    int thirdColor(void) const           {return _thirdColor;}
-    int textColor(void) const            {return _textColor;}
-    int selectionColor(void) const       {return _selectionColor;}
-    int selectionTextColor(void) const   {return _selectionTextColor;}
-    int closeHoverColor(void) const      {return _closeHoverColor;}
-    int closePressedColor(void) const    {return _closePressedColor;}
-    int maximizeHoverColor(void) const   {return _maximizeHoverColor;}
-    int maximizePressedColor(void) const {return _maximizePressedColor;}
-    int minimizeHoverColor(void) const   {return _minimizeHoverColor;}
-    int minimizePressedColor(void) const {return _minimizePressedColor;}
-    QString name(void) const             {return _name;}
+    Color baseColor(void) const            {return _baseColor;}
+    Color secondColor(void) const          {return _secondColor;}
+    Color thirdColor(void) const           {return _thirdColor;}
+    Color closeHoverColor(void) const      {return _closeHoverColor;}
+    Color closePressedColor(void) const    {return _closePressedColor;}
+    Color maximizeHoverColor(void) const   {return _maximizeHoverColor;}
+    Color maximizePressedColor(void) const {return _maximizePressedColor;}
+    Color minimizeHoverColor(void) const   {return _minimizeHoverColor;}
+    Color minimizePressedColor(void) const {return _minimizePressedColor;}
+    QString name(void) const               {return _name;}
+    IconMode iconMode(void) const          {return _iconMode;}
 
-    void setBaseColor(int value)            {_baseColor = 0xffffff&value;}
-    void setSecondColor(int value)          {_secondColor = 0xffffff&value;}
-    void setThirdColor(int value)           {_thirdColor = 0xffffff&value;}
-    void setTextColor(int value)            {_textColor = 0xffffff&value;}
-    void setSelectionColor(int value)       {_selectionColor = 0xffffff&value;}
-    void setSelectionTextColor(int value)   {_selectionTextColor = 0xffffff&value;}
-    void setCloseHoverColor(int value)      {_closeHoverColor = 0xffffff&value;}
-    void setClosePressedColor(int value)    {_closePressedColor = 0xffffff&value;}
-    void setMaximizeHoverColor(int value)   {_maximizeHoverColor = 0xffffff&value;}
-    void setMaximizePressedColor(int value) {_maximizePressedColor = 0xffffff&value;}
-    void setMinimizeHoverColor(int value)   {_minimizeHoverColor = 0xffffff&value;}
-    void setMinimizePressedColor(int value) {_minimizePressedColor = 0xffffff&value;}
-    void setName(QString text)              {_name = text;}
+    void setBaseColor(Color color);
+    void setSecondColor(Color color);
+    void setThirdColor(Color color);
+    void setCloseHoverColor(Color color);
+    void setClosePressedColor(Color color);
+    void setMaximizeHoverColor(Color color);
+    void setMaximizePressedColor(Color color);
+    void setMinimizeHoverColor(Color color);
+    void setMinimizePressedColor(Color color);
+    void setName(QString text);
+    void setIconMode(IconMode mode);
+
+    void validateColor(Color &color);
+    QString colorToString(Color color);
 
 private:
     QString _name;
-    int _baseColor;
-    int _secondColor;
-    int _thirdColor;
-    int _textColor;
-    int _selectionColor;
-    int _selectionTextColor;
-    int _closeHoverColor;
-    int _closePressedColor;
-    int _maximizeHoverColor;
-    int _maximizePressedColor;
-    int _minimizeHoverColor;
-    int _minimizePressedColor;
-    QString *appIconlUrl;
-    QString *closeIconUrl;
-    QString *maximizeIconUrl;
-    QString *minimizeIconUrl;
-    QString *connectionIconUrl;
-    QString *consoleIconUrl;
-    QString *tableIconUrl;
-    QString *converterIconUrl;
-    QString *settingsIconUrl;
+    IconMode _iconMode;
+    Color _baseColor;
+    Color _secondColor;
+    Color _thirdColor;
+    Color _closeHoverColor;
+    Color _closePressedColor;
+    Color _maximizeHoverColor;
+    Color _maximizePressedColor;
+    Color _minimizeHoverColor;
+    Color _minimizePressedColor;
+    QString appIconlUrl;
+    QString closeIconUrl;
+    QString maximizeIconUrl;
+    QString minimizeIconUrl;
+    QString connectionIconUrl;
+    QString consoleIconUrl;
+    QString tableIconUrl;
+    QString converterIconUrl;
+    QString settingsIconUrl;
 
-    static QString getAppLabelStyleSheet          (QString iconUrl);
-    static QString getTableStyleSheet             (int backgroundColor,
-                                                   int textColor,
-                                                   int selectionBackgroundColor,
-                                                   int selectionTextColor,
-                                                   int headerBackgroundColor);
-    static QString getConsoleStyleSheet           (int backgroundColor,
-                                                   int textColor,
-                                                   int selectionBackgroundColor,
-                                                   int selectionTextColor);
-    static QString getQuickPanelButtonStyleSheet  (QString iconUrl,
-                                                   int backgroundColor,
-                                                   int hoverBackgroundColor,
-                                                   int pressedBackgroundColor);
-    static QString getMainWidgetStyleSheet        (int backgroundColor,
-                                                   int textColor);
-    static QString getWindowButtonStyleSheet      (QString iconUrl,
-                                                   int backgroundColor,
-                                                   int hoverBackgroundColor,
-                                                   int pressedBackgroundColor);
-    static QString getStandartButtonStyleSheet    (int backgroundColor,
-                                                   int textColor,
-                                                   int hoverBackgroundColor,
-                                                   int pressedBackgroundColor);
-    static QString getInputFieldStyleSheet        (int backgroundColor,
-                                                   int textColor,
-                                                   int selectionBackgroundColor,
-                                                   int selectionTextColor);
-    static QString getScrollBarStyleSheet         (int handleColor,
-                                                   int pageColor);
-    static QString getSipmleWidgetStyleSheet      (int backgroundColor,
-                                                   int textColor);
-    static QString getSettingsMenuButtonStyleSheet(int background,
-                                                   int backgroundHover,
-                                                   int backgroundPressed);
-    static QString getComboBoxStyleSheet          (int background,
-                                                   int color,
-                                                   int selectionBackgroundColor,
-                                                   int selectionColor);
+    static QString getAppLabelStyleSheet(QString iconUrl);
+    QString getMainWidgetStyleSheet(Color color);
+    QString getWindowButtonStyleSheet(QString iconUrl, Color baseColor, Color hoverColor, Color pressedColor);
+    QString getStandartButtonStyleSheet (Color baseColor, Color hoverColor, Color pressedColor);
+    QString getInputFieldStyleSheet (Color color);
+    QString getScrollBarStyleSheet (Color handleColor, Color pageColor);
+    QString getConsoleStyleSheet(Color color);
+    QString getQuickPanelButtonStyleSheet(QString iconUrl, Color baseColor, Color hoverColor, Color pressedColor);
+    QString getTableStyleSheet(Color tableColor, Color headerColor);
+    QString getSipmleWidgetStyleSheet(Color color);
+    QString getSettingsMenuButtonStyleSheet(Color baseColor,Color hoverColor, Color pressedColor);
+    QString getComboBoxStyleSheet(Color activeColor, Color disableColor, Color listColor);
 signals:
     void baseColorChanged(void);
     void secondColorChanged(void);
@@ -161,6 +140,7 @@ signals:
     void minimizeHoverColorChanged(void);
     void minimizePressedColorChanged(void);
     void nameChanged(void);
+    void iconModeChanged(void);
 };
 
 Q_DECLARE_METATYPE(Decorator)

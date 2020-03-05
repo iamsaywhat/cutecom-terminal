@@ -3,31 +3,18 @@
 #include <QListView>
 
 
-Decorator::Decorator(int base, int second, int third, int text, int selection)
+Decorator::Decorator(QString name, IconMode icon, Color base, Color second, Color third)
 {
-    /* Пути к иконкам */
-    appIconlUrl       = new QString(":/icons/resources/label.png");
-    closeIconUrl      = new QString(":/icons/resources/close.png");
-    maximizeIconUrl   = new QString(":/icons/resources/maximize.png");
-    minimizeIconUrl   = new QString(":/icons/resources/minimize.png");
-    connectionIconUrl = new QString(":/icons/resources/connect.png");
-    consoleIconUrl    = new QString(":/icons/resources/consolemode.png");
-    tableIconUrl      = new QString(":/icons/resources/tablemode.png");
-    converterIconUrl  = new QString(":/icons/resources/converter.png");
-    settingsIconUrl   = new QString(":/icons/resources/settings.png");
-
     /* Устанавливаем основные цвета */
     setBaseColor(base);
     setSecondColor(second);
     setThirdColor(third);
-    setTextColor(text);
-    setSelectionColor(selection);
+    setName(name);
+    setIconMode(icon);
 
     /* Остальные цвета по-умолчанию такие */
-    setName("unnamed");
-    setSelectionTextColor(textColor());
-    setCloseHoverColor(0xea4445);
-    setClosePressedColor(0xac4042);
+    setCloseHoverColor({0xea4445, 0xea4445,0xea4445,0xea4445});
+    setClosePressedColor({0xac4042, 0xac4042, 0xac4042, 0xac4042});
     setMaximizeHoverColor(thirdColor());
     setMaximizePressedColor(secondColor());
     setMinimizeHoverColor(thirdColor());
@@ -36,53 +23,27 @@ Decorator::Decorator(int base, int second, int third, int text, int selection)
 
 Decorator::Decorator(void)
 {
-    /* Пути к иконкам */
-    appIconlUrl       = new QString(":/icons/resources/label.png");
-    closeIconUrl      = new QString(":/icons/resources/close.png");
-    maximizeIconUrl   = new QString(":/icons/resources/maximize.png");
-    minimizeIconUrl   = new QString(":/icons/resources/minimize.png");
-    connectionIconUrl = new QString(":/icons/resources/connect.png");
-    consoleIconUrl    = new QString(":/icons/resources/consolemode.png");
-    tableIconUrl      = new QString(":/icons/resources/tablemode.png");
-    converterIconUrl  = new QString(":/icons/resources/converter.png");
-    settingsIconUrl   = new QString(":/icons/resources/settings.png");
-
     /* Устанавливаем основные цвета */
-    setBaseColor(0xFFFFFF);
-    setSecondColor(0xFFFFFF);
-    setThirdColor(0xFFFFFF);
-    setTextColor(0xFFFFFF);
-    setSelectionColor(0xFFFFFF);
+    setBaseColor({0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF});
+    setSecondColor({0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF});
+    setThirdColor({0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF});
+    setName("unnamed");
+    setIconMode(Light);
 
     /* Остальные цвета по-умолчанию такие */
-    setName("unnamed");
-    setSelectionTextColor(textColor());
-    setCloseHoverColor(0xea4445);
-    setClosePressedColor(0xac4042);
+    setCloseHoverColor({0xea4445, 0xea4445,0xea4445,0xea4445});
+    setClosePressedColor({0xac4042, 0xac4042, 0xac4042, 0xac4042});
     setMaximizeHoverColor(thirdColor());
     setMaximizePressedColor(secondColor());
     setMinimizeHoverColor(thirdColor());
     setMinimizePressedColor(secondColor());
 }
 Decorator::Decorator(const Decorator &decorator){
-    /* Пути к иконкам */
-    appIconlUrl       = new QString(":/icons/resources/label.png");
-    closeIconUrl      = new QString(":/icons/resources/close.png");
-    maximizeIconUrl   = new QString(":/icons/resources/maximize.png");
-    minimizeIconUrl   = new QString(":/icons/resources/minimize.png");
-    connectionIconUrl = new QString(":/icons/resources/connect.png");
-    consoleIconUrl    = new QString(":/icons/resources/consolemode.png");
-    tableIconUrl      = new QString(":/icons/resources/tablemode.png");
-    converterIconUrl  = new QString(":/icons/resources/converter.png");
-    settingsIconUrl   = new QString(":/icons/resources/settings.png");
-
     setName(decorator.name());
+    setIconMode(decorator.iconMode());
     setBaseColor(decorator.baseColor());
-    setTextColor(decorator.textColor());
     setThirdColor(decorator.thirdColor());
     setSecondColor(decorator.secondColor());
-    setSelectionColor(decorator.selectionColor());
-    setSelectionTextColor(decorator.selectionTextColor());
     setCloseHoverColor(decorator.closeHoverColor());
     setClosePressedColor(decorator.closePressedColor());
     setMaximizeHoverColor(decorator.maximizeHoverColor());
@@ -92,25 +53,15 @@ Decorator::Decorator(const Decorator &decorator){
 }
 
 Decorator::~Decorator(){
-    delete appIconlUrl;
-    delete closeIconUrl;
-    delete maximizeIconUrl;
-    delete minimizeIconUrl;
-    delete connectionIconUrl;
-    delete consoleIconUrl;
-    delete tableIconUrl;
-    delete converterIconUrl;
-    delete settingsIconUrl;
+
 }
 
 Decorator& Decorator::operator=(const Decorator &source){
     setName(source.name());
+    setIconMode(source.iconMode());
     setBaseColor(source.baseColor());
-    setTextColor(source.textColor());
     setThirdColor(source.thirdColor());
     setSecondColor(source.secondColor());
-    setSelectionColor(source.selectionColor());
-    setSelectionTextColor(source.selectionTextColor());
     setCloseHoverColor(source.closeHoverColor());
     setClosePressedColor(source.closePressedColor());
     setMaximizeHoverColor(source.maximizeHoverColor());
@@ -120,132 +71,210 @@ Decorator& Decorator::operator=(const Decorator &source){
     return *this;
 }
 
+void Decorator::validateColor(Color &color){
+    color.background&=0xffffff;
+    color.text&=0xffffff;
+    color.selectedText&=0xffffff;
+    color.selectionColor&=0xffffff;
+}
+
+void Decorator::setBaseColor(Color color){
+    validateColor(color);
+    _baseColor = color;
+}
+void Decorator::setSecondColor(Color color){
+    validateColor(color);
+    _secondColor = color;
+}
+void Decorator::setThirdColor(Color color){
+    validateColor(color);
+    _thirdColor = color;
+}
+void Decorator::setCloseHoverColor(Color color){
+    validateColor(color);
+    _closeHoverColor = color;
+}
+void Decorator::setClosePressedColor(Color color){
+    validateColor(color);
+    _closePressedColor = color;
+}
+void Decorator::setMaximizeHoverColor(Color color){
+    validateColor(color);
+    _maximizeHoverColor = color;
+}
+void Decorator::setMaximizePressedColor(Color color){
+    validateColor(color);
+    _maximizePressedColor = color;
+}
+void Decorator::setMinimizeHoverColor(Color color){
+    validateColor(color);
+    _minimizeHoverColor = color;
+}
+void Decorator::setMinimizePressedColor(Color color){
+    validateColor(color);
+    _minimizePressedColor = color;
+}
+void Decorator::setName(QString text){
+    _name = text;
+}
+void Decorator::setIconMode(IconMode mode){
+    _iconMode = mode;
+    if(mode == Dark){
+        appIconlUrl       = ":/icons/resources/label.png";
+        closeIconUrl      = ":/icons/resources/close.png";
+        maximizeIconUrl   = ":/icons/resources/maximize.png";
+        minimizeIconUrl   = ":/icons/resources/minimize.png";
+        connectionIconUrl = ":/icons/resources/connect.png";
+        consoleIconUrl    = ":/icons/resources/consolemode.png";
+        tableIconUrl      = ":/icons/resources/tablemode.png";
+        converterIconUrl  = ":/icons/resources/converter.png";
+        settingsIconUrl   = ":/icons/resources/settings.png";
+    }
+    else{
+        appIconlUrl       = ":/icons/resources/label.png";
+        closeIconUrl      = ":/icons/resources/close.png";
+        maximizeIconUrl   = ":/icons/resources/maximize.png";
+        minimizeIconUrl   = ":/icons/resources/minimize.png";
+        connectionIconUrl = ":/icons/resources/connect.png";
+        consoleIconUrl    = ":/icons/resources/consolemode.png";
+        tableIconUrl      = ":/icons/resources/tablemode.png";
+        converterIconUrl  = ":/icons/resources/converter.png";
+        settingsIconUrl   = ":/icons/resources/settings.png";
+    }
+}
+
 void Decorator::applyToCloseButton(QToolButton *button){
-    button->setStyleSheet(getWindowButtonStyleSheet(*closeIconUrl, baseColor(), closeHoverColor(), closePressedColor()));
+    button->setStyleSheet(getWindowButtonStyleSheet(closeIconUrl, baseColor(), closeHoverColor(), closePressedColor()));
 }
 void Decorator::applyToMaximizeButton(QToolButton *button){
-    button->setStyleSheet(getWindowButtonStyleSheet(*maximizeIconUrl, baseColor(), maximizeHoverColor(), maximizePressedColor()));
+    button->setStyleSheet(getWindowButtonStyleSheet(maximizeIconUrl, baseColor(), maximizeHoverColor(), maximizePressedColor()));
 }
 void Decorator::applyToMinimizeButton(QToolButton *button){
-    button->setStyleSheet(getWindowButtonStyleSheet(*minimizeIconUrl, baseColor(), minimizeHoverColor(), minimizePressedColor()));
+    button->setStyleSheet(getWindowButtonStyleSheet(minimizeIconUrl, baseColor(), minimizeHoverColor(), minimizePressedColor()));
 }
 void Decorator::applyToConnectionButton(QPushButton *button){
-    button->setStyleSheet(getQuickPanelButtonStyleSheet(*connectionIconUrl, baseColor(), thirdColor(), secondColor()));
+    button->setStyleSheet(getQuickPanelButtonStyleSheet(connectionIconUrl, baseColor(), thirdColor(), secondColor()));
 }
 void Decorator::applyToConsoleButton(QPushButton *button){
-    button->setStyleSheet(getQuickPanelButtonStyleSheet(*consoleIconUrl, baseColor(), thirdColor(), secondColor()));
+    button->setStyleSheet(getQuickPanelButtonStyleSheet(consoleIconUrl, baseColor(), thirdColor(), secondColor()));
 }
 void Decorator::applyToTableButton(QPushButton *button){
-    button->setStyleSheet(getQuickPanelButtonStyleSheet(*tableIconUrl, baseColor(), thirdColor(), secondColor()));
+    button->setStyleSheet(getQuickPanelButtonStyleSheet(tableIconUrl, baseColor(), thirdColor(), secondColor()));
 }
 void Decorator::applyToConverterButton(QPushButton *button){
-    button->setStyleSheet(getQuickPanelButtonStyleSheet(*converterIconUrl, baseColor(), thirdColor(), secondColor()));
+    button->setStyleSheet(getQuickPanelButtonStyleSheet(converterIconUrl, baseColor(), thirdColor(), secondColor()));
 }
 void Decorator::applyToSettingsButton(QPushButton *button){
-    button->setStyleSheet(getQuickPanelButtonStyleSheet(*settingsIconUrl, baseColor(), thirdColor(), secondColor()));
+    button->setStyleSheet(getQuickPanelButtonStyleSheet(settingsIconUrl, baseColor(), thirdColor(), secondColor()));
 }
 void Decorator::applyToAppLabel(QLabel *label){
-    label->setStyleSheet(getAppLabelStyleSheet(*appIconlUrl));
+    label->setStyleSheet(getAppLabelStyleSheet(appIconlUrl));
 }
 void Decorator::applyToConsoleWidget(QPlainTextEdit *display, QLineEdit *input, QPushButton *sendButton, QPushButton *clearButton){
-    display->setStyleSheet(getConsoleStyleSheet(secondColor(), textColor(), selectionColor(), selectionTextColor()));
+    display->setStyleSheet(getConsoleStyleSheet(secondColor()));
     display->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
-    input->setStyleSheet(getInputFieldStyleSheet(secondColor(), textColor(), selectionColor(), selectionTextColor()));
-    sendButton->setStyleSheet(getStandartButtonStyleSheet(baseColor(), textColor(), thirdColor(), secondColor()));
-    clearButton->setStyleSheet(getStandartButtonStyleSheet(baseColor(), textColor(), thirdColor(), secondColor()));
+    input->setStyleSheet(getInputFieldStyleSheet(secondColor()));
+    sendButton->setStyleSheet(getStandartButtonStyleSheet(baseColor(), thirdColor(), secondColor()));
+    clearButton->setStyleSheet(getStandartButtonStyleSheet(baseColor(), thirdColor(), secondColor()));
 }
 void Decorator::applyToTableWidget(QTableView *table, QLineEdit *input, QPushButton *sendButton, QPushButton *clearButton){
     table->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
     table->horizontalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
-    table->setStyleSheet(getTableStyleSheet(secondColor(), textColor(), selectionColor(), selectionTextColor(), baseColor()));
-    input->setStyleSheet(getInputFieldStyleSheet(secondColor(), textColor(), selectionColor(), selectionTextColor()));
-    sendButton->setStyleSheet(getStandartButtonStyleSheet(baseColor(), textColor(), thirdColor(), secondColor()));
-    clearButton->setStyleSheet(getStandartButtonStyleSheet(baseColor(), textColor(), thirdColor(), secondColor()));
+    table->setStyleSheet(getTableStyleSheet(secondColor(), baseColor()));
+    input->setStyleSheet(getInputFieldStyleSheet(secondColor()));
+    sendButton->setStyleSheet(getStandartButtonStyleSheet(baseColor(), thirdColor(), secondColor()));
+    clearButton->setStyleSheet(getStandartButtonStyleSheet(baseColor(), thirdColor(), secondColor()));
 }
 void Decorator::applyToConverterWidget(QPlainTextEdit* source, QPlainTextEdit* result, QComboBox* sourceBox,
                                        QComboBox* resultBox,   QPushButton* convert,   QPushButton* swap, QPushButton* clear){
-   source->setStyleSheet(getConsoleStyleSheet(baseColor(), textColor(), selectionColor(), selectionTextColor()));
-   result->setStyleSheet(getConsoleStyleSheet(baseColor(), textColor(), selectionColor(), selectionTextColor()));
+   source->setStyleSheet(getConsoleStyleSheet(baseColor()));
+   result->setStyleSheet(getConsoleStyleSheet(baseColor()));
    setScrollBarColors(source->verticalScrollBar(), secondColor(), baseColor());
    setScrollBarColors(result->verticalScrollBar(), secondColor(), baseColor());
    setComboBoxColors(sourceBox);
    setComboBoxColors(resultBox);
    setScrollBarColors(resultBox->view()->verticalScrollBar(), secondColor(), baseColor());
    setScrollBarColors(sourceBox->view()->verticalScrollBar(), secondColor(), baseColor());
-   setStandartButtonColors(convert, secondColor(), textColor(), thirdColor(), baseColor());
-   setStandartButtonColors(swap, secondColor(), textColor(), thirdColor(), baseColor());
-   setStandartButtonColors(clear, secondColor(), textColor(), thirdColor(), baseColor());
+   setStandartButtonColors(convert, secondColor(), thirdColor(), baseColor());
+   setStandartButtonColors(swap, secondColor(), thirdColor(), baseColor());
+   setStandartButtonColors(clear, secondColor(), thirdColor(), baseColor());
 }
-void Decorator::setBasicColorsToWidget(QWidget *widget, int backgroundColor, int textColor){
-    widget->setStyleSheet(getSipmleWidgetStyleSheet(backgroundColor, textColor));
+void Decorator::setBasicColorsToWidget(QWidget *widget, Color colors){
+    widget->setStyleSheet(getSipmleWidgetStyleSheet(colors));
 }
-void Decorator::setScrollBarColors(QScrollBar *scrollBar, int handleColor, int pageColor){
+void Decorator::setScrollBarColors(QScrollBar *scrollBar, Color handleColor, Color pageColor){
     scrollBar->setStyleSheet(getScrollBarStyleSheet(handleColor, pageColor));
 }
-void Decorator::setSettingsButtonsColors(QPushButton *button, int background, int backgroundHover, int backgroundPressed){
+void Decorator::setSettingsButtonsColors(QPushButton *button, Color background, Color backgroundHover, Color backgroundPressed){
     button->setStyleSheet(getSettingsMenuButtonStyleSheet(background, backgroundHover, backgroundPressed));
 }
 void Decorator::setComboBoxColors(QComboBox *comboBox){
-    comboBox->setStyleSheet(getComboBoxStyleSheet(baseColor(), textColor(), selectionColor(), selectionTextColor()));
-    comboBox->view()->setStyleSheet(getComboBoxStyleSheet(baseColor(), textColor(), selectionColor(), selectionTextColor()));
+    comboBox->setStyleSheet(getComboBoxStyleSheet(baseColor(), secondColor(), baseColor()));
+    comboBox->view()->setStyleSheet(getComboBoxStyleSheet(baseColor(), secondColor(), baseColor()));
     comboBox->lineEdit();//->setStyleSheet(getComboBoxStyleSheet(baseColor(), textColor(), selectionColor(), selectionTextColor()));
 }
-void Decorator::setStandartButtonColors(QPushButton *button, int backgroundColor, int textColor, int hoverBackgroundColor, int pressedBackgroundColor) {
-    button->setStyleSheet(getStandartButtonStyleSheet(backgroundColor, textColor, hoverBackgroundColor, pressedBackgroundColor));
+void Decorator::setStandartButtonColors(QPushButton *button, Color baseColor, Color hoverColor, Color pressedColor){
+    button->setStyleSheet(getStandartButtonStyleSheet(baseColor, hoverColor, pressedColor));
 }
 
 
 
+QString Decorator::colorToString(Color color){
+    validateColor(color);
+    QString styleSheet(
+                "background-color:           #%1;"
+                "color:                      #%2;"
+                "selection-background-color: #%3;"
+                "selection-color:            #%4;");
+    return styleSheet.arg(QString::number(color.background, 16).rightJustified(6,'0'))
+                     .arg(QString::number(color.text, 16).rightJustified(6,'0'))
+                     .arg(QString::number(color.selectionColor, 16).rightJustified(6,'0'))
+                     .arg(QString::number(color.selectedText, 16).rightJustified(6,'0'));
+}
 
-
-QString Decorator::getMainWidgetStyleSheet(int backgroundColor,
-                                           int textColor) {
+QString Decorator::getMainWidgetStyleSheet(Color color) {
     QString styleSheet (
             "QWidget { "
-                "background-color: #%1;"
-                "color:            #%2;"
-                "border:           none;"
+                "%1"
+                "border: none;"
            "}");
-    return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
-                     .arg(QString::number(textColor&0xFFFFFF, 16).rightJustified(6,'0'));
+    return styleSheet.arg(colorToString(color));
 }
 
 QString Decorator::getWindowButtonStyleSheet(QString iconUrl,
-                                             int backgroundColor,
-                                             int hoverBackgroundColor,
-                                             int pressedBackgroundColor) {
+                                             Color baseColor,
+                                             Color hoverColor,
+                                             Color pressedColor){
     QString styleSheet (
            "QToolButton { "
-                "image:            url(%1);"
-                "background-color: #%2;"
-                "icon-size:        12px;"
-                "padding-left:     10px;"
-                "padding-right:    10px;"
-                "padding-top:      5px;"
-                "padding-bottom:   5px;"
-                "border:           none;"
+                "image:                      url(%1);"
+                "%2;"
+                "icon-size:                  12px;"
+                "padding-left:               10px;"
+                "padding-right:              10px;"
+                "padding-top:                5px;"
+                "padding-bottom:             5px;"
+                "border:                     none;"
            "}"
            "QToolButton:hover {"
-                "background-color: #%3;"
+                "%3;"
            "}"
            "QToolButton:pressed { "
-                "background-color: #%4;"
+                "%4"
            "}");
     return styleSheet.arg(iconUrl)
-                     .arg(QString::number(backgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
-                     .arg(QString::number(hoverBackgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
-                     .arg(QString::number(pressedBackgroundColor&0xFFFFFF, 16).rightJustified(6,'0'));
+                     .arg(colorToString(baseColor))
+                     .arg(colorToString(hoverColor))
+                     .arg(colorToString(pressedColor));
 }
 
 
-QString Decorator::getStandartButtonStyleSheet (int backgroundColor,
-                                                int textColor,
-                                                int hoverBackgroundColor,
-                                                int pressedBackgroundColor) {
+QString Decorator::getStandartButtonStyleSheet (Color baseColor,
+                                                Color hoverColor,
+                                                Color pressedColor) {
     QString styleSheet (
            "QPushButton { "
-                "background-color: #%1;"
-                "color:            #%2;"
+                "%1;"
                 "padding-left:     20px;"
                 "padding-right:    20px;"
                 "padding-top:      6px;"
@@ -253,41 +282,31 @@ QString Decorator::getStandartButtonStyleSheet (int backgroundColor,
                 "border:           none; "
            "}"
            "QPushButton:hover { "
-                "background-color: #%3;"
+                "%2;"
            "}"
            "QPushButton:pressed { "
-                "background-color: #%4; "
+                "%3; "
            "}");
-    return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
-                     .arg(QString::number(textColor&0xFFFFFF, 16).rightJustified(6,'0'))
-                     .arg(QString::number(hoverBackgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
-                     .arg(QString::number(pressedBackgroundColor&0xFFFFFF, 16).rightJustified(6,'0'));
+    return styleSheet.arg(colorToString(baseColor))
+                     .arg(colorToString(hoverColor))
+                     .arg(colorToString(pressedColor));
 }
 
-QString Decorator::getInputFieldStyleSheet (int backgroundColor,
-                                            int textColor,
-                                            int selectionBackgroundColor,
-                                            int selectionTextColor) {
+QString Decorator::getInputFieldStyleSheet (Color color) {
     QString styleSheet (
                 "QLineEdit { "
-                    "background:                 #%1;"
-                    "color:                      #%2;"
+                    "%1;"
                     "border:                     none;"
-                    "selection-background-color: #%3;"
-                    "selection-color:            #%4;"
                     "padding-left:               10px;"
                     "padding-right:              5px;"
                     "padding-top:                5px;"
                     "padding-bottom:             5px;"
                 "}"
                 );
-    return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
-                     .arg(QString::number(textColor&0xFFFFFF, 16).rightJustified(6,'0'))
-                     .arg(QString::number(selectionBackgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
-                     .arg(QString::number(selectionTextColor&0xFFFFFF, 16).rightJustified(6,'0'));
+    return styleSheet.arg(colorToString(color));
 }
 
-QString Decorator::getScrollBarStyleSheet (int handleColor, int pageColor) {
+QString Decorator::getScrollBarStyleSheet (Color handleColor, Color pageColor) {
     QString styleSheet (
            "QScrollBar:vertical { "
                 "border: none;"
@@ -296,7 +315,7 @@ QString Decorator::getScrollBarStyleSheet (int handleColor, int pageColor) {
                 "margin: 0;"
            "}"
            "QScrollBar::handle:vertical {"
-                "background: #%1;"
+                "%1;"
                 "min-width:  20px;"
                 "min-height: 20px;"
            "}"
@@ -309,11 +328,11 @@ QString Decorator::getScrollBarStyleSheet (int handleColor, int pageColor) {
                 "border:     none;"
            "}"
            "QScrollBar::add-page:vertical {"
-                "background: #%2;"
+                "%2;"
                 "border:     none;"
            "}"
            "QScrollBar::sub-page:vertical {"
-                "background: #%2;"
+                "%2;"
                 "border:     none;"
            "}"
            "QScrollBar:horizontal { "
@@ -323,7 +342,7 @@ QString Decorator::getScrollBarStyleSheet (int handleColor, int pageColor) {
                 "margin: 0;"
            "}"
            "QScrollBar::handle:horizontal {"
-                "background: #%1;"
+                "%1;"
                 "min-width:  20px;"
                 "min-height: 20px;"
            "}"
@@ -336,51 +355,43 @@ QString Decorator::getScrollBarStyleSheet (int handleColor, int pageColor) {
                 "border:     none;"
            "}"
            "QScrollBar::add-page:horizontal {"
-                "background: #%2;"
+                "%2;"
                 "border:     none;"
            "}"
            "QScrollBar::sub-page:horizontal {"
-                "background: #%2;"
+                "%2;"
                 "border:     none;"
            "}"
                 );
-    return styleSheet.arg(QString::number(handleColor&0xFFFFFF, 16).rightJustified(6,'0'))
-                     .arg(QString::number(pageColor&0xFFFFFF,16).rightJustified(6,'0'));
+    return styleSheet.arg(colorToString(handleColor))
+                     .arg(colorToString(pageColor));
 }
 
 
-QString Decorator::getConsoleStyleSheet(int backgroundColor,
-                                        int textColor,
-                                        int selectionBackgroundColor,
-                                        int selectionTextColor) {
+QString Decorator::getConsoleStyleSheet(Color color) {
     QString styleSheet (
            "QPlainTextEdit { "
-                "background:                 #%1;"
-                "color:                      #%2;"
-                "selection-background-color: #%3;"
-                "selection-color:            #%4;"
+                "%1;"
                 "border-style:               solid;"       // Без этого свойства бэкграунд не устанавливается(??)
                 "border:                     none;"
                 "border-top-left-radius:     5px;"
            "}");
-    return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
-                     .arg(QString::number(textColor&0xFFFFFF, 16).rightJustified(6,'0'))
-                     .arg(QString::number(selectionBackgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
-                     .arg(QString::number(selectionTextColor&0xFFFFFF, 16).rightJustified(6,'0'));
+    return styleSheet.arg(colorToString(color));
 }
 
 
 
 QString Decorator::getQuickPanelButtonStyleSheet(QString iconUrl,
-                                                 int backgroundColor,
-                                                 int hoverBackgroundColor,
-                                                 int pressedBackgroundColor) {
+                                                 Color baseColor,
+                                                 Color hoverColor,
+                                                 Color pressedColor)
+{
     QString styleSheet (
                 "QPushButton { "
                 "image:              url(%1);"
-                "background-color:   #%2;"
                 "icon-size:          12px;"
                 "qproperty-iconSize: 12px;"
+                "%2;"
                 "padding-left:       10px;"
                 "padding-right:      10px;"
                 "padding-top:        10px;"
@@ -388,15 +399,15 @@ QString Decorator::getQuickPanelButtonStyleSheet(QString iconUrl,
                 "border:             none;"
            "}"
            "QPushButton:hover { "
-                "background-color:   #%3;"
+                "%3;"
            "}"
            "QPushButton:pressed { "
-                "background-color:   #%4;"
+                "%4;"
            "}");
     return styleSheet.arg(iconUrl)
-                     .arg(QString::number(backgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
-                     .arg(QString::number(hoverBackgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
-                     .arg(QString::number(pressedBackgroundColor&0xFFFFFF, 16).rightJustified(6,'0'));
+                     .arg(colorToString(baseColor))
+                     .arg(colorToString(hoverColor))
+                     .arg(colorToString(pressedColor));
 }
 
 
@@ -409,17 +420,11 @@ QString Decorator::getAppLabelStyleSheet(QString iconUrl){
     return styleSheet.arg(iconUrl);
 }
 
-QString Decorator::getTableStyleSheet(int backgroundColor,
-                                      int textColor,
-                                      int selectionBackgroundColor,
-                                      int selectionTextColor,
-                                      int headerBackgroundColor) {
+QString Decorator::getTableStyleSheet(Color tableColor,
+                                      Color headerColor) {
     QString styleSheet (
             "QTableView {"
-                "background:                 #%1;"
-                "color:                      #%2;"
-                "selection-background-color: #%3;"
-                "selection-color:            #%4;"
+                "%1"
                 "border:                     none;"
                 "border-top-left-radius:     5px;"
             "}"
@@ -432,18 +437,14 @@ QString Decorator::getTableStyleSheet(int backgroundColor,
 //            "}"
               /* Горизонтальный хэдер таблицы */
             "QHeaderView::section:horizontal {"
-                "background-color:           #%5;"
-                "color:                      #%2;"
+                "%2"
                 "padding-left:               1px;"
                 "border:                     none;"
                 "border-top-left-radius:     5px;"
            "}"
             );
-    return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
-                     .arg(QString::number(textColor&0xFFFFFF, 16).rightJustified(6,'0'))
-                     .arg(QString::number(selectionBackgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
-                     .arg(QString::number(selectionTextColor&0xFFFFFF, 16).rightJustified(6,'0'))
-                     .arg(QString::number(headerBackgroundColor&0xFFFFFF, 16).rightJustified(6,'0'));
+    return styleSheet.arg(colorToString(tableColor))
+                     .arg(colorToString(headerColor));
 }
 
 
@@ -452,23 +453,23 @@ QString Decorator::getTableStyleSheet(int backgroundColor,
 
 
 
-QString Decorator::getSipmleWidgetStyleSheet(int backgroundColor,
-                                             int textColor) {
+QString Decorator::getSipmleWidgetStyleSheet(Color color) {
    QString styleSheet(
             "QWidget { "
                 "border:           none;"
                 "border-style:     solid;"
-                "background:       #%1;"
-                "color:            #%2;"
+                "%1;"
             "}");
-   return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
-                    .arg(QString::number(textColor&0xFFFFFF, 16).rightJustified(6,'0'));
+   return styleSheet.arg(colorToString(color));
 }
 
-QString Decorator::getSettingsMenuButtonStyleSheet(int background, int backgroundHover, int backgroundPressed){
+QString Decorator::getSettingsMenuButtonStyleSheet(Color baseColor,
+                                                   Color hoverColor,
+                                                   Color pressedColor)
+{
     QString styleSheet(
                 "QPushButton { "
-                       "background-color:       #%1;"
+                       "%1;"
                        "padding-left:           40px;"
                        "padding-right:          40px;"
                        "padding-top:            10px;"
@@ -478,20 +479,20 @@ QString Decorator::getSettingsMenuButtonStyleSheet(int background, int backgroun
                        "margin:                 2px;"
                   "}"
                   "QPushButton:hover { "
-                       "background-color:       #%2;"
+                       "%2;"
                   "}"
                   "QPushButton:pressed { "
-                       "background-color:       #%3; "
+                       "%3; "
                   "}");
-    return styleSheet.arg(QString::number(background&0xFFFFFF, 16).rightJustified(6,'0'))
-                     .arg(QString::number(backgroundHover&0xFFFFFF,16).rightJustified(6,'0'))
-                     .arg(QString::number(backgroundPressed&0xFFFFFF, 16).rightJustified(6,'0'));
+    return styleSheet.arg(colorToString(baseColor))
+                     .arg(colorToString(hoverColor))
+                     .arg(colorToString(pressedColor));
 }
 
-QString Decorator::getComboBoxStyleSheet(int background,
-                                         int color,
-                                         int selectionBackgroundColor,
-                                         int selectionColor) {
+QString Decorator::getComboBoxStyleSheet(Color activeColor,
+                                         Color disableColor,
+                                         Color listColor)
+{
     QString styleSheet(
 
 //                "QComboBox{"
@@ -539,10 +540,7 @@ QString Decorator::getComboBoxStyleSheet(int background,
                 "border:                     none; "
                 "border-style:               solid;"
                 "border-radius:              3px;"
-                "background:                 #1a1c20;"
-                "color:                      #dcddde;"
-                "selection-background-color: #3d563d;"
-                "selection-color:            #dcddde;"
+                "%1"
                 "padding-top:                5px;"
                 "padding-bottom:             5px;"
                 "padding-right:              10px;"
@@ -550,8 +548,7 @@ QString Decorator::getComboBoxStyleSheet(int background,
             "}"
             // Если бокс деактивирован
             "QComboBox:disabled { "
-                "background:                 #2b2d33;"
-                "color:                      #dcddde;"
+                "%2"
             "}"
             // Стиль виджета при редактировании элемента
             "QComboBox:editable { "
@@ -559,10 +556,7 @@ QString Decorator::getComboBoxStyleSheet(int background,
             "}"
             // Выпадающий список целиком
             "QComboBox QAbstractItemView { "
-                "background:                 #1a1c20;"
-                "color:                      #dcddde;"
-                "selection-background-color: #3d563d;"
-                "selection-color:            #dcddde;"
+                "%3"
                 "border:                     none; "   // Внешняя граница в выпадающем списке
                 "outline:                    none;"    // Граница элемента списка
             "}"
@@ -614,8 +608,7 @@ QString Decorator::getComboBoxStyleSheet(int background,
 //                "padding-left: 5px;"
 //            "}"
            );
-    return styleSheet;//.arg(QString::number(background&0xFFFFFF, 16).rightJustified(6,'0'))
-                      //.arg(QString::number(background&0xFFFFFF, 16).rightJustified(6,'0'))
-                      //.arg(QString::number(background&0xFFFFFF, 16).rightJustified(6,'0'))
-                      //.arg(QString::number(background&0xFFFFFF, 16).rightJustified(6,'0'));
+    return styleSheet.arg(colorToString(activeColor))
+                     .arg(colorToString(disableColor))
+                     .arg(colorToString(listColor));
 }
