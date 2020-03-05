@@ -168,7 +168,7 @@ void MainWidget::fillThemeList(){
     darkTheme->setName("Gray");
     themeList->append(darkTheme);
 
-    fakeTheme = new Decorator(0x1a8456, 0x2b2d33, 0x31363d, 0xdcddde, 0x3d563d);
+    fakeTheme = new Decorator(0x1a8456, 0x2b2d33, 0x31363d, 0xdcddde, 0x0d563d);
     fakeTheme->setName("HUUI");
     themeList->append(fakeTheme);
 

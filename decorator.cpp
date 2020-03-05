@@ -206,8 +206,8 @@ QString Decorator::getMainWidgetStyleSheet(int backgroundColor,
                 "color:            #%2;"
                 "border:           none;"
            "}");
-    return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16)).
-                      arg(QString::number(textColor&0xFFFFFF, 16));
+    return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
+                     .arg(QString::number(textColor&0xFFFFFF, 16).rightJustified(6,'0'));
 }
 
 QString Decorator::getWindowButtonStyleSheet(QString iconUrl,
@@ -231,10 +231,10 @@ QString Decorator::getWindowButtonStyleSheet(QString iconUrl,
            "QToolButton:pressed { "
                 "background-color: #%4;"
            "}");
-    return styleSheet.arg(iconUrl).
-                      arg(QString::number(backgroundColor&0xFFFFFF, 16)).
-                      arg(QString::number(hoverBackgroundColor&0xFFFFFF, 16)).
-                      arg(QString::number(pressedBackgroundColor&0xFFFFFF, 16));
+    return styleSheet.arg(iconUrl)
+                     .arg(QString::number(backgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
+                     .arg(QString::number(hoverBackgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
+                     .arg(QString::number(pressedBackgroundColor&0xFFFFFF, 16).rightJustified(6,'0'));
 }
 
 
@@ -258,10 +258,10 @@ QString Decorator::getStandartButtonStyleSheet (int backgroundColor,
            "QPushButton:pressed { "
                 "background-color: #%4; "
            "}");
-    return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16)).
-                      arg(QString::number(textColor&0xFFFFFF, 16)).
-                      arg(QString::number(hoverBackgroundColor&0xFFFFFF, 16)).
-                      arg(QString::number(pressedBackgroundColor&0xFFFFFF, 16));
+    return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
+                     .arg(QString::number(textColor&0xFFFFFF, 16).rightJustified(6,'0'))
+                     .arg(QString::number(hoverBackgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
+                     .arg(QString::number(pressedBackgroundColor&0xFFFFFF, 16).rightJustified(6,'0'));
 }
 
 QString Decorator::getInputFieldStyleSheet (int backgroundColor,
@@ -281,10 +281,10 @@ QString Decorator::getInputFieldStyleSheet (int backgroundColor,
                     "padding-bottom:             5px;"
                 "}"
                 );
-    return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16)).
-                      arg(QString::number(textColor&0xFFFFFF, 16)).
-                      arg(QString::number(selectionBackgroundColor&0xFFFFFF, 16)).
-                      arg(QString::number(selectionTextColor&0xFFFFFF, 16));
+    return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
+                     .arg(QString::number(textColor&0xFFFFFF, 16).rightJustified(6,'0'))
+                     .arg(QString::number(selectionBackgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
+                     .arg(QString::number(selectionTextColor&0xFFFFFF, 16).rightJustified(6,'0'));
 }
 
 QString Decorator::getScrollBarStyleSheet (int handleColor, int pageColor) {
@@ -344,8 +344,8 @@ QString Decorator::getScrollBarStyleSheet (int handleColor, int pageColor) {
                 "border:     none;"
            "}"
                 );
-    return styleSheet.arg(QString::number(handleColor&0xFFFFFF, 16)).
-                      arg(QString::number(pageColor&0xFFFFFF,16));
+    return styleSheet.arg(QString::number(handleColor&0xFFFFFF, 16).rightJustified(6,'0'))
+                     .arg(QString::number(pageColor&0xFFFFFF,16).rightJustified(6,'0'));
 }
 
 
@@ -363,10 +363,10 @@ QString Decorator::getConsoleStyleSheet(int backgroundColor,
                 "border:                     none;"
                 "border-top-left-radius:     5px;"
            "}");
-    return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16)).
-                      arg(QString::number(textColor&0xFFFFFF, 16)).
-                      arg(QString::number(selectionBackgroundColor&0xFFFFFF, 16)).
-                      arg(QString::number(selectionTextColor&0xFFFFFF, 16));
+    return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
+                     .arg(QString::number(textColor&0xFFFFFF, 16).rightJustified(6,'0'))
+                     .arg(QString::number(selectionBackgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
+                     .arg(QString::number(selectionTextColor&0xFFFFFF, 16).rightJustified(6,'0'));
 }
 
 
@@ -393,10 +393,10 @@ QString Decorator::getQuickPanelButtonStyleSheet(QString iconUrl,
            "QPushButton:pressed { "
                 "background-color:   #%4;"
            "}");
-    return styleSheet.arg(iconUrl).
-                      arg(QString::number(backgroundColor&0xFFFFFF, 16)).
-                      arg(QString::number(hoverBackgroundColor&0xFFFFFF, 16)).
-                      arg(QString::number(pressedBackgroundColor&0xFFFFFF, 16));
+    return styleSheet.arg(iconUrl)
+                     .arg(QString::number(backgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
+                     .arg(QString::number(hoverBackgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
+                     .arg(QString::number(pressedBackgroundColor&0xFFFFFF, 16).rightJustified(6,'0'));
 }
 
 
@@ -439,11 +439,11 @@ QString Decorator::getTableStyleSheet(int backgroundColor,
                 "border-top-left-radius:     5px;"
            "}"
             );
-    return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16))
-                     .arg(QString::number(textColor&0xFFFFFF, 16))
-                     .arg(QString::number(selectionBackgroundColor&0xFFFFFF, 16))
-                     .arg(QString::number(selectionTextColor&0xFFFFFF, 16))
-                     .arg(QString::number(headerBackgroundColor&0xFFFFFF, 16));
+    return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
+                     .arg(QString::number(textColor&0xFFFFFF, 16).rightJustified(6,'0'))
+                     .arg(QString::number(selectionBackgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
+                     .arg(QString::number(selectionTextColor&0xFFFFFF, 16).rightJustified(6,'0'))
+                     .arg(QString::number(headerBackgroundColor&0xFFFFFF, 16).rightJustified(6,'0'));
 }
 
 
@@ -461,8 +461,8 @@ QString Decorator::getSipmleWidgetStyleSheet(int backgroundColor,
                 "background:       #%1;"
                 "color:            #%2;"
             "}");
-   return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16))
-                    .arg(QString::number(textColor&0xFFFFFF, 16));
+   return styleSheet.arg(QString::number(backgroundColor&0xFFFFFF, 16).rightJustified(6,'0'))
+                    .arg(QString::number(textColor&0xFFFFFF, 16).rightJustified(6,'0'));
 }
 
 QString Decorator::getSettingsMenuButtonStyleSheet(int background, int backgroundHover, int backgroundPressed){
@@ -483,9 +483,9 @@ QString Decorator::getSettingsMenuButtonStyleSheet(int background, int backgroun
                   "QPushButton:pressed { "
                        "background-color:       #%3; "
                   "}");
-    return styleSheet.arg(QString::number(background&0xFFFFFF, 16)).
-                      arg(QString::number(backgroundHover&0xFFFFFF,16)).
-                      arg(QString::number(backgroundPressed&0xFFFFFF, 16));
+    return styleSheet.arg(QString::number(background&0xFFFFFF, 16).rightJustified(6,'0'))
+                     .arg(QString::number(backgroundHover&0xFFFFFF,16).rightJustified(6,'0'))
+                     .arg(QString::number(backgroundPressed&0xFFFFFF, 16).rightJustified(6,'0'));
 }
 
 QString Decorator::getComboBoxStyleSheet(int background,
@@ -614,8 +614,8 @@ QString Decorator::getComboBoxStyleSheet(int background,
 //                "padding-left: 5px;"
 //            "}"
            );
-    return styleSheet;//.arg(QString::number(background&0xFFFFFF, 16)).
-                      //arg(QString::number(background&0xFFFFFF, 16)).
-                      //arg(QString::number(background&0xFFFFFF, 16)).
-                      //arg(QString::number(background&0xFFFFFF, 16));
+    return styleSheet;//.arg(QString::number(background&0xFFFFFF, 16).rightJustified(6,'0'))
+                      //.arg(QString::number(background&0xFFFFFF, 16).rightJustified(6,'0'))
+                      //.arg(QString::number(background&0xFFFFFF, 16).rightJustified(6,'0'))
+                      //.arg(QString::number(background&0xFFFFFF, 16).rightJustified(6,'0'));
 }
