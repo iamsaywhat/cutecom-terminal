@@ -1,14 +1,1 @@
-<RCC>
-    <qresource prefix="/icons">
-        <file>resources/close.png</file>
-        <file>resources/connect.png</file>
-        <file>resources/maximize.png</file>
-        <file>resources/minimize.png</file>
-        <file>resources/settings.png</file>
-        <file>resources/consolemode.png</file>
-        <file>resources/converter.png</file>
-        <file>resources/label.png</file>
-        <file>resources/normalize.png</file>
-        <file>resources/tablemode.png</file>
-    </qresource>
-</RCC>
+<RCC/>

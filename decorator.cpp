@@ -120,26 +120,30 @@ void Decorator::setName(QString text){
 void Decorator::setIconMode(IconMode mode){
     _iconMode = mode;
     if(mode == Dark){
-        appIconlUrl       = ":/icons/resources/label.png";
-        closeIconUrl      = ":/icons/resources/close.png";
-        maximizeIconUrl   = ":/icons/resources/maximize.png";
-        minimizeIconUrl   = ":/icons/resources/minimize.png";
-        connectionIconUrl = ":/icons/resources/connect.png";
-        consoleIconUrl    = ":/icons/resources/consolemode.png";
-        tableIconUrl      = ":/icons/resources/tablemode.png";
-        converterIconUrl  = ":/icons/resources/converter.png";
-        settingsIconUrl   = ":/icons/resources/settings.png";
+        appIconlUrl       = ":/dark/resources/icons/dark/label.png";
+        closeIconUrl      = ":/dark/resources/icons/dark/close.png";
+        maximizeIconUrl   = ":/dark/resources/icons/dark/maximize.png";
+        minimizeIconUrl   = ":/dark/resources/icons/dark/minimize.png";
+        connectionIconUrl = ":/dark/resources/icons/dark/connect.png";
+        consoleIconUrl    = ":/dark/resources/icons/dark/consolemode.png";
+        tableIconUrl      = ":/dark/resources/icons/dark/tablemode.png";
+        converterIconUrl  = ":/dark/resources/icons/dark/converter.png";
+        settingsIconUrl   = ":/dark/resources/icons/dark/settings.png";
+        checkBoxCheckUrl  = ":/dark/resources/icons/dark/checkbox.png";
+        comboBoxArrowUrl  = ":/dark/resources/icons/dark/combobox.png";
     }
     else{
-        appIconlUrl       = ":/icons/resources/label.png";
-        closeIconUrl      = ":/icons/resources/close.png";
-        maximizeIconUrl   = ":/icons/resources/maximize.png";
-        minimizeIconUrl   = ":/icons/resources/minimize.png";
-        connectionIconUrl = ":/icons/resources/connect.png";
-        consoleIconUrl    = ":/icons/resources/consolemode.png";
-        tableIconUrl      = ":/icons/resources/tablemode.png";
-        converterIconUrl  = ":/icons/resources/converter.png";
-        settingsIconUrl   = ":/icons/resources/settings.png";
+        appIconlUrl       = ":/light/resources/icons/light/label.png";
+        closeIconUrl      = ":/light/resources/icons/light/close.png";
+        maximizeIconUrl   = ":/light/resources/icons/light/maximize.png";
+        minimizeIconUrl   = ":/light/resources/icons/light/minimize.png";
+        connectionIconUrl = ":/light/resources/icons/light/connect.png";
+        consoleIconUrl    = ":/light/resources/icons/light/consolemode.png";
+        tableIconUrl      = ":/light/resources/icons/light/tablemode.png";
+        converterIconUrl  = ":/light/resources/icons/light/converter.png";
+        settingsIconUrl   = ":/light/resources/icons/light/settings.png";
+        checkBoxCheckUrl  = ":/light/resources/icons/light/checkbox.png";
+        comboBoxArrowUrl  = ":/light/resources/icons/light/combobox.png";
     }
 }
 
@@ -209,14 +213,16 @@ void Decorator::setSettingsButtonsColors(QPushButton *button, Color background, 
     button->setStyleSheet(getSettingsMenuButtonStyleSheet(background, backgroundHover, backgroundPressed));
 }
 void Decorator::setComboBoxColors(QComboBox *comboBox){
-    comboBox->setStyleSheet(getComboBoxStyleSheet(baseColor(), secondColor(), baseColor()));
-    comboBox->view()->setStyleSheet(getComboBoxStyleSheet(baseColor(), secondColor(), baseColor()));
+    comboBox->setStyleSheet(getComboBoxStyleSheet(comboBoxArrowUrl, baseColor(), secondColor(), baseColor()));
+    comboBox->view()->setStyleSheet(getComboBoxStyleSheet(comboBoxArrowUrl, baseColor(), secondColor(), baseColor()));
     comboBox->lineEdit();//->setStyleSheet(getComboBoxStyleSheet(baseColor(), textColor(), selectionColor(), selectionTextColor()));
 }
 void Decorator::setStandartButtonColors(QPushButton *button, Color baseColor, Color hoverColor, Color pressedColor){
     button->setStyleSheet(getStandartButtonStyleSheet(baseColor, hoverColor, pressedColor));
 }
-
+void Decorator::setCheckBoxColors(QCheckBox *checkBox, Color color, Color hoverColor, Color pressedColor){
+    checkBox->setStyleSheet(getCheckBoxStyleSheet(checkBoxCheckUrl, color, hoverColor, pressedColor));
+}
 
 
 QString Decorator::colorToString(Color color){
@@ -489,7 +495,8 @@ QString Decorator::getSettingsMenuButtonStyleSheet(Color baseColor,
                      .arg(colorToString(pressedColor));
 }
 
-QString Decorator::getComboBoxStyleSheet(Color activeColor,
+QString Decorator::getComboBoxStyleSheet(QString &arrowUrl,
+                                         Color activeColor,
                                          Color disableColor,
                                          Color listColor)
 {
@@ -581,7 +588,7 @@ QString Decorator::getComboBoxStyleSheet(Color activeColor,
             "}"
             // Стрелка при закрытом списке
             "QComboBox::down-arrow { "
-                "image: url(:/icons/resources/minimize.png);"
+                "image: url(%4);"
                 "width: 14px;"
                 "height: 14px;"
             "}"
@@ -610,5 +617,41 @@ QString Decorator::getComboBoxStyleSheet(Color activeColor,
            );
     return styleSheet.arg(colorToString(activeColor))
                      .arg(colorToString(disableColor))
-                     .arg(colorToString(listColor));
+                     .arg(colorToString(listColor))
+                     .arg(arrowUrl);
+}
+QString Decorator::getCheckBoxStyleSheet(QString &checkUrl, Color color, Color hoverColor, Color pressedColor){
+    QString styleSheet(
+                "QCheckBox {"
+                "}"
+                "QCheckBox::indicator {"
+                    "width:           15px;"
+                    "height:          15px;"
+                    "border-radius:   4px;"
+                    "%1"
+                "}"
+                "QCheckBox::indicator:unchecked {"
+                "}"
+                "QCheckBox::indicator:unchecked:hover {"
+                    "%2"
+                "}"
+                "QCheckBox::indicator:unchecked:pressed {"
+                    "%3"
+                "}"
+                "QCheckBox::indicator:checked {"
+                    "image: url(%4);"
+                "}"
+                "QCheckBox::indicator:checked:hover {"
+                "}"
+                "QCheckBox::indicator:checked:pressed {"
+                "}"
+                "QCheckBox::indicator:indeterminate:hover {"
+                "}"
+                "QCheckBox::indicator:indeterminate:pressed {"
+                "}"
+                );
+    return styleSheet.arg(colorToString(color))
+                     .arg(colorToString(hoverColor))
+                     .arg(colorToString(pressedColor))
+                     .arg(checkUrl);
 }

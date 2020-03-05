@@ -11,6 +11,7 @@
 #include <QTableView>
 #include <QScrollBar>
 #include <QComboBox>
+#include <QCheckBox>
 
 
 class Decorator : public QObject
@@ -64,6 +65,8 @@ public:
     void setSettingsButtonsColors(QPushButton *button, Color background, Color backgroundHover, Color backgroundPressed);
     void setComboBoxColors(QComboBox *comboBox);
     void setStandartButtonColors(QPushButton *button, Color baseColor, Color hoverColor, Color pressedColor);
+    void setCheckBoxColors(QCheckBox *checkBox, Color color, Color hoverColor, Color pressedColor);
+
 
     Color baseColor(void) const            {return _baseColor;}
     Color secondColor(void) const          {return _secondColor;}
@@ -89,8 +92,22 @@ public:
     void setName(QString text);
     void setIconMode(IconMode mode);
 
-    void validateColor(Color &color);
-    QString colorToString(Color color);
+    static void validateColor(Color &color);
+    static QString colorToString(Color color);
+
+    static QString getAppLabelStyleSheet(QString iconUrl);
+    static QString getMainWidgetStyleSheet(Color color);
+    static QString getWindowButtonStyleSheet(QString iconUrl, Color baseColor, Color hoverColor, Color pressedColor);
+    static QString getStandartButtonStyleSheet (Color baseColor, Color hoverColor, Color pressedColor);
+    static QString getInputFieldStyleSheet (Color color);
+    static QString getScrollBarStyleSheet (Color handleColor, Color pageColor);
+    static QString getConsoleStyleSheet(Color color);
+    static QString getQuickPanelButtonStyleSheet(QString iconUrl, Color baseColor, Color hoverColor, Color pressedColor);
+    static QString getTableStyleSheet(Color tableColor, Color headerColor);
+    static QString getSipmleWidgetStyleSheet(Color color);
+    static QString getSettingsMenuButtonStyleSheet(Color baseColor,Color hoverColor, Color pressedColor);
+    static QString getComboBoxStyleSheet(QString &arrowUrl,Color activeColor, Color disableColor, Color listColor);
+    static QString getCheckBoxStyleSheet(QString &checkUrl, Color color, Color hoverColor, Color pressedColor);
 
 private:
     QString _name;
@@ -113,19 +130,9 @@ private:
     QString tableIconUrl;
     QString converterIconUrl;
     QString settingsIconUrl;
+    QString comboBoxArrowUrl;
+    QString checkBoxCheckUrl;
 
-    static QString getAppLabelStyleSheet(QString iconUrl);
-    QString getMainWidgetStyleSheet(Color color);
-    QString getWindowButtonStyleSheet(QString iconUrl, Color baseColor, Color hoverColor, Color pressedColor);
-    QString getStandartButtonStyleSheet (Color baseColor, Color hoverColor, Color pressedColor);
-    QString getInputFieldStyleSheet (Color color);
-    QString getScrollBarStyleSheet (Color handleColor, Color pageColor);
-    QString getConsoleStyleSheet(Color color);
-    QString getQuickPanelButtonStyleSheet(QString iconUrl, Color baseColor, Color hoverColor, Color pressedColor);
-    QString getTableStyleSheet(Color tableColor, Color headerColor);
-    QString getSipmleWidgetStyleSheet(Color color);
-    QString getSettingsMenuButtonStyleSheet(Color baseColor,Color hoverColor, Color pressedColor);
-    QString getComboBoxStyleSheet(Color activeColor, Color disableColor, Color listColor);
 signals:
     void baseColorChanged(void);
     void secondColorChanged(void);

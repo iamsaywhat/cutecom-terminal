@@ -172,7 +172,7 @@ void MainWidget::fillThemeList(){
     themeList->append(darkTheme);
 
     fakeTheme = new Decorator("HUUI",
-                              Decorator::Light,
+                              Decorator::Dark,
                               {0x1a8456, 0xdcddde, 0x0d563d, 0xdcddde,},
                               {0x2b2d33, 0xFFFFFF, 0x0d563d, 0xdcddde,},
                               {0x31363d, 0xdcddde, 0x0d563d, 0xdcddde,});
@@ -238,7 +238,7 @@ void MainWidget::applyColorSchemeToSettings(Decorator *scheme){
     scheme->setBasicColorsToWidget  (ui->labelParity, scheme->secondColor());
     scheme->setBasicColorsToWidget  (ui->labelStopBits, scheme->secondColor());
     scheme->setBasicColorsToWidget  (ui->labelFlowControl, scheme->secondColor());
-
+    // Вкладка Connection
     scheme->setComboBoxColors(ui->boxPorts);
     scheme->setComboBoxColors(ui->boxData);
     scheme->setComboBoxColors(ui->boxParity);
@@ -246,10 +246,22 @@ void MainWidget::applyColorSchemeToSettings(Decorator *scheme){
     scheme->setComboBoxColors(ui->boxStopBits);
     scheme->setComboBoxColors(ui->boxFlowControl);
     scheme->setStandartButtonColors(ui->buttonConnectDisconnect, scheme->baseColor(), scheme->thirdColor(), scheme->secondColor());
-
+    // Вкладка General
     scheme->setComboBoxColors(ui->comboBoxTheme);
     scheme->setComboBoxColors(ui->comboBoxLanguage);
     scheme->setComboBoxColors(ui->comboBoxCodec);
+    scheme->setBasicColorsToWidget(ui->labelTheme, scheme->secondColor());
+    scheme->setBasicColorsToWidget(ui->labelCodec, scheme->secondColor());
+    scheme->setBasicColorsToWidget(ui->labelLanguage, scheme->secondColor());
+    scheme->setBasicColorsToWidget(ui->labelSectionGeneral, scheme->secondColor());
+    // Вкладка Table
+    scheme->setBasicColorsToWidget(ui->labelSectionTable, scheme->secondColor());
+    scheme->setBasicColorsToWidget(ui->labelTableEcho, scheme->secondColor());
+    scheme->setCheckBoxColors(ui->checkboxTableEcho, scheme->baseColor(), scheme->thirdColor(), scheme->baseColor());
+    // Вкладка Console
+    scheme->setBasicColorsToWidget(ui->labelSectionConsole, scheme->secondColor());
+    scheme->setBasicColorsToWidget(ui->labelConsoleEcho, scheme->secondColor());
+    scheme->setCheckBoxColors(ui->checkboxConsoleEcho, scheme->baseColor(), scheme->thirdColor(), scheme->baseColor());
 }
 
 
