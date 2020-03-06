@@ -325,6 +325,20 @@ g</string>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_5">
+               <item row="1" column="1">
+                <widget class="QPushButton" name="generalContentButton">
+                 <property name="text">
+                  <string>PushButton</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QPushButton" name="logsContentButton">
+                 <property name="text">
+                  <string>PushButton</string>
+                 </property>
+                </widget>
+               </item>
                <item row="3" column="1">
                 <widget class="QPushButton" name="tableContentButton">
                  <property name="text">
@@ -332,8 +346,15 @@ g</string>
                  </property>
                 </widget>
                </item>
-               <item row="2" column="1">
-                <widget class="QPushButton" name="consoleContentButton">
+               <item row="0" column="1">
+                <widget class="QPushButton" name="connectionContentsButton">
+                 <property name="text">
+                  <string>PushButton</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QPushButton" name="bindsContentButton">
                  <property name="text">
                   <string>PushButton</string>
                  </property>
@@ -352,15 +373,8 @@ g</string>
                  </property>
                 </spacer>
                </item>
-               <item row="6" column="1">
-                <widget class="QLabel" name="infoLabel">
-                 <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QPushButton" name="connectionContentsButton">
+               <item row="2" column="1">
+                <widget class="QPushButton" name="consoleContentButton">
                  <property name="text">
                   <string>PushButton</string>
                  </property>
@@ -379,24 +393,10 @@ g</string>
                  </property>
                 </spacer>
                </item>
-               <item row="1" column="1">
-                <widget class="QPushButton" name="generalContentButton">
+               <item row="8" column="1">
+                <widget class="QLabel" name="infoLabel">
                  <property name="text">
-                  <string>PushButton</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="1">
-                <widget class="QPushButton" name="bindsContentButton">
-                 <property name="text">
-                  <string>PushButton</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="1">
-                <widget class="QPushButton" name="logsContentButton">
-                 <property name="text">
-                  <string>PushButton</string>
+                  <string>TextLabel</string>
                  </property>
                 </widget>
                </item>
@@ -434,7 +434,7 @@ g</string>
                   </sizepolicy>
                  </property>
                  <property name="currentIndex">
-                  <number>2</number>
+                  <number>1</number>
                  </property>
                  <widget class="QWidget" name="connectionPage">
                   <layout class="QGridLayout" name="gridLayout_6">
@@ -568,12 +568,8 @@ g</string>
                  </widget>
                  <widget class="QWidget" name="generalPage">
                   <layout class="QGridLayout" name="gridLayout_9">
-                   <item row="2" column="0">
-                    <widget class="QLabel" name="labelTheme">
-                     <property name="text">
-                      <string>TextLabel</string>
-                     </property>
-                    </widget>
+                   <item row="2" column="1">
+                    <widget class="QComboBox" name="comboBoxLanguage"/>
                    </item>
                    <item row="0" column="0" colspan="2">
                     <widget class="QLabel" name="labelSectionGeneral">
@@ -582,23 +578,27 @@ g</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="4" column="1">
+                   <item row="1" column="1">
+                    <widget class="QComboBox" name="comboBoxTheme"/>
+                   </item>
+                   <item row="3" column="1">
                     <widget class="QComboBox" name="comboBoxCodec"/>
                    </item>
                    <item row="3" column="0">
+                    <widget class="QLabel" name="labelCodec">
+                     <property name="text">
+                      <string>TextLabel</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
                     <widget class="QLabel" name="labelLanguage">
                      <property name="text">
                       <string>TextLabel</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="1">
-                    <widget class="QComboBox" name="comboBoxTheme"/>
-                   </item>
-                   <item row="3" column="1">
-                    <widget class="QComboBox" name="comboBoxLanguage"/>
-                   </item>
-                   <item row="5" column="0">
+                   <item row="4" column="0">
                     <spacer name="verticalSpacer_6">
                      <property name="orientation">
                       <enum>Qt::Vertical</enum>
@@ -611,17 +611,10 @@ g</string>
                      </property>
                     </spacer>
                    </item>
-                   <item row="4" column="0">
-                    <widget class="QLabel" name="labelCodec">
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="labelTheme">
                      <property name="text">
                       <string>TextLabel</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="Line" name="line">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
                      </property>
                     </widget>
                    </item>

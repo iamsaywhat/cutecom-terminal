@@ -98,8 +98,6 @@ MainWidget::MainWidget(FramelessWindow *parent)
     connect(settings, &SettingsController::currentTextCodecChanged, this, &MainWidget::setAppTextCodec);
     connect(settings, &SettingsController::consoleEchoChanged, console, &ConsoleWidget::setEchoMode);
     connect(settings, &SettingsController::tableEchoChanged, tableConsole, &TableConsole::setEchoMode);
-
-    qDebug() << QTextCodec::availableCodecs();
 }
 
 MainWidget::~MainWidget(){
@@ -212,7 +210,7 @@ void MainWidget::applyColorSchemeToTable(Decorator *scheme){
 }
 
 void MainWidget::applyColorSchemeToConverter(Decorator *scheme){
-    scheme->setBasicColorsToWidget(ui->converterPage, scheme->secondColor());
+    scheme->setBasicColorsToWidget(ui->converterPage, scheme->baseColor());
     scheme->applyToConverterWidget(ui->converterSource, ui->converterResult, ui->converterSourceBox, ui->converterResultBox,
                                    ui->converterConvertButton, ui->converterSwapButton, ui->converterClearButton);
 }
@@ -239,17 +237,18 @@ void MainWidget::applyColorSchemeToSettings(Decorator *scheme){
     scheme->setBasicColorsToWidget  (ui->labelStopBits, scheme->secondColor());
     scheme->setBasicColorsToWidget  (ui->labelFlowControl, scheme->secondColor());
     // Вкладка Connection
-    scheme->setComboBoxColors(ui->boxPorts);
-    scheme->setComboBoxColors(ui->boxData);
-    scheme->setComboBoxColors(ui->boxParity);
-    scheme->setComboBoxColors(ui->boxBaudrate);
-    scheme->setComboBoxColors(ui->boxStopBits);
-    scheme->setComboBoxColors(ui->boxFlowControl);
-    scheme->setStandartButtonColors(ui->buttonConnectDisconnect, scheme->baseColor(), scheme->thirdColor(), scheme->secondColor());
+    scheme->setComboBoxColors(ui->boxPorts, scheme->baseColor(), scheme->secondColor(), scheme->baseColor());
+    scheme->setComboBoxColors(ui->boxData, scheme->baseColor(), scheme->secondColor(), scheme->baseColor());
+    scheme->setComboBoxColors(ui->boxParity, scheme->baseColor(), scheme->secondColor(), scheme->baseColor());
+    scheme->setComboBoxColors(ui->boxBaudrate, scheme->baseColor(), scheme->secondColor(), scheme->baseColor());
+    scheme->setComboBoxColors(ui->boxStopBits, scheme->baseColor(), scheme->secondColor(), scheme->baseColor());
+    scheme->setComboBoxColors(ui->boxFlowControl, scheme->baseColor(), scheme->secondColor(), scheme->baseColor());
+    scheme->setButtonStyleSheet(ui->buttonConnectDisconnect, scheme->baseColor(), scheme->thirdColor(),
+                                scheme->secondColor(), 50, 15, 5, 5, 5, 5);
     // Вкладка General
-    scheme->setComboBoxColors(ui->comboBoxTheme);
-    scheme->setComboBoxColors(ui->comboBoxLanguage);
-    scheme->setComboBoxColors(ui->comboBoxCodec);
+    scheme->setComboBoxColors(ui->comboBoxTheme, scheme->baseColor(), scheme->secondColor(), scheme->baseColor());
+    scheme->setComboBoxColors(ui->comboBoxLanguage, scheme->baseColor(), scheme->secondColor(), scheme->baseColor());
+    scheme->setComboBoxColors(ui->comboBoxCodec, scheme->baseColor(), scheme->secondColor(), scheme->baseColor());
     scheme->setBasicColorsToWidget(ui->labelTheme, scheme->secondColor());
     scheme->setBasicColorsToWidget(ui->labelCodec, scheme->secondColor());
     scheme->setBasicColorsToWidget(ui->labelLanguage, scheme->secondColor());

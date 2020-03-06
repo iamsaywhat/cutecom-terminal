@@ -76,24 +76,24 @@ void SettingsController::setPropertiesMenu(void){
 }
 void SettingsController::setPropertiesSectionConnection (void){
     gui->labelSectionConnection->setText("Connection");
-    gui->labelSectionConnection->setFont(QFont("Terminus", 14, QFont::Thin));
+    gui->labelSectionConnection->setFont(QFont("Arial", 14, QFont::Bold));
 }
 void SettingsController::setPropertiesSectionGeneral (void){
     gui->labelSectionGeneral->setText("General");
-    gui->labelSectionGeneral->setFont(QFont("Terminus", 14, QFont::Thin));
+    gui->labelSectionGeneral->setFont(QFont("Terminus", 14, QFont::Bold));
     gui->labelTheme->setText("Theme:");
     gui->labelLanguage->setText("Language:");
     gui->labelCodec->setText("Text codec:");
 }
 void SettingsController::setPropertiesSectionConsole (void){
     gui->labelSectionConsole->setText("Console");
-    gui->labelSectionConsole->setFont(QFont("Terminus", 14, QFont::Thin));
+    gui->labelSectionConsole->setFont(QFont("Terminus", 14, QFont::Bold));
     gui->labelConsoleEcho->setText("Echo:");
     gui->checkboxConsoleEcho->setText("");
 }
 void SettingsController::setPropertiesSectionTable (void){
     gui->labelSectionTable->setText("Table");
-    gui->labelSectionTable->setFont(QFont("Terminus", 14, QFont::Thin));
+    gui->labelSectionTable->setFont(QFont("Terminus", 14, QFont::Bold));
     gui->labelTableEcho->setText("Echo:");
     gui->checkboxTableEcho->setText("");
 }

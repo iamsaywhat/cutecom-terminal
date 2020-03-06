@@ -66,7 +66,7 @@ private:
         quickIndexSettings  = 3,
     };
 
-    QFont *appFont = new QFont("Terminus", 10, QFont::Bold);
+    QFont *appFont = new QFont("Terminus", 10, QFont::ExtraBold);
 };
 #endif // MAINWIDGET_H
 

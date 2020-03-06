@@ -16,7 +16,6 @@
 
 class Decorator : public QObject
 {
-
     Q_OBJECT    
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(IconMode iconMode READ iconMode WRITE setIconMode NOTIFY iconModeChanged)
@@ -29,6 +28,7 @@ class Decorator : public QObject
     Q_PROPERTY(Color maximizePressedColor READ maximizePressedColor WRITE setMaximizePressedColor NOTIFY maximizePressedColorChanged)
     Q_PROPERTY(Color minimizeHoverColor   READ minimizeHoverColor   WRITE setMinimizeHoverColor   NOTIFY minimizeHoverColorChanged)
     Q_PROPERTY(Color minimizePressedColor READ minimizePressedColor WRITE setMinimizePressedColor NOTIFY minimizePressedColorChanged)
+
 public:
     enum IconMode{
         Light,
@@ -40,13 +40,13 @@ public:
         int selectionColor;
         int selectedText;
     };
-
     Decorator(QString name, IconMode iconmode, Color base, Color second, Color third);
     Decorator(const Decorator &decorator);
     Decorator(void);
     ~Decorator(void);
     Decorator &operator=(const Decorator &source);
 
+    // Установка стилей для главного окна
     void applyToCloseButton(QToolButton *button);
     void applyToMaximizeButton(QToolButton *button);
     void applyToMinimizeButton(QToolButton *button);
@@ -56,16 +56,23 @@ public:
     void applyToConverterButton(QPushButton *button);
     void applyToSettingsButton(QPushButton *button);
     void applyToAppLabel(QLabel *label);
+    // Установка стилей для специальных виджетов
     void applyToConsoleWidget(QPlainTextEdit *display, QLineEdit *input, QPushButton *sendButton, QPushButton *clearButton);
     void applyToTableWidget(QTableView *taleView, QLineEdit *lineEdit, QPushButton *sendButton, QPushButton *clearButton);
     void applyToConverterWidget(QPlainTextEdit*, QPlainTextEdit*, QComboBox*, QComboBox*, QPushButton*, QPushButton*, QPushButton*);
-
+    // Установка стиля для базовых виджетов
     void setBasicColorsToWidget(QWidget *widget, Color color);
     void setScrollBarColors(QScrollBar *scrollBar, Color handleColor, Color pageColor);
     void setSettingsButtonsColors(QPushButton *button, Color background, Color backgroundHover, Color backgroundPressed);
-    void setComboBoxColors(QComboBox *comboBox);
+    void setComboBoxColors(QComboBox *comboBox, Color activeColor, Color disableColor, Color listColor);
     void setStandartButtonColors(QPushButton *button, Color baseColor, Color hoverColor, Color pressedColor);
     void setCheckBoxColors(QCheckBox *checkBox, Color color, Color hoverColor, Color pressedColor);
+
+    void setButtonStyleSheet(QPushButton *button,
+                             Color baseColor, Color hoverColor, Color pressedColor,
+                             int horizontalPadding, int verticalPadding,
+                             int leftUpperRadius,   int leftBottomRadius,
+                             int rightUpperRadius,  int rightBottomRadius);
 
 
     Color baseColor(void) const            {return _baseColor;}
@@ -92,22 +99,28 @@ public:
     void setName(QString text);
     void setIconMode(IconMode mode);
 
-    static void validateColor(Color &color);
-    static QString colorToString(Color color);
 
+    // Специальные таблицы стилей для главного окна
     static QString getAppLabelStyleSheet(QString iconUrl);
-    static QString getMainWidgetStyleSheet(Color color);
     static QString getWindowButtonStyleSheet(QString iconUrl, Color baseColor, Color hoverColor, Color pressedColor);
+    static QString getQuickPanelButtonStyleSheet(QString iconUrl, Color baseColor, Color hoverColor, Color pressedColor);
+    // Специальные таблицы стилей для базовых элементов
     static QString getStandartButtonStyleSheet (Color baseColor, Color hoverColor, Color pressedColor);
     static QString getInputFieldStyleSheet (Color color);
-    static QString getScrollBarStyleSheet (Color handleColor, Color pageColor);
     static QString getConsoleStyleSheet(Color color);
-    static QString getQuickPanelButtonStyleSheet(QString iconUrl, Color baseColor, Color hoverColor, Color pressedColor);
+    static QString getSettingsMenuButtonStyleSheet(Color baseColor,Color hoverColor, Color pressedColor);
+    // Общая таблица стилей элементов
+    static QString getScrollBarStyleSheet (Color handleColor, Color pageColor);
     static QString getTableStyleSheet(Color tableColor, Color headerColor);
     static QString getSipmleWidgetStyleSheet(Color color);
-    static QString getSettingsMenuButtonStyleSheet(Color baseColor,Color hoverColor, Color pressedColor);
     static QString getComboBoxStyleSheet(QString &arrowUrl,Color activeColor, Color disableColor, Color listColor);
     static QString getCheckBoxStyleSheet(QString &checkUrl, Color color, Color hoverColor, Color pressedColor);
+    static QString getPlainTextStyleSheet(Color color);
+
+    static QString getButtonStyleSheet(Color baseColor, Color hoverColor, Color pressedColor,
+                                       int horizontalPadding, int verticalPadding,
+                                       int leftUpperRadius,   int leftBottomRadius,
+                                       int rightUpperRadius,  int rightBottomRadius);
 
 private:
     QString _name;
@@ -132,6 +145,9 @@ private:
     QString settingsIconUrl;
     QString comboBoxArrowUrl;
     QString checkBoxCheckUrl;
+
+    static void validateColor(Color &color);
+    static QString colorToString(Color color);
 
 signals:
     void baseColorChanged(void);
