@@ -106,7 +106,10 @@ MainWidget::~MainWidget(){
     delete codecList;
     delete settings;
     delete darkTheme;
-    delete fakeTheme;
+    delete greenTheme;
+    delete bitbucketTheme;
+    delete githubTheme;
+    delete purpleTheme;
     delete converter;
     delete tableConsole;
     delete console;
@@ -169,12 +172,33 @@ void MainWidget::fillThemeList(){
                               {0x33363d, 0xdcddde, 0x3d563d , 0xdcddde});
     themeList->append(darkTheme);
 
-    fakeTheme = new Decorator("HUUI",
-                              Decorator::Dark,
+    greenTheme = new Decorator("Green",
+                              Decorator::Light,
                               {0x1a8456, 0xdcddde, 0x0d563d, 0xdcddde,},
                               {0x2b2d33, 0xFFFFFF, 0x0d563d, 0xdcddde,},
                               {0x31363d, 0xdcddde, 0x0d563d, 0xdcddde,});
-    themeList->append(fakeTheme);
+    themeList->append(greenTheme);
+
+    bitbucketTheme = new Decorator("Bitbucket",
+                              Decorator::Light,
+                              {0x0044a8, 0xffffff, 0x0063ce, 0xffffff,},
+                              {0xf4f5f7, 0x3e516e, 0x0044a8, 0xffffff,},
+                              {0x1b3557, 0xf4f5f7, 0x0d563d, 0xdcddde,});
+    themeList->append(bitbucketTheme);
+
+    githubTheme = new Decorator("Github",
+                              Decorator::Light,
+                              {0x1f242a, 0xf2f2f2, 0x3e4247, 0xf2f2f2,},
+                              {0xf4f6f8, 0x393746, 0x5ec850, 0x393746,},
+                              {0x3e4247, 0xf2f2f2, 0x0d563d, 0xf2f2f2,});
+    themeList->append(githubTheme);
+
+    purpleTheme = new Decorator("Purple",
+                              Decorator::Light,
+                              {0x342947, 0xd5d1df, 0xfdd552, 0x342947,},
+                              {0x4f3e68, 0xd5d1df, 0xfdd552, 0x4f3e68,},
+                              {0x776692, 0xd5d1df, 0xfdd552, 0x776692,});
+    themeList->append(purpleTheme);
 
     QStringList list;
     foreach (const Decorator *temp, *themeList)

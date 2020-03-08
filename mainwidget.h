@@ -57,7 +57,10 @@ private:
     QList<Decorator*>  *themeList;
 
     Decorator          *darkTheme;
-    Decorator          *fakeTheme;
+    Decorator          *greenTheme;
+    Decorator          *bitbucketTheme;
+    Decorator          *githubTheme;
+    Decorator          *purpleTheme;
 
     enum quickMenu {
         quickIndexConsole   = 0,
