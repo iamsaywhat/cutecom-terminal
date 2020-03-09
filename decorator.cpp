@@ -116,8 +116,6 @@ void Decorator::applyToConverter(void){
     gui->converterClearButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 40, 10, 5, 5, 5, 5));
 }
 void Decorator::applyToSettings(void){
-    gui->settingsLeftPanel->horizontalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
-    gui->settingsLeftPanel->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
     setBasicColorsToWidget  (gui->leftPanelContents, baseColor());
     setBasicColorsToWidget  (gui->settingsPage, baseColor());
     gui->connectionContentsButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 40, 20, 5, 5, 0, 0));
@@ -126,6 +124,8 @@ void Decorator::applyToSettings(void){
     gui->tableContentButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 40, 20, 5, 5, 0, 0));
     gui->logsContentButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 40, 20, 5, 5, 0, 0));
     gui->bindsContentButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 40, 20, 5, 5, 0, 0));
+    gui->settingsLeftPanel->horizontalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
+    gui->settingsLeftPanel->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
     gui->settingsRightPanel->horizontalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
     gui->settingsRightPanel->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
     setBasicColorsToWidget(gui->rightPanelContents, secondColor());
@@ -348,13 +348,15 @@ QString Decorator::getScrollBarStyleSheet (Color handleColor, Color pageColor) {
            "QScrollBar:vertical { "
                 "border: none;"
                 "height: 10px;"
-                "width:  10px;"
-                "margin: 0;"
+                "width:  15px;"
            "}"
            "QScrollBar::handle:vertical {"
                 "%1;"
                 "min-width:  20px;"
                 "min-height: 20px;"
+                "height: 10px;"
+                "width:  15px;"
+                "margin: 3;"
            "}"
            "QScrollBar::add-line:vertical {"
                 "background: none;"
@@ -382,6 +384,9 @@ QString Decorator::getScrollBarStyleSheet (Color handleColor, Color pageColor) {
                 "%1;"
                 "min-width:  20px;"
                 "min-height: 20px;"
+                "height: 10px;"
+                "width:  15px;"
+                "margin: 3;"
            "}"
            "QScrollBar::add-line:horizontal {"
                 "background: none;"

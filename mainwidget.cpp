@@ -103,7 +103,7 @@ void MainWidget::setAppTextCodec(int index){
 }
 void MainWidget::fillLanguageList(){
     languageList->append("English");
-    languageList->append("Русский");
+    //languageList->append("Русский");
     settings->setLanguageList(languageList);
 }
 void MainWidget::fillCodecList(){
@@ -153,5 +153,4 @@ void MainWidget::fillThemeList(){
 void MainWidget::applyColorScheme(int indexOfTheme){
     themeList->at(indexOfTheme)->apply();
 }
-
 
