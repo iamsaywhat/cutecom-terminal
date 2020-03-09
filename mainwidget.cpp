@@ -17,6 +17,7 @@ MainWidget::MainWidget(FramelessWindow *parent)
     , ui(new Ui::MainWidget)
 {
     ui->setupUi(this);
+    this->setMinimumSize(600, 300);
 
     // Выполняем связку класса работы с портом окном настроек
     serial = new SerialGui(ui->boxPorts,                   // ComboBox c доступными Com портами
@@ -49,26 +50,12 @@ MainWidget::MainWidget(FramelessWindow *parent)
                               ui->converterSourceBox,      // QComboBox селектор исходного формата
                               ui->converterResultBox);     // QComboBox селектор формата вывода
 
-    settings     = new SettingsController(this, ui);
+    settings     = new GuiController(this, ui);
     codecList    = new QStringList;
     languageList = new QStringList;
     themeList    = new QList<Decorator*>;
 
-    this->setMinimumSize(600, 300);
-
-    // Внешний вид приложения
-    setPropertiesToMainWidget();
-    setPropertiesToConsole();
-    setPropertiesToTable();
-    setPropertiesToConverter();
-
-
     setAppFont();
-
-
-    ui->centralWidget->layout()->setMargin(0);
-
-
 
     fillLanguageList();
     fillCodecList();
@@ -76,29 +63,17 @@ MainWidget::MainWidget(FramelessWindow *parent)
 
     applyColorScheme(0);
 
-
     // Подключение кнопок закрыть, свернуть, развернуть окно, так как стандартные скрыты
     connect(ui->closeButton,    &QToolButton::clicked, parent, &QWidget::close);
     connect(ui->minimizeButton, &QToolButton::clicked, parent, &QWidget::showMinimized);
-    connect(ui->maximazeButton, &QToolButton::clicked, [parent](){ parent->maximizeFramelessWindow();});
-    // Дополнительные функциональные кнопки
-    connect(ui->showConnectionButton,    &QPushButton::clicked,
-            [this](){ui->workspaceWidget->setCurrentIndex(quickIndexSettings);
-                     ui->rightStackedPanel->setCurrentIndex(SettingsController::settingsMenu::settingsIndexConnection);});
-    connect(ui->switchToConsoleButton,   &QPushButton::clicked,
-            [this](){ui->workspaceWidget->setCurrentIndex(quickIndexConsole);});
-    connect(ui->switchToTableButton,     &QPushButton::clicked,
-            [this](){ui->workspaceWidget->setCurrentIndex(quickIndexTable);});
-    connect(ui->switchToConverterButton, &QPushButton::clicked,
-            [this](){ui->workspaceWidget->setCurrentIndex(quickIndexConverter);});
-    connect(ui->showSettingsButton,      &QPushButton::clicked,
-            [this](){ui->workspaceWidget->setCurrentIndex(quickIndexSettings);});
-    //
-    connect(settings, &SettingsController::currentThemeChanged, this, &MainWidget::applyColorScheme);
+    connect(ui->maximazeButton, &QToolButton::clicked, [parent](){parent->maximizeFramelessWindow();});
+
+    // Изменения настроек приложения
+    connect(settings, &GuiController::currentThemeChanged, this, &MainWidget::applyColorScheme);
     //connect(settings, &SettingsController::currentLanguageChanged, this, &MainWidget::);
-    connect(settings, &SettingsController::currentTextCodecChanged, this, &MainWidget::setAppTextCodec);
-    connect(settings, &SettingsController::consoleEchoChanged, console, &ConsoleWidget::setEchoMode);
-    connect(settings, &SettingsController::tableEchoChanged, tableConsole, &TableConsole::setEchoMode);
+    connect(settings, &GuiController::currentTextCodecChanged, this, &MainWidget::setAppTextCodec);
+    connect(settings, &GuiController::consoleEchoChanged, console, &ConsoleWidget::setEchoMode);
+    connect(settings, &GuiController::tableEchoChanged, tableConsole, &TableConsole::setEchoMode);
 }
 
 MainWidget::~MainWidget(){
@@ -119,35 +94,6 @@ MainWidget::~MainWidget(){
     delete ui;
 }
 
-
-void MainWidget::setPropertiesToMainWidget(void){
-    ui->closeButton->setText("");
-    ui->maximazeButton->setText("");
-    ui->minimizeButton->setText("");
-    ui->appName->setText("");
-    ui->appName->setAttribute(Qt::WA_TransparentForMouseEvents, true);
-    ui->showConnectionButton->setMinimumSize(50,50);
-    ui->showConnectionButton->setMinimumSize(50,50);
-    ui->showSettingsButton->setMinimumSize(50,50);
-    ui->switchToConsoleButton->setMinimumSize(50,50);
-    ui->switchToTableButton->setMinimumSize(50,50);
-    ui->switchToConverterButton->setMinimumSize(50,50);
-    ui->showConnectionButton->setText("");
-    ui->showConnectionButton->setText("");
-    ui->showSettingsButton->setText("");
-    ui->switchToConsoleButton->setText("");
-    ui->switchToTableButton->setText("");
-    ui->switchToConverterButton->setText("");
-}
-void MainWidget::setPropertiesToConsole(void){
-
-}
-void MainWidget::setPropertiesToTable(void){
-
-}
-void MainWidget::setPropertiesToConverter(void){
-
-}
 void MainWidget::setAppFont(){
     QApplication::setFont(*appFont);
 }

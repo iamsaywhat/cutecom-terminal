@@ -9,7 +9,7 @@
 #include "serialgui.h"
 #include "decorator.h"
 #include "converter.h"
-#include "settingscontroller.h"
+#include "guicontroller.h"
 
 
 
@@ -25,44 +25,29 @@ public:
     MainWidget(FramelessWindow *parent = nullptr);
     ~MainWidget();
 
-    void setPropertiesToMainWidget(void);
-    void setPropertiesToConsole(void);
-    void setPropertiesToTable(void);
-    void setPropertiesToConverter(void);
-
     void applyColorScheme(int indexOfTheme);
-
     void setAppFont();
-
     void setAppTextCodec(int index);
-
     void fillLanguageList();
     void fillCodecList();
     void fillThemeList();
 
 private:
-    Ui::MainWidget     *ui;
-    SerialGui          *serial;
-    ConsoleWidget      *console;
-    TableConsole       *tableConsole;
-    Converter          *converter;
-    SettingsController *settings;
-    QStringList        *codecList;
-    QStringList        *languageList;
-    QList<Decorator*>  *themeList;
+    Ui::MainWidget     *ui           = nullptr;
+    SerialGui          *serial       = nullptr;
+    ConsoleWidget      *console      = nullptr;
+    TableConsole       *tableConsole = nullptr;
+    Converter          *converter    = nullptr;
+    GuiController      *settings     = nullptr;
+    QStringList        *codecList    = nullptr;
+    QStringList        *languageList = nullptr;
+    QList<Decorator*>  *themeList    = nullptr;
 
-    Decorator          *darkTheme;
-    Decorator          *greenTheme;
-    Decorator          *bitbucketTheme;
-    Decorator          *githubTheme;
-    Decorator          *purpleTheme;
-
-    enum quickMenu {
-        quickIndexConsole   = 0,
-        quickIndexTable     = 1,
-        quickIndexConverter = 2,
-        quickIndexSettings  = 3,
-    };
+    Decorator          *darkTheme      = nullptr;
+    Decorator          *greenTheme     = nullptr;
+    Decorator          *bitbucketTheme = nullptr;
+    Decorator          *githubTheme    = nullptr;
+    Decorator          *purpleTheme    = nullptr;
 
     QFont *appFont = new QFont("Terminus", 10, QFont::ExtraBold);
 };

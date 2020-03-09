@@ -1,17 +1,17 @@
-#ifndef SETTINGSCONTROLLER_H
-#define SETTINGSCONTROLLER_H
+#ifndef GUICONTROLLER_H
+#define GUICONTROLLER_H
 
 #include "ui_mainwidget.h"
 #include "decorator.h"
 
-class SettingsController : public QObject
+class GuiController : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit SettingsController(QObject *parent = nullptr,
+    explicit GuiController(QObject *parent = nullptr,
                                 Ui::MainWidget* gui = nullptr);
-    ~SettingsController(void);
+    ~GuiController(void);
     enum settingsMenu {
         settingsIndexConnection = 0,
         settingsIndexGeneral    = 1,
@@ -20,7 +20,14 @@ public:
         settingsIndexLogs       = 4,
         settingsIndexBinds      = 5,
     };
+    enum quickMenu {
+        quickIndexConsole   = 0,
+        quickIndexTable     = 1,
+        quickIndexConverter = 2,
+        quickIndexSettings  = 3,
+    };
     void setProperties(void);
+    void setPropertiesMainWidget(void);
     void setPropertiesMenu(void);
     void setPropertiesSectionConnection(void);
     void setPropertiesSectionGeneral(void);
@@ -33,7 +40,7 @@ public:
     void setThemeList(QStringList* list);
 
 private:
-    Ui::MainWidget *gui;
+    static Ui::MainWidget *gui;
 
 signals:
     void currentThemeChanged(int index);
@@ -45,4 +52,4 @@ signals:
 public slots:
 };
 
-#endif // SETTINGSCONTROLLER_H
+#endif // GUICONTROLLER_H

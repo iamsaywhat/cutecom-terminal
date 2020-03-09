@@ -20,25 +20,25 @@ SOURCES += \
     converter.cpp \
     decorator.cpp \
     framelesswindow.cpp \
+    guicontroller.cpp \
     hexmode/delegate.cpp \
     hexmode/tableconsole.cpp \
     main.cpp \
     mainwidget.cpp \
     serial.cpp \
-    serialgui.cpp \
-    settingscontroller.cpp
+    serialgui.cpp
 
 HEADERS += \
     consolemode/consolewidget.h \
     converter.h \
     decorator.h \
     framelesswindow.h \
+    guicontroller.h \
     hexmode/delegate.h \
     hexmode/tableconsole.h \
     mainwidget.h \
     serial.h \
-    serialgui.h \
-    settingscontroller.h
+    serialgui.h
 
 FORMS += \
     mainwidget.ui
