@@ -26,7 +26,7 @@ Decorator::Decorator(void)
     setBaseColor({0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF});
     setSecondColor({0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF});
     setThirdColor({0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF});
-    setName("unnamed");
+    setName("untitled");
     setIconMode(Light);
 
     /* Остальные цвета по-умолчанию такие */
@@ -579,7 +579,7 @@ QString Decorator::getButtonStyleSheet(Color baseColor, Color hoverColor, Color 
                        "border-bottom-right-radius:    %7px;"
                        "border-top-right-radius:       %8px;"
                        "border-top-left-radius:        %9px;"
-                       "margin:                        2px;"
+//                       "margin:                        2px;"
                   "}"
                   "QPushButton:hover { "
                        "%2;"

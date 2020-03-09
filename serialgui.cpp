@@ -30,7 +30,7 @@ SerialGui::SerialGui(QComboBox*   ports,              // ComboBox c доступ
     // Заполняем элементы GUI
     updatePortsList(_ports);           // Обновим список доступных портов
     fillBaudrateList(_baudrate);       // Размещаем настрокий бодрейта
-    fillBaudrateList(_parity);         // Размещаем настройки паритета
+    fillParityList(_parity);           // Размещаем настройки паритета
     fillDataBitsList(_dataBits);       // Размещаем настройки бит данных
     fillStopBitsList(_stopBits);       // Размещаем настройки стоп-бит
     fillFlowControlList(_flowControl); // Размещаем настройки контроля
