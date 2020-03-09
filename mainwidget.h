@@ -31,11 +31,6 @@ public:
     void setPropertiesToConverter(void);
 
     void applyColorScheme(int indexOfTheme);
-    void applyColorSchemeToMainWidget(Decorator *scheme);
-    void applyColorSchemetoConsole(Decorator *scheme);
-    void applyColorSchemeToTable(Decorator *scheme);
-    void applyColorSchemeToConverter(Decorator *scheme);
-    void applyColorSchemeToSettings(Decorator *scheme);
 
     void setAppFont();
 

@@ -44,7 +44,6 @@ SettingsController::SettingsController(QObject *parent, Ui::MainWidget* gui) : Q
                             else
                                 emit this->tableEchoChanged(false);});
 
-
     gui->checkboxConsoleEcho->setCheckState(Qt::CheckState::Checked);
     gui->checkboxTableEcho->setCheckState(Qt::CheckState::Checked);
 }

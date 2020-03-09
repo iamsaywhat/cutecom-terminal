@@ -13,6 +13,8 @@
 #include <QComboBox>
 #include <QCheckBox>
 
+#include "ui_mainwidget.h"
+
 
 class Decorator : public QObject
 {
@@ -46,35 +48,15 @@ public:
     ~Decorator(void);
     Decorator &operator=(const Decorator &source);
 
-    // Установка стилей для главного окна
-    void applyToCloseButton(QToolButton *button);
-    void applyToMaximizeButton(QToolButton *button);
-    void applyToMinimizeButton(QToolButton *button);
-    void applyToConnectionButton(QPushButton *button);
-    void applyToConsoleButton(QPushButton *button);
-    void applyToTableButton(QPushButton *button);
-    void applyToConverterButton(QPushButton *button);
-    void applyToSettingsButton(QPushButton *button);
-    void applyToAppLabel(QLabel *label);
-    // Установка стилей для специальных виджетов
-    void applyToConsoleWidget(QPlainTextEdit *display, QLineEdit *input, QPushButton *sendButton, QPushButton *clearButton);
-    void applyToTableWidget(QTableView *taleView, QLineEdit *lineEdit, QPushButton *sendButton, QPushButton *clearButton);
-    void applyToConverterWidget(QPlainTextEdit*, QPlainTextEdit*, QComboBox*, QComboBox*, QPushButton*, QPushButton*, QPushButton*);
+    void apply(void);
+
     // Установка стиля для базовых виджетов
     void setBasicColorsToWidget(QWidget *widget, Color color);
-    void setScrollBarColors(QScrollBar *scrollBar, Color handleColor, Color pageColor);
-    void setSettingsButtonsColors(QPushButton *button, Color background, Color backgroundHover, Color backgroundPressed);
     void setComboBoxColors(QComboBox *comboBox, Color activeColor, Color disableColor, Color listColor);
-    void setStandartButtonColors(QPushButton *button, Color baseColor, Color hoverColor, Color pressedColor);
     void setCheckBoxColors(QCheckBox *checkBox, Color color, Color hoverColor, Color pressedColor);
 
-    void setButtonStyleSheet(QPushButton *button,
-                             Color baseColor, Color hoverColor, Color pressedColor,
-                             int horizontalPadding, int verticalPadding,
-                             int leftUpperRadius,   int leftBottomRadius,
-                             int rightUpperRadius,  int rightBottomRadius);
 
-
+    Ui::MainWidget* TargetGui(void) const  {return gui;}
     Color baseColor(void) const            {return _baseColor;}
     Color secondColor(void) const          {return _secondColor;}
     Color thirdColor(void) const           {return _thirdColor;}
@@ -87,6 +69,7 @@ public:
     QString name(void) const               {return _name;}
     IconMode iconMode(void) const          {return _iconMode;}
 
+    static void setTargetGui(Ui::MainWidget* target);
     void setBaseColor(Color color);
     void setSecondColor(Color color);
     void setThirdColor(Color color);
@@ -105,10 +88,8 @@ public:
     static QString getWindowButtonStyleSheet(QString iconUrl, Color baseColor, Color hoverColor, Color pressedColor);
     static QString getQuickPanelButtonStyleSheet(QString iconUrl, Color baseColor, Color hoverColor, Color pressedColor);
     // Специальные таблицы стилей для базовых элементов
-    static QString getStandartButtonStyleSheet (Color baseColor, Color hoverColor, Color pressedColor);
     static QString getInputFieldStyleSheet (Color color);
     static QString getConsoleStyleSheet(Color color);
-    static QString getSettingsMenuButtonStyleSheet(Color baseColor,Color hoverColor, Color pressedColor);
     // Общая таблица стилей элементов
     static QString getScrollBarStyleSheet (Color handleColor, Color pageColor);
     static QString getTableStyleSheet(Color tableColor, Color headerColor);
@@ -116,38 +97,45 @@ public:
     static QString getComboBoxStyleSheet(QString &arrowUrl,Color activeColor, Color disableColor, Color listColor);
     static QString getCheckBoxStyleSheet(QString &checkUrl, Color color, Color hoverColor, Color pressedColor);
     static QString getPlainTextStyleSheet(Color color);
-
     static QString getButtonStyleSheet(Color baseColor, Color hoverColor, Color pressedColor,
                                        int horizontalPadding, int verticalPadding,
                                        int leftUpperRadius,   int leftBottomRadius,
                                        int rightUpperRadius,  int rightBottomRadius);
 
 private:
-    QString _name;
-    IconMode _iconMode;
-    Color _baseColor;
-    Color _secondColor;
-    Color _thirdColor;
-    Color _closeHoverColor;
-    Color _closePressedColor;
-    Color _maximizeHoverColor;
-    Color _maximizePressedColor;
-    Color _minimizeHoverColor;
-    Color _minimizePressedColor;
-    QString appIconlUrl;
-    QString closeIconUrl;
-    QString maximizeIconUrl;
-    QString minimizeIconUrl;
-    QString connectionIconUrl;
-    QString consoleIconUrl;
-    QString tableIconUrl;
-    QString converterIconUrl;
-    QString settingsIconUrl;
-    QString comboBoxArrowUrl;
-    QString checkBoxCheckUrl;
+    QString _name;                    // Имя цветовой схемы
+    IconMode _iconMode;               // Цвет иконок
+    Color _baseColor;                 // Базовый цвет
+    Color _secondColor;               // Дополнительный цвет
+    Color _thirdColor;                // Дополнительный цвет 2
+    Color _closeHoverColor;           // Цвет кнопки "закрыть" при наведении
+    Color _closePressedColor;         // Цвет кнопки "закрыть" при нажатии
+    Color _maximizeHoverColor;        // Цвет кнопки "развернуть" при наведении
+    Color _maximizePressedColor;      // Цвет кнопки "развернуть" при нажатии
+    Color _minimizeHoverColor;        // Цвет кнопки "свернуть" при наведении
+    Color _minimizePressedColor;      // Цвет кнопки "свернуть" при нажатии
+    QString appIconlUrl;              // Путь к иконке-заголовку
+    QString closeIconUrl;             // Путь к иконке "закрыть"
+    QString maximizeIconUrl;          // Путь к иконке "развернуть"
+    QString minimizeIconUrl;          // Путь к иконке "свернуть"
+    QString connectionIconUrl;        // Путь к иконке "подключение"
+    QString consoleIconUrl;           // Путь к иконке "консоль"
+    QString tableIconUrl;             // Путь к иконке "таблица"
+    QString converterIconUrl;         // Путь к иконке "конвертер"
+    QString settingsIconUrl;          // Путь к иконке "настройки"
+    QString comboBoxArrowUrl;         // Путь к иконке стрелки комбобокса
+    QString checkBoxCheckUrl;         // Путь к иконки отметки чекбокса
+
+    static Ui::MainWidget *gui;       // Указатель на целевой виджет gui
 
     static void validateColor(Color &color);
     static QString colorToString(Color color);
+
+    void applyToMainWidget(void);
+    void applyToConsole(void);
+    void applyToTable(void);
+    void applyToConverter(void);
+    void applyToSettings(void);
 
 signals:
     void baseColorChanged(void);
