@@ -1,8 +1,14 @@
 #include "tableconsole.h"
 #include <QHeaderView>
 #include <QTime>
-#include <QDebug>
 #include <QScrollBar>
+#include "converter.h"
+
+//#define DEBUG
+
+#ifdef DEBUG
+#include <QDebug>
+#endif
 
 TableConsole::TableConsole(QObject*           parent,
                            SerialGui*         serial,
@@ -27,7 +33,7 @@ TableConsole::TableConsole(QObject*           parent,
     _input->setValidator(new QRegularExpressionValidator(hexMatcher, this));
     /* Настройки QTableView */
     model = new QStandardItemModel(0,4);  // Создаём модель и пока только декларируем 4 столбца
-    QStringList horizontalHeaders;        // Задаём заголовки столбцов
+    // Задаём заголовки столбцов
     horizontalHeaders << "#"
                       << "Timestamp"
                       << "Direction"
@@ -35,8 +41,7 @@ TableConsole::TableConsole(QObject*           parent,
     model->setHorizontalHeaderLabels(horizontalHeaders);
     delegate = new TextEditDelegate(this);                 // Создаём делегата отвечающего отрисовку содержимого таблицы
     _table->setModel(model);                               // Помещаем модель в таблицу
-    for(int i = 0; i < 4; i++)                             // Назначаем делегат
-    {
+    for(int i = 0; i < 4; i++){                             // Назначаем делегат
         _table->setItemDelegateForColumn(i, delegate);
     }
     _table->setEditTriggers(QAbstractItemView::NoEditTriggers);      // Действия инициирующие редактирование элемента запрещены
@@ -47,6 +52,7 @@ TableConsole::TableConsole(QObject*           parent,
     _table->verticalHeader()->hide();                                // Скрываем вертикальный хидер
     _table->setTextElideMode(Qt::ElideNone);                         // Настройки выравнивания
     _table->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
+
     /* Выполняем необходимые функциональные подключения слотов и сигналов */
     connect(_table->verticalScrollBar(), &QScrollBar::valueChanged,      // Изменение в скроллбаре генерирует сигнал на
             this, &TableConsole::slotAutoresize);                        // перерисовку видимой части таблицы
@@ -63,16 +69,14 @@ TableConsole::TableConsole(QObject*           parent,
 
     setEchoMode(true);
 }
-
-
 TableConsole::~TableConsole(){
     delete delegate;
     delete model;
 }
-
-
 void TableConsole::appendData(DirectionType direction, QString* data){
     QTime systemTime = QTime::currentTime();                                // Получаем системное время
+    blockAutoresizeSlot();
+    _table->verticalScrollBar()->blockSignals(true);
     /* Добавляем новую строку и заполняем ее содержимое */
     model->setRowCount(model->rowCount()+1);                                // Добавляем пустую строку данных
     model->setData(model->index(model->rowCount()-1, indexNumberColumn),    // Номер сообщения
@@ -94,16 +98,15 @@ void TableConsole::appendData(DirectionType direction, QString* data){
     model->setData(model->index(model->rowCount()-1,indexTimestampColumn), Qt::AlignTop, Qt::TextAlignmentRole);
     model->setData(model->index(model->rowCount()-1,indexDirectionColumn), Qt::AlignTop, Qt::TextAlignmentRole);
     model->setData(model->index(model->rowCount()-1,indexMessageColumn),   Qt::AlignTop, Qt::TextAlignmentRole);
-    slotAutoresize();
     _table->scrollToBottom();
+    _table->resizeRowToContents(model->rowCount()-1);    
     /* Испускаем сигнал и сообщаем, что только что были добавлены новые данные */
     emit dataWasAppend();
+    unblockAutoresizeSlot();
 }
-
-
 void TableConsole::appendData(DirectionType direction, QByteArray* data){
     QTime systemTime = QTime::currentTime();                                // Получаем системное время
-
+    blockAutoresizeSlot();
     /* Добавляем новую строку и заполняем ее содержимое */
     model->setRowCount(model->rowCount()+1);                                // Добавляем пустую строку данных
     model->setData(model->index(model->rowCount()-1, indexNumberColumn),    // Номер сообщения
@@ -128,26 +131,18 @@ void TableConsole::appendData(DirectionType direction, QByteArray* data){
     model->setData(model->index(model->rowCount()-1,indexTimestampColumn), Qt::AlignTop, Qt::TextAlignmentRole);
     model->setData(model->index(model->rowCount()-1,indexDirectionColumn), Qt::AlignTop, Qt::TextAlignmentRole);
     model->setData(model->index(model->rowCount()-1,indexMessageColumn),   Qt::AlignTop, Qt::TextAlignmentRole);
-    slotAutoresize();
     _table->scrollToBottom();
+    _table->resizeRowToContents(model->rowCount()-1);
     /* Испускаем сигнал и сообщаем, что только что были добавлены новые данные */
     emit dataWasAppend();
+    unblockAutoresizeSlot();
 }
-
-
-
-int TableConsole::firsrVisibleRow (void){
+int TableConsole::firstVisibleRow (void){
     return _firstVisibleRow;
 }
-
-
-
 int TableConsole::lastVisibleRow (void){
     return _lastVisibleRow;
 }
-
-
-
 void TableConsole::updateVisibleRows (void){
     int viewportHeight = 0;             // Высота viewport
     int viewportWidth = 0;              // Ширина viewport
@@ -194,39 +189,26 @@ void TableConsole::updateVisibleRows (void){
         else if (i == rowCount - 1)
             _lastVisibleRow = i;
     }
-    qDebug() << "firsrVisibleRow" << firsrVisibleRow() << "lastVisibleRow" << lastVisibleRow();
+#ifdef DEBUG
+    qDebug() << "firsrVisibleRow = " << firstVisibleRow()
+             << "lastVisibleRow = " << lastVisibleRow();
+#endif
 }
-
-
-
-void TableConsole::enableAutoresizeVisibleRows (int firstRow, int lastRow){
-    static int _firstRow = -1;     // Предыдущее положение видимой части: начало
-    static int _lastRow = -1;      // Предыдущее положение видимой части: конец
-    int i;
-    /* Если строк нет, то ничего делать и не надо */
-    if(model->rowCount() == 0)
-        return;
-    /* Выполняем только, если если изменения в отображаемой части  */
-    if(firstRow!=_firstRow || lastRow!=_lastRow){
-        if(_firstRow>=0 && _lastRow>=0){
-            /* Деактивируем авторесайз в предыдущем положении */
-            for (i = _firstRow; i <= _lastRow; i++)
-                _table->verticalHeader()->setSectionResizeMode(i,QHeaderView::Fixed);
-        }
-        if(firstRow>=0 && lastRow>=0){
-            /* Активируем авторесайз текущей отображаемой части */
-            for (i = firstRow; i <= lastRow; i++)
-                _table->verticalHeader()->setSectionResizeMode(i,QHeaderView::ResizeToContents);
-        }
-        /* Запоминаем положение отображаемой части */
-        _firstRow = firstRow;
-        _lastRow = lastRow;
+void TableConsole::resizeVisibleRows (int firstRow, int lastRow){
+    if(firstRow >= 0 && lastRow >= 0){
+        for (int i = firstRow; i <= lastRow; i++)
+            _table->resizeRowToContents(i);
     }
 }
-
 void TableConsole::slotAutoresize(void){
-    updateVisibleRows();                                             // Сначала узнаем видимую часть
-    enableAutoresizeVisibleRows(_firstVisibleRow, _lastVisibleRow);  // Видимой части разрешаем авторесайз
+    if(autoresizeIsBlocked())
+        return
+    resizeVisibleRows(firstVisibleRow(), lastVisibleRow());
+    updateVisibleRows();
+    //resizeVisibleRows(firstVisibleRow(), lastVisibleRow());
+#ifdef DEBUG
+    qDebug() << "TableConsole::slotAutoresize";
+#endif
 }
 
 void TableConsole::clear(void)
@@ -234,15 +216,18 @@ void TableConsole::clear(void)
     /* Если мы удалим все содержимое, индексы отображаемой части
      * нужно сделать невалидными */
     _firstVisibleRow = -1;
-    _lastVisibleRow = -1;
-    /* Выполнив с невалидными индексами, мы заберем свойство
-     * autoresize у ячеек отображаемых в данный момент и заодно
-     * сбросим внутри static-переменные, иначе после удаления
-     * функция попробует отключить свойство у уже несуществующих
-     * строк и мы поймаем вылет */
-    enableAutoresizeVisibleRows(_firstVisibleRow, _lastVisibleRow);
-    /* Теперь можем удалить все существующие строки */
-    model->removeRows(0, model->rowCount());
+    _lastVisibleRow = -1;    
+    // Запоминаем пользовательный размер колонок
+    QList<int> columnsWidth;
+    for(int i = 0; i < 4; i++)
+        columnsWidth << _table->columnWidth(i);
+    // Удаляем данные с модели
+    model->clear();
+    // Восстанавливаем заголовки
+    model->setHorizontalHeaderLabels(horizontalHeaders);
+    // Восстанавливаем пользователькую ширину колонок
+    for(int i = 0; i < 4; i++)
+        _table->setColumnWidth(i, columnsWidth.at(i));
 }
 
 void TableConsole::send(void){
@@ -256,59 +241,29 @@ void TableConsole::send(void){
     _input->clear();
     if (_echo)
         appendData(TableConsole::INCOMING, &message);
+#ifdef DEBUG
+    qDebug() << "TableConsole::send:" << message;
+#endif
 }
 
 void TableConsole::receive(QByteArray data){
     QString message = convertHexToAscii(data);     // Принимаем данные и сразу преобразуем в строку
     appendData(TableConsole::OUTGOING, &message);  // Добавляем нлвые данные в таблицу
-    qDebug() << message;
+#ifdef DEBUG
+    qDebug() << "TableConsole::receive" << message;
+#endif
 }
 
 void TableConsole::slotTextDelimiter(void){
-    QString result;
-    /* Берём текст с поля ввода */
-    QString message(_input->text());
-    /* Будем перебирать по байту и группировать символы
-     * по два разделяя их пробелом в новой строке и
-     * пропуская лишние пробелы. */
-    for(int count = 0; count < message.count(); count++){
-        if(count%3 != 2 && message[count] != ' ')
-            result.append(message[count]);
-        else if (count%3 == 2){
-            if(message[count] == ' ')
-                result.append(message[count]);
-            else
-                result.append(" " + message[count]);
-        }
-    }
-    /* В поле просто выбрасываем уже сгруппированную строку */
-    _input->setText(result);
+    QString source = _input->text();
+    Converter::setDelimitersInHexString(source, 2, ' ');
+    _input->setText(source);
 }
-
-
 
 QByteArray TableConsole::convertAsciiToHex(QString source){
-    QString    clearSource;
-    QByteArray result;
-
-    /* Удалим все разделители и дополним */
-    for(int i = 0; i < source.count(); i++){
-        if(source[i] != ' ')
-            clearSource.append(source[i]);
-    }
-    if(clearSource.count()%2 != 0)
-        clearSource.insert(clearSource.count()-1, '0');
-
-    /* Будем брать по два байта из очищенной строки и преобразовывать */
-    for(int i = 0, j = 0; i < clearSource.count(); i+=2, j++){
-        QString temp(clearSource[i]);
-        temp.append(clearSource[i+1]);
-        result.insert(j, static_cast<char>(temp.toInt(nullptr, 16)));
-    }
-
-    return result;
+    bool status;
+    return Converter::parseStringForHex(&status, source, ' ');
 }
-
 
 QString TableConsole::convertHexToAscii(QByteArray source){
     QString result = "";
@@ -320,10 +275,27 @@ QString TableConsole::convertHexToAscii(QByteArray source){
     result = result.toUpper();
     return result;
 }
+
 bool TableConsole::echoMode(void){
     return _echo;
 }
 void TableConsole::setEchoMode(bool state){
     _echo = state;
     emit echoModeChanged(state);
+}
+
+void TableConsole::blockAutoresizeSlot(void){
+    skipAutoresize = true;
+    _table->horizontalHeader()->blockSignals(true);
+    _table->verticalScrollBar()->blockSignals(true);
+}
+
+void TableConsole::unblockAutoresizeSlot(void){
+    skipAutoresize = false;
+    _table->horizontalHeader()->blockSignals(false);
+    _table->verticalScrollBar()->blockSignals(false);
+}
+
+bool TableConsole::autoresizeIsBlocked(void){
+    return skipAutoresize;
 }

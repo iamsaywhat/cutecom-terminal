@@ -62,6 +62,8 @@ MainWidget::MainWidget(FramelessWindow *parent)
     fillThemeList();
 
     applyColorScheme(0);
+    parent->setWindowTitle("Advanced Terminal");
+    parent->setWindowIcon(QIcon(":/light/resources/icons/light/consolemode.png"));
 
     // Подключение кнопок закрыть, свернуть, развернуть окно, так как стандартные скрыты
     connect(ui->closeButton,    &QToolButton::clicked, parent, &QWidget::close);

@@ -37,7 +37,7 @@ public:
     void appendData(DirectionType direction, QByteArray* data);
 
     /* Узнать номер верхней отображаемой строки */
-    int firsrVisibleRow (void);
+    int firstVisibleRow (void);
     /* Узнать номер нижней отображаемой строки */
     int lastVisibleRow (void);
     /* Преобразование строки с HEX кодами разделенными пробелами
@@ -55,6 +55,8 @@ private:
     QPushButton*        _sendButton;  // Кнопка отправки нового сообщения
     QPushButton*        _clearButton; // Кнопка очистки содержимого
     bool                _echo;
+    bool                skipAutoresize = false;
+    QStringList         horizontalHeaders;
 
     /* Здесь храним индексы видимых строк таблицы */
     int _firstVisibleRow = 0;  // Индекс верхней отображаемой строки
@@ -69,7 +71,11 @@ private:
     /* Обновить индексы видимой части таблицы */
     void updateVisibleRows ();
     /* Назначить авторесайз части таблицы между firstRow и lastRow строками */
-    void enableAutoresizeVisibleRows (int firstRow, int lastRow);
+    void resizeVisibleRows (int firstRow, int lastRow);
+
+    void blockAutoresizeSlot();
+    void unblockAutoresizeSlot();
+    bool autoresizeIsBlocked();
 
 signals:
     void dataWasAppend(void);
