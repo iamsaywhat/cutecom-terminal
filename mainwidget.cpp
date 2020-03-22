@@ -10,6 +10,7 @@
 #include <QString>
 #include <QThread>
 #include <QTextCodec>
+#include <QSettings>
 
 
 MainWidget::MainWidget(FramelessWindow *parent)
@@ -63,12 +64,13 @@ MainWidget::MainWidget(FramelessWindow *parent)
     fillCodecList();
     fillThemeList();
 
-    applyColorScheme(0);
+
+    //applyColorScheme(0);
     parent->setWindowTitle("Advanced Terminal");
     parent->setWindowIcon(QIcon(":/light/resources/icons/light/consolemode.png"));
 
-    language.load(":/resources/language_en.qm");
-    qApp->installTranslator(&language);
+    restoreSettings();
+
 
     // Подключение кнопок закрыть, свернуть, развернуть окно, так как стандартные скрыты
     connect(ui->closeButton,    &QToolButton::clicked, parent, &QWidget::close);
@@ -84,6 +86,7 @@ MainWidget::MainWidget(FramelessWindow *parent)
 }
 
 MainWidget::~MainWidget(){
+    saveSettings();
     delete themeList;
     delete languageList;
     delete codecList;
@@ -172,4 +175,59 @@ void MainWidget::setAppLanguage(int index){
     converter->retranslate();
     settings->retranstate();
 }
+void MainWidget::saveSettings(){
+    QSettings savedSettings("settings.conf", QSettings::IniFormat );
 
+    savedSettings.beginGroup("general");
+    savedSettings.setValue("theme", ui->comboBoxTheme->currentIndex());
+    savedSettings.setValue("language", ui->comboBoxLanguage->currentIndex());
+    savedSettings.setValue("text codec", ui->comboBoxCodec->currentIndex());
+    savedSettings.endGroup();
+
+    savedSettings.beginGroup("connection");
+    savedSettings.setValue("port", ui->boxPorts->currentText());
+    savedSettings.setValue("baudrate", ui->boxBaudrate->currentText());
+    savedSettings.setValue("data", ui->boxData->currentIndex());
+    savedSettings.setValue("parity", ui->boxParity->currentIndex());
+    savedSettings.setValue("stop bits", ui->boxStopBits->currentIndex());
+    savedSettings.setValue("flow control", ui->boxFlowControl->currentIndex());
+    savedSettings.endGroup();
+
+    savedSettings.beginGroup("console");
+    savedSettings.setValue("echo", ui->checkboxConsoleEcho->checkState());
+    savedSettings.endGroup();
+
+    savedSettings.beginGroup("table");
+    savedSettings.setValue("echo", ui->checkboxTableEcho->checkState());
+    savedSettings.endGroup();
+}
+void MainWidget::restoreSettings(){
+    QSettings savedSettings("settings.conf", QSettings::IniFormat );
+
+    savedSettings.beginGroup("general");
+    ui->comboBoxTheme->setCurrentIndex(savedSettings.value("theme", 0).toInt());
+    ui->comboBoxLanguage->setCurrentIndex(savedSettings.value("language", 0).toInt());
+    ui->comboBoxCodec->setCurrentIndex(savedSettings.value("text codec", 0).toInt());
+    savedSettings.endGroup();
+
+    savedSettings.beginGroup("console");
+    ui->checkboxConsoleEcho->setCheckState(savedSettings.value("echo", Qt::CheckState::Checked).value<Qt::CheckState>());
+    savedSettings.endGroup();
+
+    savedSettings.beginGroup("table");
+    ui->checkboxConsoleEcho->setCheckState(savedSettings.value("echo", Qt::CheckState::Checked).value<Qt::CheckState>());
+    savedSettings.endGroup();
+
+    savedSettings.beginGroup("connection");
+    ui->boxPorts->setCurrentText(savedSettings.value("port", "").toString());
+    ui->boxBaudrate->setCurrentText(savedSettings.value("baudrate", "").toString());
+    ui->boxData->setCurrentIndex(savedSettings.value("data", 0).toInt());
+    ui->boxParity->setCurrentIndex(savedSettings.value("parity", 0).toInt());
+    ui->boxStopBits->setCurrentIndex(savedSettings.value("stop bits", 0).toInt());
+    ui->boxFlowControl->setCurrentIndex(savedSettings.value("flow control", 0).toInt());
+    savedSettings.endGroup();
+
+    applyColorScheme(ui->comboBoxTheme->currentIndex());
+    setAppLanguage(ui->comboBoxLanguage->currentIndex());
+    setAppTextCodec(ui->comboBoxCodec->currentIndex());
+}

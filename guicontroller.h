@@ -40,6 +40,7 @@ public:
     void setCodecList(QStringList* list);
     void setThemeList(QStringList* list);
 
+
 private:
     static Ui::MainWidget *gui;
 

@@ -34,6 +34,9 @@ public:
     void fillCodecList();
     void fillThemeList();
 
+    void saveSettings();
+    void restoreSettings();
+
 private:
     Ui::MainWidget     *ui           = nullptr;
     SerialGui          *serial       = nullptr;
