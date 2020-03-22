@@ -86,10 +86,10 @@ void TableConsole::appendData(DirectionType direction, QString* data){
     switch (direction)                                                      // Направление передачи
     {
     case INCOMING:
-        model->setData(model->index(model->rowCount()-1, indexDirectionColumn),"Incoming");
+        model->setData(model->index(model->rowCount()-1, indexDirectionColumn),tr("Incoming"));
         break;
     case OUTGOING:
-        model->setData(model->index(model->rowCount()-1, indexDirectionColumn), "Outgoing");
+        model->setData(model->index(model->rowCount()-1, indexDirectionColumn), tr("Outgoing"));
         break;
     }
     model->setData(model->index(model->rowCount()-1, indexMessageColumn), *data); // Данные

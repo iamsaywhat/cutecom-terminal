@@ -146,6 +146,7 @@
     <message>
         <location filename="../guicontroller.cpp" line="130"/>
         <location filename="../guicontroller.cpp" line="136"/>
+        <location filename="../guicontroller.cpp" line="177"/>
         <location filename="../guicontroller.cpp" line="180"/>
         <source>Echo:</source>
         <translation>Режим эхо:</translation>
@@ -292,16 +293,19 @@ g</source>
     </message>
     <message>
         <location filename="../hexmode/tableconsole.cpp" line="38"/>
+        <location filename="../hexmode/tableconsole.cpp" line="303"/>
         <source>Timestamp</source>
         <translation>Время</translation>
     </message>
     <message>
         <location filename="../hexmode/tableconsole.cpp" line="39"/>
+        <location filename="../hexmode/tableconsole.cpp" line="304"/>
         <source>Direction</source>
         <translation>Направление</translation>
     </message>
     <message>
         <location filename="../hexmode/tableconsole.cpp" line="40"/>
+        <location filename="../hexmode/tableconsole.cpp" line="304"/>
         <source>Data</source>
         <translation>Данные</translation>
     </message>

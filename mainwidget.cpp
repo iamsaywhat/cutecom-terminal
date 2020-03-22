@@ -166,7 +166,6 @@ void MainWidget::setAppLanguage(int index){
     langList << ":/resources/language_ru.qm";
     language.load(langList.at(index));
     qApp->installTranslator(&language);
-
     serial->retranslate();
     console->retranslate();
     tableConsole->retranslate();
