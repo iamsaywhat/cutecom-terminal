@@ -24,8 +24,8 @@ TableConsole::TableConsole(QObject*           parent,
     _sendButton  = sendButton;       // Указатель на QPushButton форму GUI
     _clearButton = clearButton;      // Указатель на QPushButton форму GUI
     /* Добавляем текст на кнопки */
-    sendButton->setText("Send");
-    clearButton->setText("Clear");
+    sendButton->setText(tr("Send"));
+    clearButton->setText(tr("Clear"));
     // Включаем сетку на таблице
     _table->setShowGrid(false);
     /* Назначаем HEX валидатор на поле ввода */

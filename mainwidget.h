@@ -2,6 +2,7 @@
 #define MAINWIDGET_H
 
 #include <QWidget>
+#include <QTranslator>
 #include "framelesswindow.h"
 #include <QSerialPort>
 #include "consolemode/consolewidget.h"
@@ -48,6 +49,8 @@ private:
     Decorator          *bitbucketTheme = nullptr;
     Decorator          *githubTheme    = nullptr;
     Decorator          *purpleTheme    = nullptr;
+
+    QTranslator        language;
 
     QFont *appFont = new QFont("Terminus", 10, QFont::ExtraBold);
 };

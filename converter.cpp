@@ -37,9 +37,9 @@ Converter::Converter(QObject        *parent,
     _resultBox = resultBox;
 
     result->setReadOnly(true);            // Запрещаем редактировать область результата
-    convertButton->setText("Convert");    // Именуем кнопки
-    swapButton->setText("Swap");
-    clearButton->setText("Clear");
+    convertButton->setText(tr("Convert"));    // Именуем кнопки
+    swapButton->setText(tr("Swap"));
+    clearButton->setText(tr("Clear"));
 
     direction = DIRECT;                   // Исходное напрвление преобразования - прямое
     fillComboBoxs(sourceBox, resultBox);  // Заполняем combobox'ы

@@ -21,8 +21,8 @@ ConsoleWidget::ConsoleWidget(QObject*        parent,
     /* Настраиваем свойства и внешний вид рабочих областей */
     _console->setReadOnly(true);               // Запрещаем пользователю редактировать консоль
     _sendButton->setShortcut(Qt::Key_Return);  // Привязываем кнопки клавиатуры к кнопкам UI
-    _sendButton->setText("Send");              // Разместим текст на кнопках
-    _clearButton->setText("Clear");
+    _sendButton->setText(tr("Send"));              // Разместим текст на кнопках
+    _clearButton->setText(tr("Clear"));
     setEchoMode(true);
     /* Выполняем функциональные подключения */
     connect(_sendButton, &QPushButton::clicked, this, &ConsoleWidget::send);

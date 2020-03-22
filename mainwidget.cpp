@@ -27,6 +27,8 @@ MainWidget::MainWidget(FramelessWindow *parent)
                            ui->boxStopBits,                // ComboBox с настройками стоп-бит
                            ui->boxFlowControl,             // ComboBox с настройками контроля
                            ui->buttonConnectDisconnect);   // Кнопка подключения/отключения
+    serial->setCaptureInterval(20);
+    serial->setCaptureSize(10);
     // Выполняем связку класса работы с консолью с формами
     console = new ConsoleWidget(this,
                                 serial,                    // Указатель на SerialSettings экземпляр
@@ -64,6 +66,9 @@ MainWidget::MainWidget(FramelessWindow *parent)
     applyColorScheme(0);
     parent->setWindowTitle("Advanced Terminal");
     parent->setWindowIcon(QIcon(":/light/resources/icons/light/consolemode.png"));
+
+    language.load(":/resources/language_ru.qm");
+    qApp->installTranslator(&language);
 
     // Подключение кнопок закрыть, свернуть, развернуть окно, так как стандартные скрыты
     connect(ui->closeButton,    &QToolButton::clicked, parent, &QWidget::close);

@@ -93,13 +93,13 @@ void GuiController::setPropertiesMainWidget(void){
     gui->switchToConverterButton->setText("");
 }
 void GuiController::setPropertiesMenu(void){
-    gui->connectionContentsButton->setText("Connection");
-    gui->generalContentButton->setText("General");
-    gui->consoleContentButton->setText("Console");
-    gui->tableContentButton->setText("Table");
-    gui->logsContentButton->setText("Logs");
-    gui->bindsContentButton->setText("Binds");
-    gui->infoLabel->setText("Version: 0.0.0");
+    gui->connectionContentsButton->setText(tr("Connection"));
+    gui->generalContentButton->setText(tr("General"));
+    gui->consoleContentButton->setText(tr("Console"));
+    gui->tableContentButton->setText(tr("Table"));
+    gui->logsContentButton->setText(tr("Logs"));
+    gui->bindsContentButton->setText(tr("Binds"));
+    gui->infoLabel->setText(tr("Version: 0.0.0"));
     gui->settingsPage->layout()->setMargin(0);
     gui->pageDelimiterLayout->setMargin(0);
     gui->leftPanelContents->layout()->setMargin(0);
@@ -108,26 +108,32 @@ void GuiController::setPropertiesMenu(void){
     gui->pageDelimiterLayout->setSpacing(0);
 }
 void GuiController::setPropertiesSectionConnection (void){
-    gui->labelSectionConnection->setText("Connection");
+    gui->labelSectionConnection->setText(tr("Connection"));
     gui->labelSectionConnection->setFont(QFont("Arial", 14, QFont::Bold));
+    gui->labelPorts->setText(tr("Port:"));
+    gui->labelData->setText(tr("Data:"));
+    gui->labelStopBits->setText(tr("Stop bits:"));
+    gui->labelParity->setText(tr("Parity:"));
+    gui->labelBaudrate->setText(tr("Baudrate:"));
+    gui->labelFlowControl->setText(tr("Flow control:"));
 }
 void GuiController::setPropertiesSectionGeneral (void){
-    gui->labelSectionGeneral->setText("General");
+    gui->labelSectionGeneral->setText(tr("General"));
     gui->labelSectionGeneral->setFont(QFont("Terminus", 14, QFont::Bold));
-    gui->labelTheme->setText("Theme:");
-    gui->labelLanguage->setText("Language:");
-    gui->labelCodec->setText("Text codec:");
+    gui->labelTheme->setText(tr("Theme:"));
+    gui->labelLanguage->setText(tr("Language:"));
+    gui->labelCodec->setText(tr("Text codec:"));
 }
 void GuiController::setPropertiesSectionConsole (void){
-    gui->labelSectionConsole->setText("Console");
+    gui->labelSectionConsole->setText(tr("Console"));
     gui->labelSectionConsole->setFont(QFont("Terminus", 14, QFont::Bold));
     gui->labelConsoleEcho->setText("Echo:");
     gui->checkboxConsoleEcho->setText("");
 }
 void GuiController::setPropertiesSectionTable (void){
-    gui->labelSectionTable->setText("Table");
+    gui->labelSectionTable->setText(tr("Table"));
     gui->labelSectionTable->setFont(QFont("Terminus", 14, QFont::Bold));
-    gui->labelTableEcho->setText("Echo:");
+    gui->labelTableEcho->setText(tr("Echo:"));
     gui->checkboxTableEcho->setText("");
 }
 void GuiController::setPropertiesSectionLogs (void){

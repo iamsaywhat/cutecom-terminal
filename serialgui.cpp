@@ -40,7 +40,7 @@ SerialGui::SerialGui(QComboBox*   ports,              // ComboBox c доступ
     _stopBits->setCurrentText("1");
     _flowControl->setCurrentText("None");
     // Размещаем на ней соответствующий текст
-    _connectButton->setText("Connect");
+    _connectButton->setText(tr("Connect"));
     // Запрещаем автодобавление пользовательского бодрейта по нажатию enter
     _baudrate->setInsertPolicy(QComboBox::NoInsert);
 
@@ -87,7 +87,7 @@ void SerialGui::portStatusChanged(bool status){
     if(status){
         connectionStatus = OPEN;
         // Заменяем текст на кнопке
-        _connectButton->setText("Disconnect");
+        _connectButton->setText(tr("Disconnect"));
         // Блокируем ComboBoxes
         _ports->setEnabled(false);
         _baudrate->setEnabled(false);
@@ -99,7 +99,7 @@ void SerialGui::portStatusChanged(bool status){
     else {
         connectionStatus = CLOSED;
         // Заменяем текст на кнопке
-        _connectButton->setText("Connect");
+        _connectButton->setText(tr("Connect"));
         // Разблокируем ComboBoxes
         _ports->setEnabled(true);
         _baudrate->setEnabled(true);
@@ -143,6 +143,12 @@ void SerialGui::openOrCloseByButton(void){
     }
     else
         emit close();
+}
+void SerialGui::setCaptureInterval(int interval){
+    port->setCaptureInterval(interval);
+}
+void SerialGui::setCaptureSize(qint64 size){
+    port->setCapturePacketSize(size);
 }
 
 /*********************************************************************************

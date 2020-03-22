@@ -34,6 +34,8 @@ public:
     static void fillFlowControlList(QComboBox *comboBox);
     // Узнать состояние подключения
     ConnectionStatus getConnectionStatus (void);
+    void setCaptureInterval(int interval);
+    void setCaptureSize(qint64 size);
 
 private:
     // Элементы GUI

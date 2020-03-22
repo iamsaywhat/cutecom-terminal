@@ -43,10 +43,15 @@ HEADERS += \
 FORMS += \
     mainwidget.ui
 
+TRANSLATIONS += \
+    resources/language_ru.ts \
+    resources/language_en.ts \
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
-    icons.qrc
+    icons.qrc \
+    languages.qrc
