@@ -35,9 +35,9 @@ TableConsole::TableConsole(QObject*           parent,
     model = new QStandardItemModel(0,4);  // Создаём модель и пока только декларируем 4 столбца
     // Задаём заголовки столбцов
     horizontalHeaders << "#"
-                      << "Timestamp"
-                      << "Direction"
-                      << "Message";
+                      << tr("Timestamp")
+                      << tr("Direction")
+                      << tr("Data");
     model->setHorizontalHeaderLabels(horizontalHeaders);
     delegate = new TextEditDelegate(this);                 // Создаём делегата отвечающего отрисовку содержимого таблицы
     _table->setModel(model);                               // Помещаем модель в таблицу
@@ -116,16 +116,13 @@ void TableConsole::appendData(DirectionType direction, QByteArray* data){
     switch (direction)                                                      // Направление передачи
     {
         case INCOMING:
-            model->setData(model->index(model->rowCount()-1, indexDirectionColumn),
-                           "Incoming");
+            model->setData(model->index(model->rowCount()-1, indexDirectionColumn), tr("Incoming"));
             break;
         case OUTGOING:
-            model->setData(model->index(model->rowCount()-1, indexDirectionColumn),
-                           "Outgoing");
+            model->setData(model->index(model->rowCount()-1, indexDirectionColumn), tr("Outgoing"));
             break;
     }
-    model->setData(model->index(model->rowCount()-1, indexMessageColumn),   // Данные
-                   *data);
+    model->setData(model->index(model->rowCount()-1, indexMessageColumn), *data); // Данные
     /* Настройки выравниваия для новой строки */
     model->setData(model->index(model->rowCount()-1,indexNumberColumn),    Qt::AlignTop, Qt::TextAlignmentRole);
     model->setData(model->index(model->rowCount()-1,indexTimestampColumn), Qt::AlignTop, Qt::TextAlignmentRole);
@@ -298,4 +295,12 @@ void TableConsole::unblockAutoresizeSlot(void){
 
 bool TableConsole::autoresizeIsBlocked(void){
     return skipAutoresize;
+}
+void TableConsole::retranslate(void){
+    _sendButton->setText(tr("Send"));
+    _clearButton->setText(tr("Clear"));
+    horizontalHeaders.clear();
+    horizontalHeaders << "#" << tr("Timestamp")
+                      << tr("Direction") << tr("Data");
+    model->setHorizontalHeaderLabels(horizontalHeaders);
 }

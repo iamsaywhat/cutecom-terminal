@@ -10,7 +10,7 @@ class GuiController : public QObject
 
 public:
     explicit GuiController(QObject *parent = nullptr,
-                                Ui::MainWidget* gui = nullptr);
+                           Ui::MainWidget* gui = nullptr);
     ~GuiController(void);
     enum settingsMenu {
         settingsIndexConnection = 0,
@@ -34,6 +34,7 @@ public:
     void setPropertiesSectionConsole(void);
     void setPropertiesSectionTable(void);
     void setPropertiesSectionLogs(void);
+    void retranstate(void);
 
     void setLanguageList(QStringList* list);
     void setCodecList(QStringList* list);

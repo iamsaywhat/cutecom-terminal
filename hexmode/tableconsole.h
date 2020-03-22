@@ -26,6 +26,7 @@ public:
                           QPushButton*       clearButton);
     ~TableConsole();
     bool echoMode (void);
+    void retranslate(void);
 
     /* Типы сообщения */
     enum DirectionType{

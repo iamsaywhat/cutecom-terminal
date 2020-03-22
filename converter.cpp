@@ -965,3 +965,8 @@ QString Converter::convertToUnicode (QByteArray &text){
     QTextCodec *textCodec = QTextCodec::codecForName(currentCodec());
     return  textCodec->toUnicode(text);
 }
+void Converter::retranslate(void){
+    _convertButton->setText(tr("Convert"));
+    _swapButton->setText(tr("Swap"));
+    _clearButton->setText(tr("Clear"));
+}

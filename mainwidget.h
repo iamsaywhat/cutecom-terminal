@@ -29,6 +29,7 @@ public:
     void applyColorScheme(int indexOfTheme);
     void setAppFont();
     void setAppTextCodec(int index);
+    void setAppLanguage(int index);
     void fillLanguageList();
     void fillCodecList();
     void fillThemeList();

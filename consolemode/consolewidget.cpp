@@ -69,3 +69,7 @@ void ConsoleWidget::setEchoMode(bool state){
     _echo = state;
     emit echoModeChanged(state);
 }
+void ConsoleWidget::retranslate(void){
+    _sendButton->setText(tr("Send"));
+    _clearButton->setText(tr("Clear"));
+}

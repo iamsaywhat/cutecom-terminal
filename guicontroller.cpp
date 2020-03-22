@@ -127,7 +127,7 @@ void GuiController::setPropertiesSectionGeneral (void){
 void GuiController::setPropertiesSectionConsole (void){
     gui->labelSectionConsole->setText(tr("Console"));
     gui->labelSectionConsole->setFont(QFont("Terminus", 14, QFont::Bold));
-    gui->labelConsoleEcho->setText("Echo:");
+    gui->labelConsoleEcho->setText(tr("Echo:"));
     gui->checkboxConsoleEcho->setText("");
 }
 void GuiController::setPropertiesSectionTable (void){
@@ -150,5 +150,33 @@ void GuiController::setCodecList(QStringList* list){
 void GuiController::setThemeList(QStringList* list){
     gui->comboBoxTheme->clear();
     gui->comboBoxTheme->addItems(*list);
+}
+void GuiController::retranstate(void){
+    gui->connectionContentsButton->setText(tr("Connection"));
+    gui->generalContentButton->setText(tr("General"));
+    gui->consoleContentButton->setText(tr("Console"));
+    gui->tableContentButton->setText(tr("Table"));
+    gui->logsContentButton->setText(tr("Logs"));
+    gui->bindsContentButton->setText(tr("Binds"));
+    gui->infoLabel->setText(tr("Version: 0.0.0"));
+
+    gui->labelSectionConnection->setText(tr("Connection"));
+    gui->labelPorts->setText(tr("Port:"));
+    gui->labelData->setText(tr("Data:"));
+    gui->labelStopBits->setText(tr("Stop bits:"));
+    gui->labelParity->setText(tr("Parity:"));
+    gui->labelBaudrate->setText(tr("Baudrate:"));
+    gui->labelFlowControl->setText(tr("Flow control:"));
+
+    gui->labelSectionGeneral->setText(tr("General"));
+    gui->labelTheme->setText(tr("Theme:"));
+    gui->labelLanguage->setText(tr("Language:"));
+    gui->labelCodec->setText(tr("Text codec:"));
+
+    gui->labelSectionConsole->setText(tr("Console"));
+    gui->labelConsoleEcho->setText(tr("Echo:"));
+
+    gui->labelSectionTable->setText(tr("Table"));
+    gui->labelTableEcho->setText(tr("Echo:"));
 }
 

@@ -67,7 +67,7 @@ MainWidget::MainWidget(FramelessWindow *parent)
     parent->setWindowTitle("Advanced Terminal");
     parent->setWindowIcon(QIcon(":/light/resources/icons/light/consolemode.png"));
 
-    language.load(":/resources/language_ru.qm");
+    language.load(":/resources/language_en.qm");
     qApp->installTranslator(&language);
 
     // Подключение кнопок закрыть, свернуть, развернуть окно, так как стандартные скрыты
@@ -77,7 +77,7 @@ MainWidget::MainWidget(FramelessWindow *parent)
 
     // Изменения настроек приложения
     connect(settings, &GuiController::currentThemeChanged, this, &MainWidget::applyColorScheme);
-    //connect(settings, &SettingsController::currentLanguageChanged, this, &MainWidget::);
+    connect(settings, &GuiController::currentLanguageChanged, this, &MainWidget::setAppLanguage);
     connect(settings, &GuiController::currentTextCodecChanged, this, &MainWidget::setAppTextCodec);
     connect(settings, &GuiController::consoleEchoChanged, console, &ConsoleWidget::setEchoMode);
     connect(settings, &GuiController::tableEchoChanged, tableConsole, &TableConsole::setEchoMode);
@@ -110,7 +110,7 @@ void MainWidget::setAppTextCodec(int index){
 }
 void MainWidget::fillLanguageList(){
     languageList->append("English");
-    //languageList->append("Русский");
+    languageList->append("Русский");
     settings->setLanguageList(languageList);
 }
 void MainWidget::fillCodecList(){
@@ -159,5 +159,18 @@ void MainWidget::fillThemeList(){
 }
 void MainWidget::applyColorScheme(int indexOfTheme){
     themeList->at(indexOfTheme)->apply();
+}
+void MainWidget::setAppLanguage(int index){
+    QStringList langList;
+    langList << ":/resources/language_en.qm";
+    langList << ":/resources/language_ru.qm";
+    language.load(langList.at(index));
+    qApp->installTranslator(&language);
+
+    serial->retranslate();
+    console->retranslate();
+    tableConsole->retranslate();
+    converter->retranslate();
+    settings->retranstate();
 }
 

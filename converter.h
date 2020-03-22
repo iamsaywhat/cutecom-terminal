@@ -23,6 +23,7 @@ public:
                        QComboBox      *sourceBox,
                        QComboBox      *resultBox);
     ~Converter();
+    void retranslate(void);
     // Группировка символов в строке по groupSize штук, разделителем delimiter
     static void setDelimitersInHexString(QString &currentText, int groupSize, char delimiter);
     static void setDelimitersInHexString(QPlainTextEdit *textEdit, int groupSize, char delimiter);

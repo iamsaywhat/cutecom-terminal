@@ -22,6 +22,7 @@ public:
                            QPushButton*    clearButton);
     ~ConsoleWidget();
     bool echoMode (void);
+    void retranslate(void);
 
 private:
     SerialGui*      _serial;

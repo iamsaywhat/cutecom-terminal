@@ -36,6 +36,7 @@ public:
     ConnectionStatus getConnectionStatus (void);
     void setCaptureInterval(int interval);
     void setCaptureSize(qint64 size);
+    void retranslate (void);
 
 private:
     // Элементы GUI

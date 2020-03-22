@@ -150,7 +150,12 @@ void SerialGui::setCaptureInterval(int interval){
 void SerialGui::setCaptureSize(qint64 size){
     port->setCapturePacketSize(size);
 }
-
+void SerialGui::retranslate(void){
+    if(connectionStatus == OPEN)
+        _connectButton->setText(tr("Disconnect"));
+    else
+        _connectButton->setText(tr("Connect"));
+}
 /*********************************************************************************
  * setCustomBaudrate - Слот обслуживания custom baudrate
 *********************************************************************************/
