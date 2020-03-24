@@ -463,10 +463,6 @@ QString Decorator::getComboBoxStyleSheet(QString &arrowUrl,
             "QComboBox:disabled { "
                 "%2"
             "}"
-            // Стиль виджета при редактировании элемента
-            "QComboBox:editable { "
-                "background:                 red;"//#2b2d33;"
-            "}"
             // Выпадающий список целиком
             "QComboBox QAbstractItemView { "
                 "%3"
@@ -503,20 +499,6 @@ QString Decorator::getComboBoxStyleSheet(QString &arrowUrl,
                 "top: 1px;"
                 "left: 1px;"
             "}"
-//            Работает только если установить для Combobox специальный делегат
-//            combobox->setItemDelegate(new QStyledItemDelegate(combobox));
-//            https://switch-case.ru/33415621
-//            "QComboBox QAbstractItemView::item {"
-//                "border-style:             solid;"
-//                "border:                   none;"
-//                "padding-left:             5px;"
-//            "}"
-//            "QComboBox QAbstractItemView::item:selected {"
-//                "border-style:               solid;"
-//                "border: none;"
-//                "background: rgb(47, 175, 178);"
-//                "padding-left: 5px;"
-//            "}"
            );
     return styleSheet.arg(colorToString(activeColor))
                      .arg(colorToString(disableColor))

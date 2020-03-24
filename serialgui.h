@@ -52,7 +52,6 @@ private:
     QThread         *otherThread;                // Поток для serial
     Serial          *port;                       // Базовый класс для работы с com-портом
     ConnectionStatus connectionStatus = CLOSED;  // Статус подключения
-    const char  indexCustomBaudrate = 8;         // Индекс элемента пользовательского Baudrate (Custom)
 
 signals:
     void setSettings(Serial::Settings);       // Отправка настроек базовому классу
@@ -63,7 +62,6 @@ signals:
     void error(QString);
 
 private slots:
-     void setCustomBaudrate(void);
      void portStatusChanged(bool);
      void receivedData(QByteArray);
      void openOrCloseByButton(void);

@@ -43,9 +43,11 @@ SerialGui::SerialGui(QComboBox*   ports,              // ComboBox c доступ
     _connectButton->setText(tr("Connect"));
     // Запрещаем автодобавление пользовательского бодрейта по нажатию enter
     _baudrate->setInsertPolicy(QComboBox::NoInsert);
-
     // Создаём валидатор данных пользовательского бодрейта
     baudrateValidator = (new QIntValidator(0, 4000000, this));
+    _baudrate->setEditable(true);
+    _baudrate->setValidator(baudrateValidator);
+
     otherThread = new QThread;
     port = new Serial;
     port->moveToThread(otherThread);
@@ -64,7 +66,6 @@ SerialGui::SerialGui(QComboBox*   ports,              // ComboBox c доступ
     connect(this, &SerialGui::setSettings, port, &Serial::setSettings);
     connect(port, &Serial::errorInfo, this, &SerialGui::error);
     // События от Gui
-    connect(_baudrate, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SerialGui::setCustomBaudrate);
     connect(_connectButton, &QPushButton::clicked, this, &SerialGui::openOrCloseByButton);
 
     // Запускаем поток
@@ -156,18 +157,6 @@ void SerialGui::retranslate(void){
     else
         _connectButton->setText(tr("Connect"));
 }
-/*********************************************************************************
- * setCustomBaudrate - Слот обслуживания custom baudrate
-*********************************************************************************/
-void SerialGui::setCustomBaudrate(void){
-    if (_baudrate->currentIndex() == indexCustomBaudrate){       // Если выбран Custom
-        _baudrate->setEditable(true);                            // Делаем изменяемым
-        _baudrate->clearEditText();                              // Убираем текст
-        _baudrate->lineEdit()->setValidator(baudrateValidator);  // Привязываем к полю ввода валидатор данных
-    }  
-    else                                                         // Если выбран любой другой пункт
-        _baudrate->setEditable(false);
-}
 
 /*********************************************************************************
  * updatePortsList - Обновление в списка доступных портов
@@ -197,7 +186,6 @@ void SerialGui::fillBaudrateList(QComboBox *comboBox){
     comboBox->addItem(QStringLiteral("38400"),   QSerialPort::Baud38400);
     comboBox->addItem(QStringLiteral("57600"),   QSerialPort::Baud57600);
     comboBox->addItem(QStringLiteral("115200"),  QSerialPort::Baud115200);
-    comboBox->addItem(QStringLiteral("Custom"));
 }
 void SerialGui::fillParityList(QComboBox *comboBox){
     comboBox->clear();
