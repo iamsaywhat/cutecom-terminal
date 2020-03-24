@@ -88,14 +88,14 @@ void Decorator::applyToMainWidget(void){
 }
 void Decorator::applyToConsole(void){
     gui->consoleField->setStyleSheet(getConsoleStyleSheet(secondColor()));
-    gui->consoleField->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(baseColor(), secondColor()));
+    gui->consoleField->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
     gui->inputConsoleField->setStyleSheet(getInputFieldStyleSheet(secondColor()));
     gui->sendConsoleButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 20, 6, 0, 0, 0, 0));
     gui->clearConsoleButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 20, 6, 0, 0, 0, 0));
 }
 void Decorator::applyToTable(void){
-    gui->tableField->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(baseColor(), secondColor()));
-    gui->tableField->horizontalScrollBar()->setStyleSheet(getScrollBarStyleSheet(baseColor(), secondColor()));
+    gui->tableField->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
+    gui->tableField->horizontalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
     gui->tableField->setStyleSheet(getTableStyleSheet(secondColor(), baseColor()));
     gui->inputTableField->setStyleSheet(getInputFieldStyleSheet(secondColor()));
     gui->sendTableButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 20, 6, 0, 0, 0, 0));
@@ -105,8 +105,8 @@ void Decorator::applyToConverter(void){
     setBasicColorsToWidget(gui->converterPage, baseColor());
     gui->converterSource->setStyleSheet(getPlainTextStyleSheet(secondColor()));
     gui->converterResult->setStyleSheet(getPlainTextStyleSheet(secondColor()));
-    gui->converterSource->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(baseColor(), secondColor()));
-    gui->converterResult->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(baseColor(), secondColor()));
+    gui->converterSource->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
+    gui->converterResult->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
     setComboBoxColors(gui->converterSourceBox, secondColor(), baseColor(), secondColor());
     setComboBoxColors(gui->converterResultBox, secondColor(), baseColor(), secondColor());
     gui->converterResultBox->view()->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(baseColor(), secondColor()));
@@ -345,66 +345,26 @@ QString Decorator::getConsoleStyleSheet(Color color) {
 /* Таблицы стилей базовых элементов gui **************************************************************************/
 QString Decorator::getScrollBarStyleSheet (Color handleColor, Color pageColor) {
     QString styleSheet (
-           "QScrollBar:vertical { "
-                "border: none;"
-                "height: 10px;"
-                "width:  15px;"
+           "QScrollBar {"
+                 "border: none;"
+                 "%2"
+                 "height: 15px;"
+                 "width: 15px;"
+                 "margin: 0px;"  // Если ясно не указать ломает вертикальные скроллбары
            "}"
-           "QScrollBar::handle:vertical {"
-                "%1;"
-                "min-width:  20px;"
-                "min-height: 20px;"
-                "height: 10px;"
-                "width:  15px;"
-                "margin: 3;"
+           "QScrollBar::handle {"
+                 "%1"
+                 "min-width: 20px;"
+                 "min-height: 20px;"
+                 "margin: 4px;"
            "}"
-           "QScrollBar::add-line:vertical {"
-                "background: none;"
-                "border:     none; "
+           "QScrollBar::add-line,  QScrollBar::sub-line {"
+                 "background: none;"
+                 "border: none;"
            "}"
-           "QScrollBar::sub-line:vertical {"
-                "background: none;"
-                "border:     none;"
-           "}"
-           "QScrollBar::add-page:vertical {"
-                "%2;"
-                "border:     none;"
-           "}"
-           "QScrollBar::sub-page:vertical {"
-                "%2;"
-                "border:     none;"
-           "}"
-           "QScrollBar:horizontal { "
-                "border: none;"
-                "height: 10px;"
-                "width:  10px;"
-                "margin: 0;"
-           "}"
-           "QScrollBar::handle:horizontal {"
-                "%1;"
-                "min-width:  20px;"
-                "min-height: 20px;"
-                "height: 10px;"
-                "width:  15px;"
-                "margin: 3;"
-           "}"
-           "QScrollBar::add-line:horizontal {"
-                "background: none;"
-                "border:     none;"
-           "}"
-           "QScrollBar::sub-line:horizontal {"
-                "background: none;"
-                "border:     none;"
-           "}"
-           "QScrollBar::add-page:horizontal {"
-                "%2;"
-                "border:     none;"
-           "}"
-           "QScrollBar::sub-page:horizontal {"
-                "%2;"
-                "border:     none;"
-           "}"
-                );
+           "QScrollBar::add-page, QScrollBar::sub-page {"
+                 "%2"
+           "}");
     return styleSheet.arg(colorToString(handleColor))
                      .arg(colorToString(pageColor));
 }
