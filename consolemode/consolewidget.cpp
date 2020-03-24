@@ -56,11 +56,12 @@ void ConsoleWidget::clear (void){
 }
 
 void ConsoleWidget::receive(QByteArray data){
+    replaceSymbols(data, '.');
     QString temp = Converter::convertToUnicode(data);
     _console->moveCursor(QTextCursor::End);            // Смещаем курсор текста гарантированно в конец
     _console->textCursor().insertText(temp);        // Печатаем то, что пришло
     //_console->textCursor().insertText(QString::fromLatin1(data));        // Печатаем то, что пришло
-    _console->textCursor().insertText("\n");           // Переведем курсор на следующую строку
+    //_console->textCursor().insertText("\n");           // Переведем курсор на следующую строку
 }
 bool ConsoleWidget::echoMode(void){
     return _echo;
@@ -72,4 +73,14 @@ void ConsoleWidget::setEchoMode(bool state){
 void ConsoleWidget::retranslate(void){
     _sendButton->setText(tr("Send"));
     _clearButton->setText(tr("Clear"));
+}
+void ConsoleWidget::replaceSymbols(QByteArray &data, const char symbol){
+    for(int i = 0; i < data.count(); i++){
+        if(((data[i] >= char(0x00) && data[i] < char(0x20))
+           && data[i] != char(0x09)
+           && data[i] != char(0x0A)
+           && data[i] != char(0x0D))
+           || data[i] == char(0x7F))
+            data[i] = symbol;
+    }
 }

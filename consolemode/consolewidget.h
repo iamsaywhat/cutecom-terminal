@@ -31,7 +31,7 @@ private:
     QPushButton*    _sendButton;
     QPushButton*    _clearButton;
     bool            _echo;
-
+    void replaceSymbols(QByteArray &data, const char symbol);
 
 signals:
     void echoModeChanged(bool);
