@@ -96,6 +96,8 @@ MainWidget::MainWidget(FramelessWindow *parent)
     connect(settings, &GuiController::tableEchoChanged, tableConsole, &TableConsole::setEchoMode);
     connect(settings, &GuiController::tableCyclicChanged, tableConsole, &TableConsole::setCyclicMode);
     connect(settings, &GuiController::tableCyclicIntervalChanged, tableConsole, &TableConsole::setCyclicInterval);
+    connect(settings, &GuiController::captureTimeChanges, serial, &SerialGui::setCaptureInterval);
+    connect(settings, &GuiController::captureBytesChanges, serial, &SerialGui::setCaptureSize);
 }
 
 MainWidget::~MainWidget(){

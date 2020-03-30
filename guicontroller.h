@@ -48,6 +48,8 @@ signals:
     void currentThemeChanged(int index);
     void currentLanguageChanged(int index);
     void currentTextCodecChanged(int index);
+    void captureTimeChanges(int value);
+    void captureBytesChanges(int value);
     void consoleEchoChanged(bool state);
     void tableEchoChanged(bool state);
     void consoleCyclicChanged(bool state);

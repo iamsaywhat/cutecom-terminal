@@ -73,6 +73,11 @@ GuiController::GuiController(QObject *parent, Ui::MainWidget* gui) : QObject(par
     connect(gui->spinboxTableCyclicInterval, QOverload<int>::of(&QSpinBox::valueChanged),
             this, &GuiController::tableCyclicIntervalChanged);
 
+    connect(gui->spinBoxCaptureTime, QOverload<int>::of(&QSpinBox::valueChanged),
+            this, &GuiController::captureTimeChanges);
+    connect(gui->spinBoxCaptureBytes, QOverload<int>::of(&QSpinBox::valueChanged),
+            this, &GuiController::captureBytesChanges);
+
     gui->checkboxConsoleEcho->setCheckState(Qt::CheckState::Checked);
     gui->checkboxTableEcho->setCheckState(Qt::CheckState::Checked);
 }
@@ -139,6 +144,10 @@ void GuiController::setPropertiesSectionGeneral (void){
     gui->labelTheme->setText(tr("Theme:"));
     gui->labelLanguage->setText(tr("Language:"));
     gui->labelCodec->setText(tr("Text codec:"));
+    gui->labelCaptureTime->setText(tr("Capture time, ms:"));
+    gui->labelCaptureBytes->setText(tr("Capture bytes:"));
+    gui->spinBoxCaptureTime->setRange(0, 2147483647);
+    gui->spinBoxCaptureBytes->setRange(0, 2147483647);
 }
 void GuiController::setPropertiesSectionConsole (void){
     gui->labelSectionConsole->setText(tr("Console"));
