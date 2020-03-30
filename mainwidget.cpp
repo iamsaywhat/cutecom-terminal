@@ -41,7 +41,6 @@ MainWidget::MainWidget(FramelessWindow *parent)
     console->addBindSet(ui->lineEditConsoleHotKey2, ui->buttonConsoleHotkey2);
     console->addBindSet(ui->lineEditConsoleHotKey3, ui->buttonConsoleHotkey3);
     console->addBindSet(ui->lineEditConsoleHotKey4, ui->buttonConsoleHotkey4);
-    //connect(ui->buttonHotkey1, &QPushButton::clicked, console, &ConsoleWidget::sendHotData);
 
     // Создаём и связываем табличную консоль с формой
     tableConsole = new TableConsole(this,
@@ -50,6 +49,10 @@ MainWidget::MainWidget(FramelessWindow *parent)
                                     ui->inputTableField,   // Указатель на QLineEdit форму
                                     ui->sendTableButton,   // Указатель на QPushButton форму
                                     ui->clearTableButton); // Указатель на QPushButton форму
+    tableConsole->addBindSet(ui->lineEditTableHotKey1, ui->buttonTableHotKey1);
+    tableConsole->addBindSet(ui->lineEditTableHotKey2, ui->buttonTableHotKey2);
+    tableConsole->addBindSet(ui->lineEditTableHotKey3, ui->buttonTableHotKey3);
+    tableConsole->addBindSet(ui->lineEditTableHotKey4, ui->buttonTableHotKey4);
     converter = new Converter(this,
                               ui->converterSource,         // QPlainText для ввода
                               ui->converterResult,         // QplainText для вывода результата
@@ -88,9 +91,11 @@ MainWidget::MainWidget(FramelessWindow *parent)
     connect(settings, &GuiController::currentLanguageChanged, this, &MainWidget::setAppLanguage);
     connect(settings, &GuiController::currentTextCodecChanged, this, &MainWidget::setAppTextCodec);
     connect(settings, &GuiController::consoleEchoChanged, console, &ConsoleWidget::setEchoMode);
+    connect(settings, &GuiController::consoleCyclicChanged, console, &ConsoleWidget::setCyclicMode);
+    connect(settings, &GuiController::consoleCyclicIntervalChanged, console, &ConsoleWidget::setCyclicInterval);
     connect(settings, &GuiController::tableEchoChanged, tableConsole, &TableConsole::setEchoMode);
-    connect(settings, &GuiController::consoleCiclicChanged, console, &ConsoleWidget::setCiclicMode);
-    connect(settings, &GuiController::consoleCiclicIntervalChanged, console, &ConsoleWidget::setCiclicInterval);
+    connect(settings, &GuiController::tableCyclicChanged, tableConsole, &TableConsole::setCyclicMode);
+    connect(settings, &GuiController::tableCyclicIntervalChanged, tableConsole, &TableConsole::setCyclicInterval);
 }
 
 MainWidget::~MainWidget(){

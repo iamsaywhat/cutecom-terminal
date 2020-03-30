@@ -31,7 +31,7 @@ ConsoleWidget::ConsoleWidget(QObject*        parent,
     connect(_serial,     &SerialGui::received,  this, &ConsoleWidget::receive);
 
     timer = new QTimer;
-    connect(timer, &QTimer::timeout, this, &ConsoleWidget::ciclicTimeout);
+    connect(timer, &QTimer::timeout, this, &ConsoleWidget::cyclicTimeout);
 }
 
 ConsoleWidget::~ConsoleWidget()
@@ -74,21 +74,21 @@ void ConsoleWidget::setEchoMode(bool state){
     _echo = state;
     emit echoModeChanged(state);
 }
-bool ConsoleWidget::ciclicMode(void){
-    return _ciclic;
+bool ConsoleWidget::cyclicMode(void){
+    return _cyclic;
 }
-void ConsoleWidget::setCiclicMode(bool mode){
-    _ciclic = mode;
-    if(_ciclic == false)
+void ConsoleWidget::setCyclicMode(bool mode){
+    _cyclic = mode;
+    if(_cyclic == false)
         timer->stop();
-    emit ciclicModeChanged(mode);
+    emit cyclicModeChanged(mode);
 }
-int ConsoleWidget::ciclicInterval(void){
-    return _ciclicInterval;
+int ConsoleWidget::cyclicInterval(void){
+    return _cyclicInterval;
 }
-void ConsoleWidget::setCiclicInterval(int interval){
-    _ciclicInterval = interval;
-    emit ciclicIntervalChanged(interval);
+void ConsoleWidget::setCyclicInterval(int interval){
+    _cyclicInterval = interval;
+    emit cyclicIntervalChanged(interval);
 }
 void ConsoleWidget::retranslate(void){
     _sendButton->setText(tr("Send"));
@@ -126,12 +126,12 @@ void ConsoleWidget::sendBind(void){
         _console->textCursor().insertText(data);
         _console->textCursor().insertText("\n");
     }
-    if(ciclicMode()) {
-        ciclicButtonIndex = index;
-        timer->setInterval(ciclicInterval());
+    if(cyclicMode()) {
+        cyclicButtonIndex = index;
+        timer->setInterval(cyclicInterval());
         timer->start();
     }
 }
-void ConsoleWidget::ciclicTimeout(void){
-    emit bindButtons.at(ciclicButtonIndex)->clicked();
+void ConsoleWidget::cyclicTimeout(void){
+    emit bindButtons.at(cyclicButtonIndex)->clicked();
 }

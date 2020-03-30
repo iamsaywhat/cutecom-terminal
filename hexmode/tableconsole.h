@@ -5,6 +5,7 @@
 #include <QTableView>
 #include <QStandardItemModel>
 #include <QPushButton>
+#include <QToolButton>
 #include <QLineEdit>
 #include <QString>
 #include <QByteArray>
@@ -16,6 +17,8 @@ class TableConsole : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool echoMode READ echoMode WRITE setEchoMode NOTIFY echoModeChanged)
+    Q_PROPERTY(bool cyclicMode READ cyclicMode WRITE setCyclicMode NOTIFY cyclicModeChanged)
+    Q_PROPERTY(int cyclicInterval READ cyclicInterval WRITE setCyclicInterval NOTIFY cyclicIntervalChanged)
 
 public:
     explicit TableConsole(QObject*           parent,
@@ -25,8 +28,11 @@ public:
                           QPushButton*       sendButton,
                           QPushButton*       clearButton);
     ~TableConsole();
-    bool echoMode (void);
+    bool echoMode(void);
+    bool cyclicMode(void);
+    int cyclicInterval(void);
     void retranslate(void);
+    void addBindSet(QLineEdit* textField, QToolButton* button);
 
     /* Типы сообщения */
     enum DirectionType{
@@ -35,7 +41,6 @@ public:
     };
     /* Отобразить новую информациию */
     void appendData(DirectionType direction, QString* data);
-    void appendData(DirectionType direction, QByteArray* data);
 
     /* Узнать номер верхней отображаемой строки */
     int firstVisibleRow (void);
@@ -48,6 +53,7 @@ public:
     QString convertHexToAscii(QByteArray source);
 
 private:
+    QRegularExpressionValidator  *hexMatcher;
     TextEditDelegate*   delegate;     // Делегат для особого отображения содержимого
     QStandardItemModel* model;        // Модель данных для таблицы
     SerialGui*          _serial;      // Com-порт
@@ -55,9 +61,15 @@ private:
     QLineEdit*          _input;       // Поле ввода исходящего сообщения
     QPushButton*        _sendButton;  // Кнопка отправки нового сообщения
     QPushButton*        _clearButton; // Кнопка очистки содержимого
-    bool                _echo;
     bool                skipAutoresize = false;
     QStringList         horizontalHeaders;
+    bool                _echo = true;
+    bool                _cyclic = false;
+    int                 _cyclicInterval = 1000;
+    QTimer              *timer;
+    int                 cyclicButtonIndex;
+    QList<QLineEdit*>   bindTextFields;
+    QList<QToolButton*> bindButtons;
 
     /* Здесь храним индексы видимых строк таблицы */
     int _firstVisibleRow = 0;  // Индекс верхней отображаемой строки
@@ -81,16 +93,22 @@ private:
 signals:
     void dataWasAppend(void);
     void echoModeChanged(bool);
+    void cyclicModeChanged(bool);
+    void cyclicIntervalChanged(int);
 
 private slots:
     void slotAutoresize(void);
     void slotTextDelimiter(void);
+    void cyclicTimeout(void);
+    void sendBind(void);
 
 public slots:
     void clear(void);
     void send(void);
     void receive(QByteArray);
     void setEchoMode(bool);
+    void setCyclicMode(bool);
+    void setCyclicInterval(int);
 };
 
 #endif // TABLECONSOLE_H

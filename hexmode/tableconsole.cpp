@@ -29,8 +29,8 @@ TableConsole::TableConsole(QObject*           parent,
     // Включаем сетку на таблице
     _table->setShowGrid(false);
     /* Назначаем HEX валидатор на поле ввода */
-    QRegularExpression hexMatcher("[0-9A-Fa-f ]+");
-    _input->setValidator(new QRegularExpressionValidator(hexMatcher, this));
+    hexMatcher = new QRegularExpressionValidator(QRegularExpression("[0-9A-Fa-f ]+"), this);
+    _input->setValidator(hexMatcher);
     /* Настройки QTableView */
     model = new QStandardItemModel(0,4);  // Создаём модель и пока только декларируем 4 столбца
     // Задаём заголовки столбцов
@@ -67,11 +67,15 @@ TableConsole::TableConsole(QObject*           parent,
     connect(serial, &SerialGui::received,                                // QSerialPort будет уведомлять о принятых данных
             this, &TableConsole::receive);                               // и вызывать slot обработки входящих данных
 
-    setEchoMode(true);
+    timer = new QTimer;
+    connect(timer, &QTimer::timeout,
+            this, &TableConsole::cyclicTimeout);
 }
 TableConsole::~TableConsole(){
+    delete timer;
     delete delegate;
     delete model;
+    delete hexMatcher;
 }
 void TableConsole::appendData(DirectionType direction, QString* data){
     QTime systemTime = QTime::currentTime();                                // Получаем системное время
@@ -104,36 +108,7 @@ void TableConsole::appendData(DirectionType direction, QString* data){
     emit dataWasAppend();
     unblockAutoresizeSlot();
 }
-void TableConsole::appendData(DirectionType direction, QByteArray* data){
-    QTime systemTime = QTime::currentTime();                                // Получаем системное время
-    blockAutoresizeSlot();
-    /* Добавляем новую строку и заполняем ее содержимое */
-    model->setRowCount(model->rowCount()+1);                                // Добавляем пустую строку данных
-    model->setData(model->index(model->rowCount()-1, indexNumberColumn),    // Номер сообщения
-                   model->rowCount()-1);
-    model->setData(model->index(model->rowCount()-1, indexTimestampColumn), // Метка времени
-                   systemTime.toString("hh:mm:ss:ms"));
-    switch (direction)                                                      // Направление передачи
-    {
-        case INCOMING:
-            model->setData(model->index(model->rowCount()-1, indexDirectionColumn), tr("Incoming"));
-            break;
-        case OUTGOING:
-            model->setData(model->index(model->rowCount()-1, indexDirectionColumn), tr("Outgoing"));
-            break;
-    }
-    model->setData(model->index(model->rowCount()-1, indexMessageColumn), *data); // Данные
-    /* Настройки выравниваия для новой строки */
-    model->setData(model->index(model->rowCount()-1,indexNumberColumn),    Qt::AlignTop, Qt::TextAlignmentRole);
-    model->setData(model->index(model->rowCount()-1,indexTimestampColumn), Qt::AlignTop, Qt::TextAlignmentRole);
-    model->setData(model->index(model->rowCount()-1,indexDirectionColumn), Qt::AlignTop, Qt::TextAlignmentRole);
-    model->setData(model->index(model->rowCount()-1,indexMessageColumn),   Qt::AlignTop, Qt::TextAlignmentRole);
-    _table->scrollToBottom();
-    _table->resizeRowToContents(model->rowCount()-1);
-    /* Испускаем сигнал и сообщаем, что только что были добавлены новые данные */
-    emit dataWasAppend();
-    unblockAutoresizeSlot();
-}
+
 int TableConsole::firstVisibleRow (void){
     return _firstVisibleRow;
 }
@@ -252,9 +227,10 @@ void TableConsole::receive(QByteArray data){
 }
 
 void TableConsole::slotTextDelimiter(void){
-    QString source = _input->text();
+    QLineEdit *input = static_cast<QLineEdit*>(QObject::sender());
+    QString source = input->text();
     Converter::setDelimitersInHexString(source, 2, ' ');
-    _input->setText(source);
+    input->setText(source);
 }
 
 QByteArray TableConsole::convertAsciiToHex(QString source){
@@ -280,7 +256,22 @@ void TableConsole::setEchoMode(bool state){
     _echo = state;
     emit echoModeChanged(state);
 }
-
+bool TableConsole::cyclicMode(void){
+    return _cyclic;
+}
+void TableConsole::setCyclicMode(bool mode){
+    _cyclic = mode;
+    emit cyclicModeChanged(mode);
+}
+int TableConsole::cyclicInterval(void){
+    return _cyclicInterval;
+}
+void TableConsole::setCyclicInterval(int interval){
+    if(interval < 0)
+        return;
+    _cyclicInterval = interval;
+    emit cyclicIntervalChanged(interval);
+}
 void TableConsole::blockAutoresizeSlot(void){
     skipAutoresize = true;
     _table->horizontalHeader()->blockSignals(true);
@@ -303,4 +294,32 @@ void TableConsole::retranslate(void){
     horizontalHeaders << "#" << tr("Timestamp")
                       << tr("Direction") << tr("Data");
     model->setHorizontalHeaderLabels(horizontalHeaders);
+}
+void TableConsole::cyclicTimeout(void){
+    emit bindButtons.at(cyclicButtonIndex)->clicked();
+}
+void TableConsole::addBindSet(QLineEdit* textField, QToolButton* button){
+    bindTextFields.append(textField);
+    bindButtons.append(button);
+    textField->setValidator(hexMatcher);
+    connect(textField, &QLineEdit::textChanged, this, &TableConsole::slotTextDelimiter);
+    connect(button, &QToolButton::clicked, this, &TableConsole::sendBind);
+}
+void TableConsole::sendBind(void){
+    int index = bindButtons.indexOf(static_cast<QToolButton*>(QObject::sender()));   // Определяем отправителя
+    if(index == -1 ||                                                                // Если отпраитель не был найден в списке
+       _serial->getConnectionStatus() == SerialGui::CLOSED ||                        // или если порт закрыт
+       bindTextFields.at(index)->text().isEmpty())                                   // или если строка пуска
+        return;                                                                      // Выходим
+
+    QString message = bindTextFields.at(index)->text();
+    QByteArray buffer = convertAsciiToHex(message);
+    _serial->send(buffer);
+    if (echoMode())
+        appendData(TableConsole::INCOMING, &message);
+    if(cyclicMode()) {
+        cyclicButtonIndex = index;
+        timer->setInterval(cyclicInterval());
+        timer->start();
+    }
 }

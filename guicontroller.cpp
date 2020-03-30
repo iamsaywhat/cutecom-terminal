@@ -52,19 +52,26 @@ GuiController::GuiController(QObject *parent, Ui::MainWidget* gui) : QObject(par
                                 emit this->consoleEchoChanged(true);
                             else
                                 emit this->consoleEchoChanged(false);});
-    connect(gui->checkboxConsoleCiclic, &QCheckBox::stateChanged,
+    connect(gui->checkboxConsoleCyclic, &QCheckBox::stateChanged,
             [=](int state){ if(state == Qt::CheckState::Checked)
-                                emit this->consoleCiclicChanged(true);
+                                emit this->consoleCyclicChanged(true);
                             else
-                                emit this->consoleCiclicChanged(false);});
-    connect(gui->spinboxConsoleCiclicInterval, QOverload<int>::of(&QSpinBox::valueChanged),
-            this, &GuiController::consoleCiclicIntervalChanged);
+                                emit this->consoleCyclicChanged(false);});
+    connect(gui->spinboxConsoleCyclicInterval, QOverload<int>::of(&QSpinBox::valueChanged),
+            this, &GuiController::consoleCyclicIntervalChanged);
     // Вкладка Table
     connect(gui->checkboxTableEcho, &QCheckBox::stateChanged,
             [=](int state){ if(state == Qt::CheckState::Checked)
                                 emit this->tableEchoChanged(true);
                             else
                                 emit this->tableEchoChanged(false);});
+    connect(gui->checkboxTableCyclic, &QCheckBox::stateChanged,
+            [=](int state){ if(state == Qt::CheckState::Checked)
+                                emit this->tableCyclicChanged(true);
+                            else
+                                emit this->tableCyclicChanged(false);});
+    connect(gui->spinboxTableCyclicInterval, QOverload<int>::of(&QSpinBox::valueChanged),
+            this, &GuiController::tableCyclicIntervalChanged);
 
     gui->checkboxConsoleEcho->setCheckState(Qt::CheckState::Checked);
     gui->checkboxTableEcho->setCheckState(Qt::CheckState::Checked);
@@ -139,7 +146,9 @@ void GuiController::setPropertiesSectionConsole (void){
     gui->labelConsoleEcho->setText(tr("Echo:"));
     gui->checkboxConsoleEcho->setText("");
 
-    gui->checkboxConsoleCiclic->setText(tr("Ciclic mode:"));
+    gui->labelConsoleCyclic->setText(tr("Cyclic mode:"));
+    gui->labelConsoleCyclicInterval->setText(tr("Interval, ms:"));
+    gui->checkboxConsoleCyclic->setText("");
     gui->labelConsoleHotKey1->setText("1:");
     gui->labelConsoleHotKey2->setText("2:");
     gui->labelConsoleHotKey3->setText("3:");
@@ -148,7 +157,7 @@ void GuiController::setPropertiesSectionConsole (void){
     gui->buttonConsoleHotkey2->setText(" ");
     gui->buttonConsoleHotkey3->setText(" ");
     gui->buttonConsoleHotkey4->setText(" ");
-    gui->spinboxConsoleCiclicInterval->setRange(5, 10000);
+    gui->spinboxConsoleCyclicInterval->setRange(5, 10000);
 
 }
 void GuiController::setPropertiesSectionTable (void){
@@ -156,6 +165,16 @@ void GuiController::setPropertiesSectionTable (void){
     gui->labelSectionTable->setFont(QFont("Terminus", 14, QFont::Bold));
     gui->labelTableEcho->setText(tr("Echo:"));
     gui->checkboxTableEcho->setText("");
+
+    gui->labelTableCyclicMode->setText(tr("Cyclic mode:"));
+    gui->checkboxTableCyclic->setText("");
+    gui->labelTableCyclicInterval->setText(tr("Interval:"));
+    gui->labelTableHotKey1->setText(tr("1:"));
+    gui->labelTableHotKey2->setText(tr("2:"));
+    gui->labelTableHotKey3->setText(tr("3:"));
+    gui->labelTableHotKey4->setText(tr("4:"));
+
+    gui->spinboxTableCyclicInterval->setRange(5, 10000);
 }
 void GuiController::setPropertiesSectionLogs (void){
 
@@ -225,6 +244,7 @@ bool GuiController::eventFilter(QObject *target, QEvent *event){
             emit gui->buttonConsoleHotkey1->clicked();
             return true;
         case quickIndexTable:
+            emit gui->buttonTableHotKey1->clicked();
             return true;
         }
         break;
@@ -235,6 +255,7 @@ bool GuiController::eventFilter(QObject *target, QEvent *event){
             emit gui->buttonConsoleHotkey2->clicked();
             return true;
         case quickIndexTable:
+            emit gui->buttonTableHotKey2->clicked();
             return true;
         }
         break;
@@ -245,6 +266,7 @@ bool GuiController::eventFilter(QObject *target, QEvent *event){
             emit gui->buttonConsoleHotkey3->clicked();
             return true;
         case quickIndexTable:
+            emit gui->buttonTableHotKey3->clicked();
             return true;
         }
         break;
@@ -255,6 +277,7 @@ bool GuiController::eventFilter(QObject *target, QEvent *event){
             emit gui->buttonConsoleHotkey4->clicked();
             return true;
         case quickIndexTable:
+            emit gui->buttonTableHotKey4->clicked();
             return true;
         }
         break;

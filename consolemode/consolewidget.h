@@ -13,8 +13,8 @@ class ConsoleWidget : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool echoMode READ echoMode WRITE setEchoMode NOTIFY echoModeChanged)
-    Q_PROPERTY(bool ciclicMode READ ciclicMode WRITE setCiclicMode NOTIFY ciclicModeChanged)
-    Q_PROPERTY(int ciclicInterval READ ciclicInterval WRITE setCiclicInterval NOTIFY ciclicIntervalChanged)
+    Q_PROPERTY(bool cyclicMode READ cyclicMode WRITE setCyclicMode NOTIFY cyclicModeChanged)
+    Q_PROPERTY(int cyclicInterval READ cyclicInterval WRITE setCyclicInterval NOTIFY cyclicIntervalChanged)
 
 public:
     explicit ConsoleWidget(QObject*        parent,
@@ -25,14 +25,14 @@ public:
                            QPushButton*    clearButton);
     ~ConsoleWidget();
     bool echoMode (void);
-    bool ciclicMode(void);
-    int  ciclicInterval(void);
+    bool cyclicMode(void);
+    int  cyclicInterval(void);
     void retranslate(void);
     void addBindSet(QLineEdit*, QToolButton*);
 
 private:
     QTimer              *timer;
-    int                 ciclicButtonIndex;
+    int                 cyclicButtonIndex;
     QList<QLineEdit*>   bindTextFields;
     QList<QToolButton*> bindButtons;
     SerialGui*          _serial;
@@ -41,26 +41,26 @@ private:
     QPushButton*        _sendButton;
     QPushButton*        _clearButton;
     bool                _echo   = true;
-    bool                _ciclic = true;
-    int                 _ciclicInterval = 1000;
+    bool                _cyclic = false;
+    int                 _cyclicInterval = 1000;
     void replaceSymbols(QByteArray &data, const char symbol);
 
 signals:
     void echoModeChanged(bool);
-    void ciclicModeChanged(bool);
-    void ciclicIntervalChanged(int);
+    void cyclicModeChanged(bool);
+    void cyclicIntervalChanged(int);
 
 public slots:
     void setEchoMode(bool);
-    void setCiclicMode(bool);
-    void setCiclicInterval(int);
+    void setCyclicMode(bool);
+    void setCyclicInterval(int);
 
 private slots:
     void send(void);
     void clear(void);
     void receive(QByteArray);
     void sendBind(void);
-    void ciclicTimeout(void);
+    void cyclicTimeout(void);
 };
 
 #endif // CONSOLEWIDGET_H
