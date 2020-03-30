@@ -37,6 +37,12 @@ MainWidget::MainWidget(FramelessWindow *parent)
                                 ui->inputConsoleField,     // Указатель на QLineEdit форму
                                 ui->sendConsoleButton,     // Указатель на QPushButton форму
                                 ui->clearConsoleButton);   // Указатель на QPushButton форму
+    console->addBindSet(ui->lineEditConsoleHotKey1, ui->buttonConsoleHotkey1);
+    console->addBindSet(ui->lineEditConsoleHotKey2, ui->buttonConsoleHotkey2);
+    console->addBindSet(ui->lineEditConsoleHotKey3, ui->buttonConsoleHotkey3);
+    console->addBindSet(ui->lineEditConsoleHotKey4, ui->buttonConsoleHotkey4);
+    //connect(ui->buttonHotkey1, &QPushButton::clicked, console, &ConsoleWidget::sendHotData);
+
     // Создаём и связываем табличную консоль с формой
     tableConsole = new TableConsole(this,
                                     serial,                // Указатель на SerialSettings экземпляр
@@ -83,6 +89,8 @@ MainWidget::MainWidget(FramelessWindow *parent)
     connect(settings, &GuiController::currentTextCodecChanged, this, &MainWidget::setAppTextCodec);
     connect(settings, &GuiController::consoleEchoChanged, console, &ConsoleWidget::setEchoMode);
     connect(settings, &GuiController::tableEchoChanged, tableConsole, &TableConsole::setEchoMode);
+    connect(settings, &GuiController::consoleCiclicChanged, console, &ConsoleWidget::setCiclicMode);
+    connect(settings, &GuiController::consoleCiclicIntervalChanged, console, &ConsoleWidget::setCiclicInterval);
 }
 
 MainWidget::~MainWidget(){

@@ -3,6 +3,7 @@
 #include <QString>
 #include <QByteArray>
 #include <QTime>
+#include <QDebug>
 #include "converter.h"
 
 ConsoleWidget::ConsoleWidget(QObject*        parent,
@@ -25,13 +26,17 @@ ConsoleWidget::ConsoleWidget(QObject*        parent,
     _clearButton->setText(tr("Clear"));
     setEchoMode(true);
     /* Выполняем функциональные подключения */
-    connect(_sendButton, &QPushButton::clicked, this, &ConsoleWidget::send);
+    connect(_sendButton, &QPushButton::clicked, this, QOverload<>::of(&ConsoleWidget::send));
     connect(_clearButton,&QPushButton::clicked, this, &ConsoleWidget::clear);
     connect(_serial,     &SerialGui::received,  this, &ConsoleWidget::receive);
+
+    timer = new QTimer;
+    connect(timer, &QTimer::timeout, this, &ConsoleWidget::ciclicTimeout);
 }
 
 ConsoleWidget::~ConsoleWidget()
 {
+    delete timer;
 }
 
 void ConsoleWidget::send (void){
@@ -50,7 +55,6 @@ void ConsoleWidget::send (void){
         _console->textCursor().insertText("\n");
     }
 }
-
 void ConsoleWidget::clear (void){
     _console->clear();   // Очищаем окно терминала
 }
@@ -70,6 +74,22 @@ void ConsoleWidget::setEchoMode(bool state){
     _echo = state;
     emit echoModeChanged(state);
 }
+bool ConsoleWidget::ciclicMode(void){
+    return _ciclic;
+}
+void ConsoleWidget::setCiclicMode(bool mode){
+    _ciclic = mode;
+    if(_ciclic == false)
+        timer->stop();
+    emit ciclicModeChanged(mode);
+}
+int ConsoleWidget::ciclicInterval(void){
+    return _ciclicInterval;
+}
+void ConsoleWidget::setCiclicInterval(int interval){
+    _ciclicInterval = interval;
+    emit ciclicIntervalChanged(interval);
+}
 void ConsoleWidget::retranslate(void){
     _sendButton->setText(tr("Send"));
     _clearButton->setText(tr("Clear"));
@@ -83,4 +103,35 @@ void ConsoleWidget::replaceSymbols(QByteArray &data, const char symbol){
            || data[i] == char(0x7F))
             data[i] = symbol;
     }
+}
+void ConsoleWidget::addBindSet(QLineEdit* textField, QToolButton* button){
+    bindTextFields.append(textField);
+    bindButtons.append(button);
+    connect(button, &QToolButton::clicked, this, &ConsoleWidget::sendBind);
+}
+void ConsoleWidget::sendBind(void){
+    int index = bindButtons.indexOf(static_cast<QToolButton*>(QObject::sender()));   // Определяем отправителя
+    if(index == -1 ||                                                                // Если отпраитель не был найден в списке
+       _serial->getConnectionStatus() == SerialGui::CLOSED ||                        // или если порт закрыт
+       bindTextFields.at(index)->text().isEmpty())                                   // или если строка пуска
+        return;                                                                      // Выходим
+
+    QString data = bindTextFields.at(index)->text();
+
+    _serial->send(Converter::convertFromUnicode(data).toLatin1());   // Отправляем данные преобразованные в QByteArray
+    _console->moveCursor(QTextCursor::End);                          // Смещаем курсор текста гарантированно в конец
+
+    if(echoMode()) {
+        _console->textCursor().insertText(">> ");
+        _console->textCursor().insertText(data);
+        _console->textCursor().insertText("\n");
+    }
+    if(ciclicMode()) {
+        ciclicButtonIndex = index;
+        timer->setInterval(ciclicInterval());
+        timer->start();
+    }
+}
+void ConsoleWidget::ciclicTimeout(void){
+    emit bindButtons.at(ciclicButtonIndex)->clicked();
 }

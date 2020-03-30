@@ -46,12 +46,19 @@ GuiController::GuiController(QObject *parent, Ui::MainWidget* gui) : QObject(par
             this, &GuiController::currentTextCodecChanged);
     connect(gui->comboBoxLanguage, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &GuiController::currentLanguageChanged);
-    // Вкладка Connection
+    // Вкладка Console
     connect(gui->checkboxConsoleEcho, &QCheckBox::stateChanged,
             [=](int state){ if(state == Qt::CheckState::Checked)
                                 emit this->consoleEchoChanged(true);
                             else
                                 emit this->consoleEchoChanged(false);});
+    connect(gui->checkboxConsoleCiclic, &QCheckBox::stateChanged,
+            [=](int state){ if(state == Qt::CheckState::Checked)
+                                emit this->consoleCiclicChanged(true);
+                            else
+                                emit this->consoleCiclicChanged(false);});
+    connect(gui->spinboxConsoleCiclicInterval, QOverload<int>::of(&QSpinBox::valueChanged),
+            this, &GuiController::consoleCiclicIntervalChanged);
     // Вкладка Table
     connect(gui->checkboxTableEcho, &QCheckBox::stateChanged,
             [=](int state){ if(state == Qt::CheckState::Checked)
@@ -131,6 +138,18 @@ void GuiController::setPropertiesSectionConsole (void){
     gui->labelSectionConsole->setFont(QFont("Terminus", 14, QFont::Bold));
     gui->labelConsoleEcho->setText(tr("Echo:"));
     gui->checkboxConsoleEcho->setText("");
+
+    gui->checkboxConsoleCiclic->setText(tr("Ciclic mode:"));
+    gui->labelConsoleHotKey1->setText("1:");
+    gui->labelConsoleHotKey2->setText("2:");
+    gui->labelConsoleHotKey3->setText("3:");
+    gui->labelConsoleHotKey4->setText("4:");
+    gui->buttonConsoleHotkey1->setText(" ");
+    gui->buttonConsoleHotkey2->setText(" ");
+    gui->buttonConsoleHotkey3->setText(" ");
+    gui->buttonConsoleHotkey4->setText(" ");
+    gui->spinboxConsoleCiclicInterval->setRange(5, 10000);
+
 }
 void GuiController::setPropertiesSectionTable (void){
     gui->labelSectionTable->setText(tr("Table"));
@@ -181,8 +200,10 @@ void GuiController::retranstate(void){
     gui->labelSectionTable->setText(tr("Table"));
     gui->labelTableEcho->setText(tr("Echo:"));
 }
-
 bool GuiController::eventFilter(QObject *target, QEvent *event){
+    if(event->type() != QKeyEvent::KeyPress || static_cast<QKeyEvent*>(event)->isAutoRepeat())
+        return QObject::eventFilter(target, event);
+
     switch (static_cast<QKeyEvent*>(event)->key()) {
     case Qt::Key_Return:
         qDebug() << "Enter";
@@ -199,18 +220,46 @@ bool GuiController::eventFilter(QObject *target, QEvent *event){
         }
     case Qt::Key_1:
         qDebug() << "Key_1";
+        switch (gui->workspaceWidget->currentIndex()){
+        case quickIndexConsole:
+            emit gui->buttonConsoleHotkey1->clicked();
+            return true;
+        case quickIndexTable:
+            return true;
+        }
         break;
     case Qt::Key_2:
         qDebug() << "Key_2";
+        switch (gui->workspaceWidget->currentIndex()){
+        case quickIndexConsole:
+            emit gui->buttonConsoleHotkey2->clicked();
+            return true;
+        case quickIndexTable:
+            return true;
+        }
         break;
     case Qt::Key_3:
         qDebug() << "Key_3";
+        switch (gui->workspaceWidget->currentIndex()){
+        case quickIndexConsole:
+            emit gui->buttonConsoleHotkey3->clicked();
+            return true;
+        case quickIndexTable:
+            return true;
+        }
         break;
     case Qt::Key_4:
         qDebug() << "Key_4";
+        switch (gui->workspaceWidget->currentIndex()){
+        case quickIndexConsole:
+            emit gui->buttonConsoleHotkey4->clicked();
+            return true;
+        case quickIndexTable:
+            return true;
+        }
         break;
     }
-    return false;
+    return QObject::eventFilter(target, event);
 }
 
 

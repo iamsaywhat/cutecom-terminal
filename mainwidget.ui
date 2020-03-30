@@ -486,22 +486,6 @@
                   </rect>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_4">
-                  <item row="0" column="1">
-                   <spacer name="horizontalSpacer_2">
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
-                    </property>
-                    <property name="sizeType">
-                     <enum>QSizePolicy::Expanding</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>40</width>
-                      <height>20</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
                   <item row="0" column="0">
                    <widget class="QStackedWidget" name="rightStackedPanel">
                     <property name="sizePolicy">
@@ -699,6 +683,20 @@
                     </widget>
                     <widget class="QWidget" name="consoleSettingPage">
                      <layout class="QGridLayout" name="gridLayout_10">
+                      <item row="6" column="2">
+                       <widget class="QLineEdit" name="lineEditConsoleHotKey4">
+                        <property name="text">
+                         <string>444444</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="5" column="2">
+                       <widget class="QLineEdit" name="lineEditConsoleHotKey3">
+                        <property name="text">
+                         <string>33333</string>
+                        </property>
+                       </widget>
+                      </item>
                       <item row="0" column="0">
                        <widget class="QLabel" name="labelSectionConsole">
                         <property name="text">
@@ -706,14 +704,17 @@
                         </property>
                        </widget>
                       </item>
-                      <item row="4" column="0">
+                      <item row="5" column="0">
                        <widget class="QLabel" name="labelConsoleHotKey3">
                         <property name="text">
                          <string>TextLabel</string>
                         </property>
                        </widget>
                       </item>
-                      <item row="6" column="0">
+                      <item row="2" column="2">
+                       <widget class="QSpinBox" name="spinboxConsoleCiclicInterval"/>
+                      </item>
+                      <item row="7" column="0">
                        <spacer name="verticalSpacer_7">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
@@ -726,10 +727,38 @@
                         </property>
                        </spacer>
                       </item>
-                      <item row="1" column="1">
+                      <item row="6" column="0">
+                       <widget class="QLabel" name="labelConsoleHotKey4">
+                        <property name="text">
+                         <string>TextLabel</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="3" column="3">
+                       <widget class="QToolButton" name="buttonConsoleHotkey1">
+                        <property name="text">
+                         <string>...</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="1" column="2">
                        <widget class="QCheckBox" name="checkboxConsoleEcho">
                         <property name="text">
                          <string>CheckBox</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="6" column="3">
+                       <widget class="QToolButton" name="buttonConsoleHotkey4">
+                        <property name="text">
+                         <string>...</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="3" column="0">
+                       <widget class="QLabel" name="labelConsoleHotKey1">
+                        <property name="text">
+                         <string>TextLabel</string>
                         </property>
                        </widget>
                       </item>
@@ -740,38 +769,50 @@
                         </property>
                        </widget>
                       </item>
-                      <item row="2" column="0">
-                       <widget class="QLabel" name="labelConsoleHotKey1">
+                      <item row="4" column="2">
+                       <widget class="QLineEdit" name="lineEditConsoleHotKey2">
                         <property name="text">
-                         <string>TextLabel</string>
+                         <string>2222</string>
                         </property>
                        </widget>
                       </item>
-                      <item row="3" column="0">
+                      <item row="5" column="3">
+                       <widget class="QToolButton" name="buttonConsoleHotkey3">
+                        <property name="text">
+                         <string>...</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="3" column="2">
+                       <widget class="QLineEdit" name="lineEditConsoleHotKey1">
+                        <property name="text">
+                         <string>11111</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="4" column="0">
                        <widget class="QLabel" name="labelConsoleHotKey2">
                         <property name="text">
                          <string>TextLabel</string>
                         </property>
                        </widget>
                       </item>
-                      <item row="5" column="0">
-                       <widget class="QLabel" name="labelConsoleHotKey4">
+                      <item row="4" column="3">
+                       <widget class="QToolButton" name="buttonConsoleHotkey2">
                         <property name="text">
-                         <string>TextLabel</string>
+                         <string>...</string>
                         </property>
                        </widget>
                       </item>
-                      <item row="2" column="1">
-                       <widget class="QLineEdit" name="lineEditConsoleHotKey1"/>
-                      </item>
-                      <item row="3" column="1">
-                       <widget class="QLineEdit" name="lineEditConsoleHotKey2"/>
-                      </item>
-                      <item row="4" column="1">
-                       <widget class="QLineEdit" name="lineEditConsoleHotKey3"/>
-                      </item>
-                      <item row="5" column="1">
-                       <widget class="QLineEdit" name="lineEditConsoleHotKey4"/>
+                      <item row="2" column="0">
+                       <widget class="QCheckBox" name="checkboxConsoleCiclic">
+                        <property name="layoutDirection">
+                         <enum>Qt::RightToLeft</enum>
+                        </property>
+                        <property name="text">
+                         <string>CheckBox</string>
+                        </property>
+                       </widget>
                       </item>
                      </layout>
                     </widget>
@@ -815,6 +856,22 @@
                     </widget>
                     <widget class="QWidget" name="logSettingsPage"/>
                    </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <spacer name="horizontalSpacer_2">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::Expanding</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
                   </item>
                  </layout>
                 </widget>

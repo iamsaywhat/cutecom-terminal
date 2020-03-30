@@ -50,6 +50,10 @@ signals:
     void currentTextCodecChanged(int index);
     void consoleEchoChanged(bool state);
     void tableEchoChanged(bool state);
+    void consoleCiclicChanged(bool state);
+    void tableCiclicChanged(bool state);
+    void consoleCiclicIntervalChanged(int interval);
+    void tableCiclicIntervalChanged(int interval);
 
 public slots:
 };
