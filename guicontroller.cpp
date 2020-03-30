@@ -4,12 +4,14 @@
 #include <QLabel>
 #include <QComboBox>
 #include <QCheckBox>
+#include <QDebug>
 
 Ui::MainWidget* GuiController::gui = nullptr;
 
 GuiController::GuiController(QObject *parent, Ui::MainWidget* gui) : QObject(parent)
 {
     GuiController::gui = gui;
+    parent->installEventFilter(this);
     setProperties();
 
     // Обслуживание основного меню
@@ -179,4 +181,36 @@ void GuiController::retranstate(void){
     gui->labelSectionTable->setText(tr("Table"));
     gui->labelTableEcho->setText(tr("Echo:"));
 }
+
+bool GuiController::eventFilter(QObject *target, QEvent *event){
+    switch (static_cast<QKeyEvent*>(event)->key()) {
+    case Qt::Key_Return:
+        qDebug() << "Enter";
+        switch (gui->workspaceWidget->currentIndex()){
+        case quickIndexConsole:
+            emit gui->sendConsoleButton->clicked();
+            return true;
+        case quickIndexTable:
+            emit gui->sendTableButton->clicked();
+            return true;
+        case quickIndexConverter:
+            emit gui->converterConvertButton->clicked();
+            return true;
+        }
+    case Qt::Key_1:
+        qDebug() << "Key_1";
+        break;
+    case Qt::Key_2:
+        qDebug() << "Key_2";
+        break;
+    case Qt::Key_3:
+        qDebug() << "Key_3";
+        break;
+    case Qt::Key_4:
+        qDebug() << "Key_4";
+        break;
+    }
+    return false;
+}
+
 

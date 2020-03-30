@@ -200,18 +200,7 @@
                <string notr="true"/>
               </property>
               <property name="plainText">
-               <string>кеоооо
-
-gert
-gre
-gre
-gre
-ger
-ger
-gre
-ger
-gre
-g</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -497,6 +486,22 @@ g</string>
                   </rect>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_4">
+                  <item row="0" column="1">
+                   <spacer name="horizontalSpacer_2">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::Expanding</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
                   <item row="0" column="0">
                    <widget class="QStackedWidget" name="rightStackedPanel">
                     <property name="sizePolicy">
@@ -506,7 +511,7 @@ g</string>
                      </sizepolicy>
                     </property>
                     <property name="currentIndex">
-                     <number>0</number>
+                     <number>2</number>
                     </property>
                     <widget class="QWidget" name="connectionPage">
                      <layout class="QGridLayout" name="gridLayout_6">
@@ -694,6 +699,33 @@ g</string>
                     </widget>
                     <widget class="QWidget" name="consoleSettingPage">
                      <layout class="QGridLayout" name="gridLayout_10">
+                      <item row="0" column="0">
+                       <widget class="QLabel" name="labelSectionConsole">
+                        <property name="text">
+                         <string>TextLabel</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="4" column="0">
+                       <widget class="QLabel" name="labelConsoleHotKey3">
+                        <property name="text">
+                         <string>TextLabel</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="6" column="0">
+                       <spacer name="verticalSpacer_7">
+                        <property name="orientation">
+                         <enum>Qt::Vertical</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>20</width>
+                          <height>40</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
                       <item row="1" column="1">
                        <widget class="QCheckBox" name="checkboxConsoleEcho">
                         <property name="text">
@@ -708,25 +740,38 @@ g</string>
                         </property>
                        </widget>
                       </item>
-                      <item row="0" column="0">
-                       <widget class="QLabel" name="labelSectionConsole">
+                      <item row="2" column="0">
+                       <widget class="QLabel" name="labelConsoleHotKey1">
                         <property name="text">
                          <string>TextLabel</string>
                         </property>
                        </widget>
                       </item>
-                      <item row="2" column="0">
-                       <spacer name="verticalSpacer_7">
-                        <property name="orientation">
-                         <enum>Qt::Vertical</enum>
+                      <item row="3" column="0">
+                       <widget class="QLabel" name="labelConsoleHotKey2">
+                        <property name="text">
+                         <string>TextLabel</string>
                         </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>20</width>
-                          <height>40</height>
-                         </size>
+                       </widget>
+                      </item>
+                      <item row="5" column="0">
+                       <widget class="QLabel" name="labelConsoleHotKey4">
+                        <property name="text">
+                         <string>TextLabel</string>
                         </property>
-                       </spacer>
+                       </widget>
+                      </item>
+                      <item row="2" column="1">
+                       <widget class="QLineEdit" name="lineEditConsoleHotKey1"/>
+                      </item>
+                      <item row="3" column="1">
+                       <widget class="QLineEdit" name="lineEditConsoleHotKey2"/>
+                      </item>
+                      <item row="4" column="1">
+                       <widget class="QLineEdit" name="lineEditConsoleHotKey3"/>
+                      </item>
+                      <item row="5" column="1">
+                       <widget class="QLineEdit" name="lineEditConsoleHotKey4"/>
                       </item>
                      </layout>
                     </widget>
@@ -770,22 +815,6 @@ g</string>
                     </widget>
                     <widget class="QWidget" name="logSettingsPage"/>
                    </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <spacer name="horizontalSpacer_2">
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
-                    </property>
-                    <property name="sizeType">
-                     <enum>QSizePolicy::Expanding</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>40</width>
-                      <height>20</height>
-                     </size>
-                    </property>
-                   </spacer>
                   </item>
                  </layout>
                 </widget>
