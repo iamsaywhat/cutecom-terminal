@@ -66,12 +66,16 @@ GuiController::GuiController(QObject *parent, Ui::MainWidget* gui) : QObject(par
     connect(gui->buttonTableHotKey2, &QToolButton::clicked, this, &GuiController::tableHotkeys);
     connect(gui->buttonTableHotKey3, &QToolButton::clicked, this, &GuiController::tableHotkeys);
     connect(gui->buttonTableHotKey4, &QToolButton::clicked, this, &GuiController::tableHotkeys);
+    connect(gui->lineEditTableHotKey1, &QLineEdit::textChanged, this, &GuiController::hexDelimiters);
+    connect(gui->lineEditTableHotKey2, &QLineEdit::textChanged, this, &GuiController::hexDelimiters);
+    connect(gui->lineEditTableHotKey3, &QLineEdit::textChanged, this, &GuiController::hexDelimiters);
+    connect(gui->lineEditTableHotKey4, &QLineEdit::textChanged, this, &GuiController::hexDelimiters);
 
     gui->checkboxConsoleEcho->setCheckState(Qt::CheckState::Checked);
     gui->checkboxTableEcho->setCheckState(Qt::CheckState::Checked);
 }
 GuiController::~GuiController(){
-
+    delete hexValidator;
 }
 void GuiController::setProperties (void){
     setPropertiesMainWidget();
@@ -173,6 +177,11 @@ void GuiController::setPropertiesSectionTable (void){
     gui->labelTableHotKey4->setText(tr("4:"));
 
     gui->spinboxTableCyclicInterval->setRange(5, 10000);
+
+    gui->lineEditTableHotKey1->setValidator(hexValidator);
+    gui->lineEditTableHotKey2->setValidator(hexValidator);
+    gui->lineEditTableHotKey3->setValidator(hexValidator);
+    gui->lineEditTableHotKey4->setValidator(hexValidator);
 }
 void GuiController::setPropertiesSectionLogs (void){
 
@@ -332,4 +341,9 @@ void GuiController::tableHotkeys(void){
         emit tableStopCycle();
     }
 }
-
+void GuiController::hexDelimiters(const QString& text){
+    QLineEdit* lineEdit = static_cast<QLineEdit*>(QObject::sender());
+    QString data = text;
+    Converter::setDelimitersInHexString(data, 2, ' ');
+    lineEdit->setText(data);
+}

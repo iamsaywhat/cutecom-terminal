@@ -3,6 +3,7 @@
 
 #include "ui_mainwidget.h"
 #include "decorator.h"
+#include "converter.h"
 
 class GuiController : public QObject
 {
@@ -42,6 +43,7 @@ public:
 
 private:
     static Ui::MainWidget *gui;
+    QRegularExpressionValidator *hexValidator = new QRegularExpressionValidator(QRegularExpression("[0-9A-Fa-f ]+"));
     bool eventFilter(QObject *target, QEvent *event);
 
 signals:
@@ -68,6 +70,7 @@ signals:
 private slots:
     void consoleHotkeys(void);
     void tableHotkeys(void);
+    void hexDelimiters(const QString&);
 
 public slots:
 };
