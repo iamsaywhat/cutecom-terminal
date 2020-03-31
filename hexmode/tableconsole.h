@@ -19,6 +19,7 @@ class TableConsole : public QObject
     Q_PROPERTY(bool echoMode READ echoMode WRITE setEchoMode NOTIFY echoModeChanged)
     Q_PROPERTY(bool cyclicMode READ cyclicMode WRITE setCyclicMode NOTIFY cyclicModeChanged)
     Q_PROPERTY(int cyclicInterval READ cyclicInterval WRITE setCyclicInterval NOTIFY cyclicIntervalChanged)
+    Q_PROPERTY(QString bindData READ bindData WRITE setBindData NOTIFY bindDataChanged)
 
 public:
     explicit TableConsole(QObject*           parent,
@@ -31,8 +32,8 @@ public:
     bool echoMode(void);
     bool cyclicMode(void);
     int cyclicInterval(void);
+    QString& bindData(void);
     void retranslate(void);
-    void addBindSet(QLineEdit* textField, QToolButton* button);
 
     /* Типы сообщения */
     enum DirectionType{
@@ -66,10 +67,8 @@ private:
     bool                _echo = true;
     bool                _cyclic = false;
     int                 _cyclicInterval = 1000;
+    QString             _bindData;
     QTimer              *timer;
-    int                 cyclicButtonIndex;
-    QList<QLineEdit*>   bindTextFields;
-    QList<QToolButton*> bindButtons;
 
     /* Здесь храним индексы видимых строк таблицы */
     int _firstVisibleRow = 0;  // Индекс верхней отображаемой строки
@@ -95,20 +94,25 @@ signals:
     void echoModeChanged(bool);
     void cyclicModeChanged(bool);
     void cyclicIntervalChanged(int);
+    void bindDataChanged(QString&);
 
 private slots:
     void slotAutoresize(void);
     void slotTextDelimiter(void);
     void cyclicTimeout(void);
-    void sendBind(void);
 
 public slots:
     void clear(void);
     void send(void);
-    void receive(QByteArray);
+    void send(QString);
+    void sended(QByteArray);
+    void received(QByteArray);
     void setEchoMode(bool);
     void setCyclicMode(bool);
     void setCyclicInterval(int);
+    void setBindData(QString);
+    void startCyclicSending(void);
+    void stopCyclicSending(void);
 };
 
 #endif // TABLECONSOLE_H

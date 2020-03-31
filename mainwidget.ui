@@ -511,7 +511,7 @@
                      </sizepolicy>
                     </property>
                     <property name="currentIndex">
-                     <number>1</number>
+                     <number>3</number>
                     </property>
                     <widget class="QWidget" name="connectionPage">
                      <layout class="QGridLayout" name="gridLayout_6">
@@ -727,7 +727,7 @@
                        </widget>
                       </item>
                       <item row="9" column="3">
-                       <widget class="QToolButton" name="buttonConsoleHotkey4">
+                       <widget class="QToolButton" name="buttonConsoleHotKey4">
                         <property name="text">
                          <string>...</string>
                         </property>
@@ -741,7 +741,7 @@
                        </widget>
                       </item>
                       <item row="8" column="3">
-                       <widget class="QToolButton" name="buttonConsoleHotkey3">
+                       <widget class="QToolButton" name="buttonConsoleHotKey3">
                         <property name="text">
                          <string>...</string>
                         </property>
@@ -755,14 +755,14 @@
                        </widget>
                       </item>
                       <item row="6" column="3">
-                       <widget class="QToolButton" name="buttonConsoleHotkey1">
+                       <widget class="QToolButton" name="buttonConsoleHotKey1">
                         <property name="text">
                          <string>...</string>
                         </property>
                        </widget>
                       </item>
                       <item row="7" column="3">
-                       <widget class="QToolButton" name="buttonConsoleHotkey2">
+                       <widget class="QToolButton" name="buttonConsoleHotKey2">
                         <property name="text">
                          <string>...</string>
                         </property>
@@ -910,10 +910,18 @@
                        </widget>
                       </item>
                       <item row="5" column="1">
-                       <widget class="QLineEdit" name="lineEditTableHotKey2"/>
+                       <widget class="QLineEdit" name="lineEditTableHotKey2">
+                        <property name="text">
+                         <string>22</string>
+                        </property>
+                       </widget>
                       </item>
                       <item row="6" column="1">
-                       <widget class="QLineEdit" name="lineEditTableHotKey3"/>
+                       <widget class="QLineEdit" name="lineEditTableHotKey3">
+                        <property name="text">
+                         <string>33</string>
+                        </property>
+                       </widget>
                       </item>
                       <item row="4" column="0">
                        <widget class="QLabel" name="labelTableHotKey1">
@@ -923,7 +931,11 @@
                        </widget>
                       </item>
                       <item row="7" column="1">
-                       <widget class="QLineEdit" name="lineEditTableHotKey4"/>
+                       <widget class="QLineEdit" name="lineEditTableHotKey4">
+                        <property name="text">
+                         <string>44</string>
+                        </property>
+                       </widget>
                       </item>
                       <item row="2" column="0">
                        <widget class="QLabel" name="labelTableCyclicMode">
@@ -940,7 +952,11 @@
                        </widget>
                       </item>
                       <item row="4" column="1">
-                       <widget class="QLineEdit" name="lineEditTableHotKey1"/>
+                       <widget class="QLineEdit" name="lineEditTableHotKey1">
+                        <property name="text">
+                         <string>11</string>
+                        </property>
+                       </widget>
                       </item>
                       <item row="6" column="0">
                        <widget class="QLabel" name="labelTableHotKey3">

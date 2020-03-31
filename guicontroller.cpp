@@ -52,28 +52,20 @@ GuiController::GuiController(QObject *parent, Ui::MainWidget* gui) : QObject(par
                                 emit this->consoleEchoChanged(true);
                             else
                                 emit this->consoleEchoChanged(false);});
-    connect(gui->buttonConsoleHotkey1, &QToolButton::clicked, this, &GuiController::consoleHotkeys);
-    connect(gui->buttonConsoleHotkey2, &QToolButton::clicked, this, &GuiController::consoleHotkeys);
-    connect(gui->buttonConsoleHotkey3, &QToolButton::clicked, this, &GuiController::consoleHotkeys);
-    connect(gui->buttonConsoleHotkey4, &QToolButton::clicked, this, &GuiController::consoleHotkeys);
+    connect(gui->buttonConsoleHotKey1, &QToolButton::clicked, this, &GuiController::consoleHotkeys);
+    connect(gui->buttonConsoleHotKey2, &QToolButton::clicked, this, &GuiController::consoleHotkeys);
+    connect(gui->buttonConsoleHotKey3, &QToolButton::clicked, this, &GuiController::consoleHotkeys);
+    connect(gui->buttonConsoleHotKey4, &QToolButton::clicked, this, &GuiController::consoleHotkeys);
     // Вкладка Table
     connect(gui->checkboxTableEcho, &QCheckBox::stateChanged,
             [=](int state){ if(state == Qt::CheckState::Checked)
                                 emit this->tableEchoChanged(true);
                             else
                                 emit this->tableEchoChanged(false);});
-    connect(gui->checkboxTableCyclic, &QCheckBox::stateChanged,
-            [=](int state){ if(state == Qt::CheckState::Checked)
-                                emit this->tableCyclicChanged(true);
-                            else
-                                emit this->tableCyclicChanged(false);});
-    connect(gui->spinboxTableCyclicInterval, QOverload<int>::of(&QSpinBox::valueChanged),
-            this, &GuiController::tableCyclicIntervalChanged);
-
-    connect(gui->spinBoxCaptureTime, QOverload<int>::of(&QSpinBox::valueChanged),
-            this, &GuiController::captureTimeChanges);
-    connect(gui->spinBoxCaptureBytes, QOverload<int>::of(&QSpinBox::valueChanged),
-            this, &GuiController::captureBytesChanges);
+    connect(gui->buttonTableHotKey1, &QToolButton::clicked, this, &GuiController::tableHotkeys);
+    connect(gui->buttonTableHotKey2, &QToolButton::clicked, this, &GuiController::tableHotkeys);
+    connect(gui->buttonTableHotKey3, &QToolButton::clicked, this, &GuiController::tableHotkeys);
+    connect(gui->buttonTableHotKey4, &QToolButton::clicked, this, &GuiController::tableHotkeys);
 
     gui->checkboxConsoleEcho->setCheckState(Qt::CheckState::Checked);
     gui->checkboxTableEcho->setCheckState(Qt::CheckState::Checked);
@@ -159,10 +151,10 @@ void GuiController::setPropertiesSectionConsole (void){
     gui->labelConsoleHotKey2->setText("2:");
     gui->labelConsoleHotKey3->setText("3:");
     gui->labelConsoleHotKey4->setText("4:");
-    gui->buttonConsoleHotkey1->setText(" ");
-    gui->buttonConsoleHotkey2->setText(" ");
-    gui->buttonConsoleHotkey3->setText(" ");
-    gui->buttonConsoleHotkey4->setText(" ");
+    gui->buttonConsoleHotKey1->setText(" ");
+    gui->buttonConsoleHotKey2->setText(" ");
+    gui->buttonConsoleHotKey3->setText(" ");
+    gui->buttonConsoleHotKey4->setText(" ");
     gui->spinboxConsoleCyclicInterval->setRange(5, 10000);
 
 }
@@ -247,7 +239,7 @@ bool GuiController::eventFilter(QObject *target, QEvent *event){
         qDebug() << "Key_1";
         switch (gui->workspaceWidget->currentIndex()){
         case quickIndexConsole:
-            emit gui->buttonConsoleHotkey1->clicked();
+            emit gui->buttonConsoleHotKey1->clicked();
             return true;
         case quickIndexTable:
             emit gui->buttonTableHotKey1->clicked();
@@ -258,7 +250,7 @@ bool GuiController::eventFilter(QObject *target, QEvent *event){
         qDebug() << "Key_2";
         switch (gui->workspaceWidget->currentIndex()){
         case quickIndexConsole:
-            emit gui->buttonConsoleHotkey2->clicked();
+            emit gui->buttonConsoleHotKey2->clicked();
             return true;
         case quickIndexTable:
             emit gui->buttonTableHotKey2->clicked();
@@ -269,7 +261,7 @@ bool GuiController::eventFilter(QObject *target, QEvent *event){
         qDebug() << "Key_3";
         switch (gui->workspaceWidget->currentIndex()){
         case quickIndexConsole:
-            emit gui->buttonConsoleHotkey3->clicked();
+            emit gui->buttonConsoleHotKey3->clicked();
             return true;
         case quickIndexTable:
             emit gui->buttonTableHotKey3->clicked();
@@ -280,7 +272,7 @@ bool GuiController::eventFilter(QObject *target, QEvent *event){
         qDebug() << "Key_4";
         switch (gui->workspaceWidget->currentIndex()){
         case quickIndexConsole:
-            emit gui->buttonConsoleHotkey4->clicked();
+            emit gui->buttonConsoleHotKey4->clicked();
             return true;
         case quickIndexTable:
             emit gui->buttonTableHotKey4->clicked();
@@ -293,22 +285,18 @@ bool GuiController::eventFilter(QObject *target, QEvent *event){
 void GuiController::consoleHotkeys(void){
     QString data;
     static QToolButton *button = nullptr;
-
-    if(button != static_cast<QToolButton*>(QObject::sender()))
-    {
+    if(button != static_cast<QToolButton*>(QObject::sender())){
         button = static_cast<QToolButton*>(QObject::sender());
-
-        if(button == gui->buttonConsoleHotkey1)
+        if(button == gui->buttonConsoleHotKey1)
             data = gui->lineEditConsoleHotKey1->text();
-        else if(button == gui->buttonConsoleHotkey2)
+        else if(button == gui->buttonConsoleHotKey2)
             data = gui->lineEditConsoleHotKey2->text();
-        else if(button == gui->buttonConsoleHotkey3)
+        else if(button == gui->buttonConsoleHotKey3)
             data = gui->lineEditConsoleHotKey3->text();
-        else if(button == gui->buttonConsoleHotkey4)
+        else if(button == gui->buttonConsoleHotKey4)
             data = gui->lineEditConsoleHotKey4->text();
         else
             return;
-
         emit consoleCyclicChanged(gui->checkboxConsoleCyclic->checkState() == Qt::CheckState::Checked ? true : false);
         emit consoleCyclicIntervalChanged(gui->spinboxConsoleCyclicInterval->value());
         emit consoleCyclicDataChanged(data);
@@ -317,6 +305,31 @@ void GuiController::consoleHotkeys(void){
     else {
         button = nullptr;
         emit consoleStopCycle();
+    }
+}
+void GuiController::tableHotkeys(void){
+    QString data;
+    static QToolButton *button = nullptr;
+    if(button != static_cast<QToolButton*>(QObject::sender())){
+        button = static_cast<QToolButton*>(QObject::sender());
+        if(button == gui->buttonTableHotKey1)
+            data = gui->lineEditTableHotKey1->text();
+        else if(button == gui->buttonTableHotKey2)
+            data = gui->lineEditTableHotKey2->text();
+        else if(button == gui->buttonTableHotKey3)
+            data = gui->lineEditTableHotKey3->text();
+        else if(button == gui->buttonTableHotKey4)
+            data = gui->lineEditTableHotKey4->text();
+        else
+            return;
+        emit tableCyclicChanged(gui->checkboxTableCyclic->checkState() == Qt::CheckState::Checked ? true : false);
+        emit tableCyclicIntervalChanged(gui->spinboxTableCyclicInterval->value());
+        emit tableCyclicDataChanged(data);
+        emit tableStartCycle();
+    }
+    else {
+        button = nullptr;
+        emit tableStopCycle();
     }
 }
 

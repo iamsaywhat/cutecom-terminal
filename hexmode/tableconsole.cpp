@@ -4,11 +4,9 @@
 #include <QScrollBar>
 #include "converter.h"
 
-//#define DEBUG
 
-#ifdef DEBUG
 #include <QDebug>
-#endif
+
 
 TableConsole::TableConsole(QObject*           parent,
                            SerialGui*         serial,
@@ -61,11 +59,11 @@ TableConsole::TableConsole(QObject*           parent,
     connect(clearButton, &QPushButton::clicked,                          // Клик по clear-кнопке будет инициировать стирание
             this, &TableConsole::clear);
     connect(sendButton, &QPushButton::clicked,                           // Клик по send-кнопке будет инициировать отправку
-            this, &TableConsole::send);                                  // и отображение введенного сообщения
+            this, QOverload<>::of(&TableConsole::send));                 // и отображение введенного сообщения
     connect(_input, &QLineEdit::textChanged,                             // Каждый введенный символ запускает автоустановщик
             this, &TableConsole::slotTextDelimiter);                     // разделителей между байтами
     connect(serial, &SerialGui::received,                                // QSerialPort будет уведомлять о принятых данных
-            this, &TableConsole::receive);                               // и вызывать slot обработки входящих данных
+            this, &TableConsole::received);                              // и вызывать slot обработки входящих данных
 
     timer = new QTimer;
     connect(timer, &QTimer::timeout,
@@ -161,10 +159,8 @@ void TableConsole::updateVisibleRows (void){
         else if (i == rowCount - 1)
             _lastVisibleRow = i;
     }
-#ifdef DEBUG
     qDebug() << "firsrVisibleRow = " << firstVisibleRow()
              << "lastVisibleRow = " << lastVisibleRow();
-#endif
 }
 void TableConsole::resizeVisibleRows (int firstRow, int lastRow){
     if(firstRow >= 0 && lastRow >= 0){
@@ -178,13 +174,10 @@ void TableConsole::slotAutoresize(void){
     resizeVisibleRows(firstVisibleRow(), lastVisibleRow());
     updateVisibleRows();
     //resizeVisibleRows(firstVisibleRow(), lastVisibleRow());
-#ifdef DEBUG
     qDebug() << "TableConsole::slotAutoresize";
-#endif
 }
 
-void TableConsole::clear(void)
-{
+void TableConsole::clear(void){
     /* Если мы удалим все содержимое, индексы отображаемой части
      * нужно сделать невалидными */
     _firstVisibleRow = -1;
@@ -203,34 +196,33 @@ void TableConsole::clear(void)
 }
 
 void TableConsole::send(void){
-    /* Берём текст с поля ввода */
-    QString message(_input->text());
-    /* Если в поле ввода пусто, или порт не открыт, ничего не делаем */
-    if(message == "" || _serial->getConnectionStatus() == SerialGui::CLOSED)
-        return;
-    QByteArray buffer = convertAsciiToHex(message);
-    _serial->send(buffer);
-    _input->clear();
-    if (_echo)
-        appendData(TableConsole::INCOMING, &message);
-#ifdef DEBUG
-    qDebug() << "TableConsole::send:" << message;
-#endif
+    QString text(_input->text());                                             // Берём текст с поля ввода
+    if(text != "" && _serial->getConnectionStatus() != SerialGui::CLOSED) {   // Если в поле ввода не пусто,
+        QByteArray data = convertAsciiToHex(text);                            // и порт открыт, то конвертируем
+        _serial->send(data);                                                  // в байтовый массив и отправляем
+        _input->clear();                                                      // в порт, после очищаем поле ввода
+    }
 }
-
-void TableConsole::receive(QByteArray data){
-    QString message = convertHexToAscii(data);     // Принимаем данные и сразу преобразуем в строку
-    appendData(TableConsole::OUTGOING, &message);  // Добавляем нлвые данные в таблицу
-#ifdef DEBUG
-    qDebug() << "TableConsole::receive" << message;
-#endif
+void TableConsole::send(QString text){
+    if(text != "" && _serial->getConnectionStatus() != SerialGui::CLOSED) {   // Если в поле ввода не пусто,
+        QByteArray data = convertAsciiToHex(text);                            // и порт открыт, то конвертируем
+        _serial->send(data);                                                  // в байтовый массив и отправляем в порт
+    }
+}
+void TableConsole::sended(QByteArray data){
+    QString text = convertHexToAscii(data);       // Посланные данные нужно сконверировать в текст
+    appendData(TableConsole::INCOMING, &text);    // А после добавить в таблицу
+}
+void TableConsole::received(QByteArray data){
+    QString text = convertHexToAscii(data);       // Посланные данные нужно сконверировать в текст
+    appendData(TableConsole::OUTGOING, &text);    // А после добавить в таблицу
 }
 
 void TableConsole::slotTextDelimiter(void){
-    QLineEdit *input = static_cast<QLineEdit*>(QObject::sender());
-    QString source = input->text();
-    Converter::setDelimitersInHexString(source, 2, ' ');
-    input->setText(source);
+    QLineEdit *input = static_cast<QLineEdit*>(QObject::sender());   // Определим отправителя
+    QString source = input->text();                                  // Берем текст с поля
+    Converter::setDelimitersInHexString(source, 2, ' ');             // Группируем символы
+    input->setText(source);                                          // Возвращаем в поле ввода
 }
 
 QByteArray TableConsole::convertAsciiToHex(QString source){
@@ -252,25 +244,36 @@ QString TableConsole::convertHexToAscii(QByteArray source){
 bool TableConsole::echoMode(void){
     return _echo;
 }
-void TableConsole::setEchoMode(bool state){
-    _echo = state;
-    emit echoModeChanged(state);
-}
 bool TableConsole::cyclicMode(void){
     return _cyclic;
+}
+int TableConsole::cyclicInterval(void){
+    return _cyclicInterval;
+}
+QString& TableConsole::bindData(void){
+    return _bindData;
+}
+void TableConsole::setEchoMode(bool state){   
+    if(state)                                                                 // Режим эхо, не просто маскирует посылаемые
+        connect(_serial, &SerialGui::send, this, &TableConsole::sended);      // данные, а фактически подписывает/отписывает
+    else                                                                      // нас на исходящие данные порта
+        disconnect(_serial, &SerialGui::send, this, &TableConsole::sended);   //
+    _echo = state;                                                            // Фиксируем состояние
+    emit echoModeChanged(state);                                              // Уведомляем о изменении
 }
 void TableConsole::setCyclicMode(bool mode){
     _cyclic = mode;
     emit cyclicModeChanged(mode);
-}
-int TableConsole::cyclicInterval(void){
-    return _cyclicInterval;
 }
 void TableConsole::setCyclicInterval(int interval){
     if(interval < 0)
         return;
     _cyclicInterval = interval;
     emit cyclicIntervalChanged(interval);
+}
+void TableConsole::setBindData(QString text){
+    _bindData = text;
+    emit bindDataChanged(text);
 }
 void TableConsole::blockAutoresizeSlot(void){
     skipAutoresize = true;
@@ -283,7 +286,6 @@ void TableConsole::unblockAutoresizeSlot(void){
     _table->horizontalHeader()->blockSignals(false);
     _table->verticalScrollBar()->blockSignals(false);
 }
-
 bool TableConsole::autoresizeIsBlocked(void){
     return skipAutoresize;
 }
@@ -296,30 +298,14 @@ void TableConsole::retranslate(void){
     model->setHorizontalHeaderLabels(horizontalHeaders);
 }
 void TableConsole::cyclicTimeout(void){
-    emit bindButtons.at(cyclicButtonIndex)->clicked();
+   send(_bindData);
 }
-void TableConsole::addBindSet(QLineEdit* textField, QToolButton* button){
-    bindTextFields.append(textField);
-    bindButtons.append(button);
-    textField->setValidator(hexMatcher);
-    connect(textField, &QLineEdit::textChanged, this, &TableConsole::slotTextDelimiter);
-    connect(button, &QToolButton::clicked, this, &TableConsole::sendBind);
+void TableConsole::startCyclicSending(void){
+    send(_bindData);
+    if(cyclicMode())
+        timer->start(cyclicInterval());
 }
-void TableConsole::sendBind(void){
-    int index = bindButtons.indexOf(static_cast<QToolButton*>(QObject::sender()));   // Определяем отправителя
-    if(index == -1 ||                                                                // Если отпраитель не был найден в списке
-       _serial->getConnectionStatus() == SerialGui::CLOSED ||                        // или если порт закрыт
-       bindTextFields.at(index)->text().isEmpty())                                   // или если строка пуска
-        return;                                                                      // Выходим
+void TableConsole::stopCyclicSending(void){
+    timer->stop();
+}
 
-    QString message = bindTextFields.at(index)->text();
-    QByteArray buffer = convertAsciiToHex(message);
-    _serial->send(buffer);
-    if (echoMode())
-        appendData(TableConsole::INCOMING, &message);
-    if(cyclicMode()) {
-        cyclicButtonIndex = index;
-        timer->setInterval(cyclicInterval());
-        timer->start();
-    }
-}

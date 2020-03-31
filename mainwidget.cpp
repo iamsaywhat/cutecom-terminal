@@ -44,10 +44,6 @@ MainWidget::MainWidget(FramelessWindow *parent)
                                     ui->inputTableField,   // Указатель на QLineEdit форму
                                     ui->sendTableButton,   // Указатель на QPushButton форму
                                     ui->clearTableButton); // Указатель на QPushButton форму
-    tableConsole->addBindSet(ui->lineEditTableHotKey1, ui->buttonTableHotKey1);
-    tableConsole->addBindSet(ui->lineEditTableHotKey2, ui->buttonTableHotKey2);
-    tableConsole->addBindSet(ui->lineEditTableHotKey3, ui->buttonTableHotKey3);
-    tableConsole->addBindSet(ui->lineEditTableHotKey4, ui->buttonTableHotKey4);
     converter = new Converter(this,
                               ui->converterSource,         // QPlainText для ввода
                               ui->converterResult,         // QplainText для вывода результата
@@ -96,6 +92,10 @@ MainWidget::MainWidget(FramelessWindow *parent)
     connect(settings, &GuiController::tableEchoChanged, tableConsole, &TableConsole::setEchoMode);
     connect(settings, &GuiController::tableCyclicChanged, tableConsole, &TableConsole::setCyclicMode);
     connect(settings, &GuiController::tableCyclicIntervalChanged, tableConsole, &TableConsole::setCyclicInterval);
+    connect(settings, &GuiController::tableCyclicDataChanged, tableConsole, &TableConsole::setBindData);
+    connect(settings, &GuiController::tableStartCycle, tableConsole, &TableConsole::startCyclicSending);
+    connect(settings, &GuiController::tableStopCycle, tableConsole, &TableConsole::stopCyclicSending);
+
     connect(settings, &GuiController::captureTimeChanges, serial, &SerialGui::setCaptureInterval);
     connect(settings, &GuiController::captureBytesChanges, serial, &SerialGui::setCaptureSize);
 }

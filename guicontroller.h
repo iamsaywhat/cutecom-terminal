@@ -61,8 +61,13 @@ signals:
     void tableEchoChanged(bool state);
     void tableCyclicChanged(bool state);
     void tableCyclicIntervalChanged(int interval);
+    void tableCyclicDataChanged(QString);
+    void tableStartCycle(void);
+    void tableStopCycle(void);
+
 private slots:
     void consoleHotkeys(void);
+    void tableHotkeys(void);
 
 public slots:
 };
