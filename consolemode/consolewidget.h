@@ -15,6 +15,7 @@ class ConsoleWidget : public QObject
     Q_PROPERTY(bool echoMode READ echoMode WRITE setEchoMode NOTIFY echoModeChanged)
     Q_PROPERTY(bool cyclicMode READ cyclicMode WRITE setCyclicMode NOTIFY cyclicModeChanged)
     Q_PROPERTY(int cyclicInterval READ cyclicInterval WRITE setCyclicInterval NOTIFY cyclicIntervalChanged)
+    Q_PROPERTY(QString bindData READ bindData WRITE setBindData NOTIFY bindDataChanged)
 
 public:
     explicit ConsoleWidget(QObject*        parent,
@@ -27,14 +28,11 @@ public:
     bool echoMode (void);
     bool cyclicMode(void);
     int  cyclicInterval(void);
+    QString& bindData(void);
     void retranslate(void);
-    void addBindSet(QLineEdit*, QToolButton*);
 
 private:
     QTimer              *timer;
-    int                 cyclicButtonIndex;
-    QList<QLineEdit*>   bindTextFields;
-    QList<QToolButton*> bindButtons;
     SerialGui*          _serial;
     QPlainTextEdit*     _console;
     QLineEdit *         _input;
@@ -43,24 +41,29 @@ private:
     bool                _echo   = true;
     bool                _cyclic = false;
     int                 _cyclicInterval = 1000;
+    QString             _bindData;
     void replaceSymbols(QByteArray &data, const char symbol);
 
 signals:
     void echoModeChanged(bool);
     void cyclicModeChanged(bool);
     void cyclicIntervalChanged(int);
+    void bindDataChanged(QString&);
 
 public slots:
     void setEchoMode(bool);
     void setCyclicMode(bool);
     void setCyclicInterval(int);
+    void setBindData(QString);
+    void startCyclicSending(void);
+    void stopCyclicSending(void);
 
 private slots:
     void send(void);
+    void send(QString);
     void clear(void);
     void sended(QByteArray data);
     void received(QByteArray);
-    void sendBind(void);
     void cyclicTimeout(void);
 };
 

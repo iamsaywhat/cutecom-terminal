@@ -37,11 +37,6 @@ MainWidget::MainWidget(FramelessWindow *parent)
                                 ui->inputConsoleField,     // Указатель на QLineEdit форму
                                 ui->sendConsoleButton,     // Указатель на QPushButton форму
                                 ui->clearConsoleButton);   // Указатель на QPushButton форму
-    console->addBindSet(ui->lineEditConsoleHotKey1, ui->buttonConsoleHotkey1);
-    console->addBindSet(ui->lineEditConsoleHotKey2, ui->buttonConsoleHotkey2);
-    console->addBindSet(ui->lineEditConsoleHotKey3, ui->buttonConsoleHotkey3);
-    console->addBindSet(ui->lineEditConsoleHotKey4, ui->buttonConsoleHotkey4);
-
     // Создаём и связываем табличную консоль с формой
     tableConsole = new TableConsole(this,
                                     serial,                // Указатель на SerialSettings экземпляр
@@ -90,9 +85,14 @@ MainWidget::MainWidget(FramelessWindow *parent)
     connect(settings, &GuiController::currentThemeChanged, this, &MainWidget::applyColorScheme);
     connect(settings, &GuiController::currentLanguageChanged, this, &MainWidget::setAppLanguage);
     connect(settings, &GuiController::currentTextCodecChanged, this, &MainWidget::setAppTextCodec);
+
     connect(settings, &GuiController::consoleEchoChanged, console, &ConsoleWidget::setEchoMode);
     connect(settings, &GuiController::consoleCyclicChanged, console, &ConsoleWidget::setCyclicMode);
     connect(settings, &GuiController::consoleCyclicIntervalChanged, console, &ConsoleWidget::setCyclicInterval);
+    connect(settings, &GuiController::consoleCyclicDataChanged, console, &ConsoleWidget::setBindData);
+    connect(settings, &GuiController::consoleStartCycle, console, &ConsoleWidget::startCyclicSending);
+    connect(settings, &GuiController::consoleStopCycle, console, &ConsoleWidget::stopCyclicSending);
+
     connect(settings, &GuiController::tableEchoChanged, tableConsole, &TableConsole::setEchoMode);
     connect(settings, &GuiController::tableCyclicChanged, tableConsole, &TableConsole::setCyclicMode);
     connect(settings, &GuiController::tableCyclicIntervalChanged, tableConsole, &TableConsole::setCyclicInterval);

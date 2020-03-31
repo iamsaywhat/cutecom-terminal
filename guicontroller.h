@@ -50,12 +50,19 @@ signals:
     void currentTextCodecChanged(int index);
     void captureTimeChanges(int value);
     void captureBytesChanges(int value);
+
     void consoleEchoChanged(bool state);
-    void tableEchoChanged(bool state);
     void consoleCyclicChanged(bool state);
-    void tableCyclicChanged(bool state);
     void consoleCyclicIntervalChanged(int interval);
+    void consoleCyclicDataChanged(QString);
+    void consoleStartCycle(void);
+    void consoleStopCycle(void);
+
+    void tableEchoChanged(bool state);
+    void tableCyclicChanged(bool state);
     void tableCyclicIntervalChanged(int interval);
+private slots:
+    void consoleHotkeys(void);
 
 public slots:
 };

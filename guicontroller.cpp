@@ -52,13 +52,10 @@ GuiController::GuiController(QObject *parent, Ui::MainWidget* gui) : QObject(par
                                 emit this->consoleEchoChanged(true);
                             else
                                 emit this->consoleEchoChanged(false);});
-    connect(gui->checkboxConsoleCyclic, &QCheckBox::stateChanged,
-            [=](int state){ if(state == Qt::CheckState::Checked)
-                                emit this->consoleCyclicChanged(true);
-                            else
-                                emit this->consoleCyclicChanged(false);});
-    connect(gui->spinboxConsoleCyclicInterval, QOverload<int>::of(&QSpinBox::valueChanged),
-            this, &GuiController::consoleCyclicIntervalChanged);
+    connect(gui->buttonConsoleHotkey1, &QToolButton::clicked, this, &GuiController::consoleHotkeys);
+    connect(gui->buttonConsoleHotkey2, &QToolButton::clicked, this, &GuiController::consoleHotkeys);
+    connect(gui->buttonConsoleHotkey3, &QToolButton::clicked, this, &GuiController::consoleHotkeys);
+    connect(gui->buttonConsoleHotkey4, &QToolButton::clicked, this, &GuiController::consoleHotkeys);
     // Вкладка Table
     connect(gui->checkboxTableEcho, &QCheckBox::stateChanged,
             [=](int state){ if(state == Qt::CheckState::Checked)
@@ -293,5 +290,33 @@ bool GuiController::eventFilter(QObject *target, QEvent *event){
     }
     return QObject::eventFilter(target, event);
 }
+void GuiController::consoleHotkeys(void){
+    QString data;
+    static QToolButton *button = nullptr;
 
+    if(button != static_cast<QToolButton*>(QObject::sender()))
+    {
+        button = static_cast<QToolButton*>(QObject::sender());
+
+        if(button == gui->buttonConsoleHotkey1)
+            data = gui->lineEditConsoleHotKey1->text();
+        else if(button == gui->buttonConsoleHotkey2)
+            data = gui->lineEditConsoleHotKey2->text();
+        else if(button == gui->buttonConsoleHotkey3)
+            data = gui->lineEditConsoleHotKey3->text();
+        else if(button == gui->buttonConsoleHotkey4)
+            data = gui->lineEditConsoleHotKey4->text();
+        else
+            return;
+
+        emit consoleCyclicChanged(gui->checkboxConsoleCyclic->checkState() == Qt::CheckState::Checked ? true : false);
+        emit consoleCyclicIntervalChanged(gui->spinboxConsoleCyclicInterval->value());
+        emit consoleCyclicDataChanged(data);
+        emit consoleStartCycle();
+    }
+    else {
+        button = nullptr;
+        emit consoleStopCycle();
+    }
+}
 
