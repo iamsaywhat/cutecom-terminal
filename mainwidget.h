@@ -11,6 +11,7 @@
 #include "decorator.h"
 #include "converter.h"
 #include "guicontroller.h"
+#include "logger.h"
 
 
 
@@ -47,6 +48,7 @@ private:
     QStringList        *codecList    = nullptr;
     QStringList        *languageList = nullptr;
     QList<Decorator*>  *themeList    = nullptr;
+    Logger             *logger       = nullptr;
 
     Decorator          *darkTheme      = nullptr;
     Decorator          *greenTheme     = nullptr;

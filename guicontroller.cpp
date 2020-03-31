@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QComboBox>
 #include <QCheckBox>
+#include <QFileDialog>
 #include <QDebug>
 
 Ui::MainWidget* GuiController::gui = nullptr;
@@ -71,6 +72,8 @@ GuiController::GuiController(QObject *parent, Ui::MainWidget* gui) : QObject(par
     connect(gui->lineEditTableHotKey3, &QLineEdit::textChanged, this, &GuiController::hexDelimiters);
     connect(gui->lineEditTableHotKey4, &QLineEdit::textChanged, this, &GuiController::hexDelimiters);
 
+    connect(gui->buttonLogPath, &QToolButton::clicked, this, &GuiController::selectLogPath);
+
     gui->checkboxConsoleEcho->setCheckState(Qt::CheckState::Checked);
     gui->checkboxTableEcho->setCheckState(Qt::CheckState::Checked);
 }
@@ -114,6 +117,8 @@ void GuiController::setPropertiesMenu(void){
     gui->logsContentButton->setText(tr("Logs"));
     gui->bindsContentButton->setText(tr("Binds"));
     gui->infoLabel->setText(tr("Version: 0.0.0"));
+    gui->infoLabel->setFont(QFont("Arial", 8, QFont::Bold));
+    gui->infoLabel->setAlignment(Qt::AlignRight);
     gui->settingsPage->layout()->setMargin(0);
     gui->pageDelimiterLayout->setMargin(0);
     gui->leftPanelContents->layout()->setMargin(0);
@@ -160,7 +165,6 @@ void GuiController::setPropertiesSectionConsole (void){
     gui->buttonConsoleHotKey3->setText(" ");
     gui->buttonConsoleHotKey4->setText(" ");
     gui->spinboxConsoleCyclicInterval->setRange(5, 10000);
-
 }
 void GuiController::setPropertiesSectionTable (void){
     gui->labelSectionTable->setText(tr("Table"));
@@ -184,7 +188,10 @@ void GuiController::setPropertiesSectionTable (void){
     gui->lineEditTableHotKey4->setValidator(hexValidator);
 }
 void GuiController::setPropertiesSectionLogs (void){
-
+    gui->labelSectionLog->setText(tr("Logs"));
+    gui->labelSectionLog->setFont(QFont("Terminus", 14, QFont::Bold));
+    gui->labelLogEnable->setText(tr("Enable:"));
+    gui->labelLogPath->setText(tr("Path:"));
 }
 void GuiController::setLanguageList(QStringList* list){
     gui->comboBoxLanguage->clear();
@@ -346,4 +353,9 @@ void GuiController::hexDelimiters(const QString& text){
     QString data = text;
     Converter::setDelimitersInHexString(data, 2, ' ');
     lineEdit->setText(data);
+}
+void GuiController::selectLogPath(void){
+    QString path = QFileDialog::getExistingDirectory(nullptr, tr("Select path"), "/logs",
+                                                     QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    gui->lineEditLogPath->setText(path);
 }

@@ -53,6 +53,9 @@ MainWidget::MainWidget(FramelessWindow *parent)
                               ui->converterSourceBox,      // QComboBox селектор исходного формата
                               ui->converterResultBox);     // QComboBox селектор формата вывода
 
+    logger = new Logger(this, serial);
+    logger->setEnabled(true);
+
     settings     = new GuiController(this, ui);
     codecList    = new QStringList;
     languageList = new QStringList;
@@ -102,6 +105,7 @@ MainWidget::MainWidget(FramelessWindow *parent)
 
 MainWidget::~MainWidget(){
     saveSettings();
+    delete logger;
     delete themeList;
     delete languageList;
     delete codecList;

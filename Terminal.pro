@@ -23,6 +23,7 @@ SOURCES += \
     guicontroller.cpp \
     hexmode/delegate.cpp \
     hexmode/tableconsole.cpp \
+    logger.cpp \
     main.cpp \
     mainwidget.cpp \
     serial.cpp \
@@ -36,6 +37,7 @@ HEADERS += \
     guicontroller.h \
     hexmode/delegate.h \
     hexmode/tableconsole.h \
+    logger.h \
     mainwidget.h \
     serial.h \
     serialgui.h

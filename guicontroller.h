@@ -71,6 +71,7 @@ private slots:
     void consoleHotkeys(void);
     void tableHotkeys(void);
     void hexDelimiters(const QString&);
+    void selectLogPath(void);
 
 public slots:
 };
