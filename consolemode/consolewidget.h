@@ -58,7 +58,8 @@ public slots:
 private slots:
     void send(void);
     void clear(void);
-    void receive(QByteArray);
+    void sended(QByteArray data);
+    void received(QByteArray);
     void sendBind(void);
     void cyclicTimeout(void);
 };
