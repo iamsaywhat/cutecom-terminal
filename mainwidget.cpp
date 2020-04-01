@@ -201,6 +201,8 @@ void MainWidget::saveSettings(){
     savedSettings.setValue("theme", ui->comboBoxTheme->currentIndex());
     savedSettings.setValue("language", ui->comboBoxLanguage->currentIndex());
     savedSettings.setValue("text codec", ui->comboBoxCodec->currentIndex());
+    savedSettings.setValue("capture_time", ui->spinBoxCaptureTime->value());
+    savedSettings.setValue("capture_bytes", ui->spinBoxCaptureBytes->value());
     savedSettings.endGroup();
 
     savedSettings.beginGroup("connection");
@@ -214,10 +216,27 @@ void MainWidget::saveSettings(){
 
     savedSettings.beginGroup("console");
     savedSettings.setValue("echo", ui->checkboxConsoleEcho->checkState());
+    savedSettings.setValue("ciclic", ui->checkboxConsoleCyclic->checkState());
+    savedSettings.setValue("interval", ui->spinboxConsoleCyclicInterval->value());
+    savedSettings.setValue("bind1", ui->lineEditConsoleHotKey1->text());
+    savedSettings.setValue("bind2", ui->lineEditConsoleHotKey2->text());
+    savedSettings.setValue("bind3", ui->lineEditConsoleHotKey3->text());
+    savedSettings.setValue("bind4", ui->lineEditConsoleHotKey4->text());
     savedSettings.endGroup();
 
     savedSettings.beginGroup("table");
     savedSettings.setValue("echo", ui->checkboxTableEcho->checkState());
+    savedSettings.setValue("ciclic", ui->checkboxTableCyclic->checkState());
+    savedSettings.setValue("interval", ui->spinboxTableCyclicInterval->value());
+    savedSettings.setValue("bind1", ui->lineEditTableHotKey1->text());
+    savedSettings.setValue("bind2", ui->lineEditTableHotKey2->text());
+    savedSettings.setValue("bind3", ui->lineEditTableHotKey3->text());
+    savedSettings.setValue("bind4", ui->lineEditTableHotKey4->text());
+    savedSettings.endGroup();
+
+    savedSettings.beginGroup("log");
+    savedSettings.setValue("enable", ui->checkBoxLogEnable->checkState());
+    savedSettings.setValue("path", ui->lineEditLogPath->text());
     savedSettings.endGroup();
 }
 void MainWidget::restoreSettings(){
@@ -227,14 +246,39 @@ void MainWidget::restoreSettings(){
     ui->comboBoxTheme->setCurrentIndex(savedSettings.value("theme", 0).toInt());
     ui->comboBoxLanguage->setCurrentIndex(savedSettings.value("language", 0).toInt());
     ui->comboBoxCodec->setCurrentIndex(savedSettings.value("text codec", 0).toInt());
+    ui->spinBoxCaptureTime->setValue(savedSettings.value("capture_time", 20).toInt());
+    ui->spinBoxCaptureBytes->setValue(savedSettings.value("capture_bytes", 20).toInt());
+    applyColorScheme(ui->comboBoxTheme->currentIndex());
+    setAppLanguage(ui->comboBoxLanguage->currentIndex());
+    setAppTextCodec(ui->comboBoxCodec->currentIndex());
+    serial->setCaptureInterval(ui->spinBoxCaptureTime->value());
+    serial->setCaptureSize(ui->spinBoxCaptureBytes->value());
     savedSettings.endGroup();
 
     savedSettings.beginGroup("console");
-    ui->checkboxConsoleEcho->setCheckState(savedSettings.value("echo", Qt::CheckState::Checked).value<Qt::CheckState>());
+    ui->checkboxConsoleEcho->setCheckState(savedSettings.value("echo", console->echoMode()).value<Qt::CheckState>());
+    ui->checkboxConsoleCyclic->setCheckState(savedSettings.value("cyclic", console->cyclicMode()).value<Qt::CheckState>());
+    ui->spinboxConsoleCyclicInterval->setValue(savedSettings.value("interval", console->cyclicInterval()).toInt());
+    ui->lineEditConsoleHotKey1->setText(savedSettings.value("bind1", "").toString());
+    ui->lineEditConsoleHotKey2->setText(savedSettings.value("bind2", "").toString());
+    ui->lineEditConsoleHotKey3->setText(savedSettings.value("bind3", "").toString());
+    ui->lineEditConsoleHotKey4->setText(savedSettings.value("bind4", "").toString());
+    console->setEchoMode(ui->checkboxConsoleEcho->checkState()==Qt::Checked ? true : false);
+    console->setCyclicMode(ui->checkboxConsoleCyclic->checkState()==Qt::Checked ? true : false);
+    console->setCyclicInterval(ui->spinboxConsoleCyclicInterval->value());
     savedSettings.endGroup();
 
     savedSettings.beginGroup("table");
-    ui->checkboxConsoleEcho->setCheckState(savedSettings.value("echo", Qt::CheckState::Checked).value<Qt::CheckState>());
+    ui->checkboxTableEcho->setCheckState(savedSettings.value("echo", tableConsole->echoMode()).value<Qt::CheckState>());
+    ui->checkboxTableCyclic->setCheckState(savedSettings.value("cyclic", tableConsole->cyclicMode()).value<Qt::CheckState>());
+    ui->spinboxTableCyclicInterval->setValue(savedSettings.value("interval", console->cyclicInterval()).toInt());
+    ui->lineEditTableHotKey1->setText(savedSettings.value("bind1", "").toString());
+    ui->lineEditTableHotKey2->setText(savedSettings.value("bind2", "").toString());
+    ui->lineEditTableHotKey3->setText(savedSettings.value("bind3", "").toString());
+    ui->lineEditTableHotKey4->setText(savedSettings.value("bind4", "").toString());
+    tableConsole->setEchoMode(ui->checkboxTableEcho->checkState()==Qt::Checked ? true : false);
+    tableConsole->setCyclicMode(ui->checkboxTableCyclic->checkState()==Qt::Checked ? true : false);
+    tableConsole->setCyclicInterval(ui->spinboxTableCyclicInterval->value());
     savedSettings.endGroup();
 
     savedSettings.beginGroup("connection");
@@ -246,7 +290,10 @@ void MainWidget::restoreSettings(){
     ui->boxFlowControl->setCurrentIndex(savedSettings.value("flow control", 0).toInt());
     savedSettings.endGroup();
 
-    applyColorScheme(ui->comboBoxTheme->currentIndex());
-    setAppLanguage(ui->comboBoxLanguage->currentIndex());
-    setAppTextCodec(ui->comboBoxCodec->currentIndex());
+    savedSettings.beginGroup("log");
+    ui->checkBoxLogEnable->setCheckState(savedSettings.value("enable", logger->enabled()).value<Qt::CheckState>());
+    ui->lineEditLogPath->setText(savedSettings.value("path", logger->path()).toString());
+    logger->setPath(ui->lineEditLogPath->text());
+    logger->setEnabled(ui->checkBoxLogEnable->checkState()==Qt::Checked ? true : false);
+    savedSettings.endGroup();
 }

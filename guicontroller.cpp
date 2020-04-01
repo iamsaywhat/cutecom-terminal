@@ -192,6 +192,8 @@ void GuiController::setPropertiesSectionLogs (void){
     gui->labelSectionLog->setFont(QFont("Terminus", 14, QFont::Bold));
     gui->labelLogEnable->setText(tr("Enable:"));
     gui->labelLogPath->setText(tr("Path:"));
+    gui->lineEditLogPath->setReadOnly(true);
+    gui->checkBoxLogEnable->setText("");
 }
 void GuiController::setLanguageList(QStringList* list){
     gui->comboBoxLanguage->clear();
@@ -355,7 +357,13 @@ void GuiController::hexDelimiters(const QString& text){
     lineEdit->setText(data);
 }
 void GuiController::selectLogPath(void){
-    QString path = QFileDialog::getExistingDirectory(nullptr, tr("Select path"), "/logs",
-                                                     QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-    gui->lineEditLogPath->setText(path);
+    QString previousPath = gui->lineEditLogPath->text();
+    QString path = QFileDialog::getExistingDirectory(nullptr, tr("Select path"),
+                                                     previousPath,
+                                                     QFileDialog::ShowDirsOnly |
+                                                     QFileDialog::DontResolveSymlinks);
+    if(path == "")
+        gui->lineEditLogPath->setText(previousPath);
+    else
+        gui->lineEditLogPath->setText(path);
 }

@@ -7,7 +7,7 @@ Logger::Logger(QObject *parent, SerialGui *port) : QObject(parent){
     setPath(QApplication::applicationDirPath()+"/logs");  // По-умолчанию путь находится в директории приложения
 }
 Logger::~Logger(){
-    if(file->isOpen())
+    if(file!=nullptr && file->isOpen())
         file->close();
     if(file != nullptr)
         delete file;
@@ -89,7 +89,8 @@ void Logger::openFile(void){
                QIODevice::Text);               // Текстовый формат
 }
 void Logger::closeFile(void){
-    file->close();
+    if(file!=nullptr && file->isOpen())
+        file->close();
     delete file;
 }
 void Logger::write(DirectionType direction, QByteArray& data){

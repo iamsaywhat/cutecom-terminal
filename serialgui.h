@@ -12,6 +12,7 @@
 class SerialGui : public QObject
 {
     Q_OBJECT
+
 public:
     explicit SerialGui(QComboBox*   ports,              // ComboBox c доступными Com портами
                        QComboBox*   baudrate,           // ComboBox с настройками скорости

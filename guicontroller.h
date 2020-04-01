@@ -43,7 +43,8 @@ public:
 
 private:
     static Ui::MainWidget *gui;
-    QRegularExpressionValidator *hexValidator = new QRegularExpressionValidator(QRegularExpression("[0-9A-Fa-f ]+"));
+    QRegularExpressionValidator *hexValidator = new QRegularExpressionValidator(
+                                                    QRegularExpression("[0-9A-Fa-f ]+"));
     bool eventFilter(QObject *target, QEvent *event);
 
 signals:

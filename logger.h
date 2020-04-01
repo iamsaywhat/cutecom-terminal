@@ -33,7 +33,7 @@ public:
 
 private:
     QString _path;
-    bool _enabled = true;
+    bool _enabled = false;
     QFile *file = nullptr;
     SerialGui *_port = nullptr;
     int _bytesInRow = 5;
