@@ -55,6 +55,7 @@ MainWidget::MainWidget(FramelessWindow *parent)
 
     logger = new Logger(this, serial);
     logger->setEnabled(true);
+    //logger->setPath("D:\\Qt project\\build-Terminal-Desktop_Qt_5_13_1_MinGW_64_bit-Debug\\logsr\\");
 
     settings     = new GuiController(this, ui);
     codecList    = new QStringList;
