@@ -155,6 +155,7 @@ void GuiController::setPropertiesSectionGeneral (void){
     gui->labelCodec->setText(tr("Text codec:"));
     gui->labelCaptureTime->setText(tr("Capture time, ms:"));
     gui->labelCaptureBytes->setText(tr("Capture bytes:"));
+    gui->buttonGeneralApply->setText(tr("Apply"));
     gui->spinBoxCaptureTime->setRange(0, 2147483647);
     gui->spinBoxCaptureBytes->setRange(0, 2147483647);
 }
@@ -185,7 +186,7 @@ void GuiController::setPropertiesSectionTable (void){
 
     gui->labelTableCyclicMode->setText(tr("Cyclic mode:"));
     gui->checkboxTableCyclic->setText("");
-    gui->labelTableCyclicInterval->setText(tr("Interval:"));
+    gui->labelTableCyclicInterval->setText(tr("Interval, ms:"));
     gui->labelTableHotKey1->setText(tr("1:"));
     gui->labelTableHotKey2->setText(tr("2:"));
     gui->labelTableHotKey3->setText(tr("3:"));
@@ -207,6 +208,7 @@ void GuiController::setPropertiesSectionLogs (void){
     gui->checkBoxLogEnable->setText("");
     gui->labelLogSpace->setText("Сolumn spacing:");
     gui->labelLogColomnSize->setText("Сolumn size, byte:");
+    gui->buttonLogApply->setText(tr("Apply"));
     gui->spinBoxLogSpace->setRange(1, 50);
     gui->spinBoxLogColumnSize->setRange(1, 50);
 }

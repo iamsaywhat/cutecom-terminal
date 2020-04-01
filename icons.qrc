@@ -12,6 +12,8 @@
         <file>resources/icons/light/normalize.png</file>
         <file>resources/icons/light/settings.png</file>
         <file>resources/icons/light/tablemode.png</file>
+        <file>resources/icons/light/down-arrow.png</file>
+        <file>resources/icons/light/up-arrow.png</file>
     </qresource>
     <qresource prefix="/dark">
         <file>resources/icons/dark/checkbox.png</file>
@@ -26,5 +28,7 @@
         <file>resources/icons/dark/normalize.png</file>
         <file>resources/icons/dark/settings.png</file>
         <file>resources/icons/dark/tablemode.png</file>
+        <file>resources/icons/dark/down-arrow.png</file>
+        <file>resources/icons/dark/up-arrow.png</file>
     </qresource>
 </RCC>

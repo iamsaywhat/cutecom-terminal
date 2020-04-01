@@ -101,6 +101,9 @@ public:
                                        int horizontalPadding, int verticalPadding,
                                        int leftUpperRadius,   int leftBottomRadius,
                                        int rightUpperRadius,  int rightBottomRadius);
+    static QString getSpinBoxStyleSheet(QString& downArrowUrl,
+                                        QString& upArrowUrl,
+                                        Color color);
 
 private:
     QString _name;                    // Имя цветовой схемы
@@ -125,6 +128,8 @@ private:
     QString settingsIconUrl;          // Путь к иконке "настройки"
     QString comboBoxArrowUrl;         // Путь к иконке стрелки комбобокса
     QString checkBoxCheckUrl;         // Путь к иконки отметки чекбокса
+    QString spinboxDownArrow;         // Путь к иконке стрелки вниз
+    QString spinboxUpArrow;           // Путь к иконке стрелки вверх
 
     static Ui::MainWidget *gui;       // Указатель на целевой виджет gui
 

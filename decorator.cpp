@@ -153,14 +153,54 @@ void Decorator::applyToSettings(void){
     setBasicColorsToWidget(gui->labelCodec, secondColor());
     setBasicColorsToWidget(gui->labelLanguage, secondColor());
     setBasicColorsToWidget(gui->labelSectionGeneral, secondColor());
+    setBasicColorsToWidget(gui->labelCaptureTime, secondColor());
+    setBasicColorsToWidget(gui->labelCaptureBytes, secondColor());
+    gui->spinBoxCaptureTime->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrow, spinboxUpArrow, baseColor()));
+    gui->spinBoxCaptureBytes->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrow, spinboxUpArrow, baseColor()));
+    gui->buttonGeneralApply->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 50, 15, 5, 5, 5, 5));
     // Вкладка Table
     setBasicColorsToWidget(gui->labelSectionTable, secondColor());
     setBasicColorsToWidget(gui->labelTableEcho, secondColor());
+    setBasicColorsToWidget(gui->labelTableCyclicMode, secondColor());
+    setBasicColorsToWidget(gui->labelTableCyclicInterval, secondColor());
+    setBasicColorsToWidget(gui->labelTableHotKey1, secondColor());
+    setBasicColorsToWidget(gui->labelTableHotKey2, secondColor());
+    setBasicColorsToWidget(gui->labelTableHotKey3, secondColor());
+    setBasicColorsToWidget(gui->labelTableHotKey4, secondColor());
     setCheckBoxColors(gui->checkboxTableEcho, baseColor(), thirdColor(), baseColor());
+    setCheckBoxColors(gui->checkboxTableCyclic, baseColor(), thirdColor(), baseColor());
+    gui->spinboxTableCyclicInterval->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrow, spinboxUpArrow, baseColor()));
+    gui->lineEditTableHotKey1->setStyleSheet(getInputFieldStyleSheet(baseColor()));
+    gui->lineEditTableHotKey2->setStyleSheet(getInputFieldStyleSheet(baseColor()));
+    gui->lineEditTableHotKey3->setStyleSheet(getInputFieldStyleSheet(baseColor()));
+    gui->lineEditTableHotKey4->setStyleSheet(getInputFieldStyleSheet(baseColor()));
     // Вкладка Console
     setBasicColorsToWidget(gui->labelSectionConsole, secondColor());
     setBasicColorsToWidget(gui->labelConsoleEcho, secondColor());
+    setBasicColorsToWidget(gui->labelConsoleCyclic, secondColor());
+    setBasicColorsToWidget(gui->labelConsoleCyclicInterval, secondColor());
+    setBasicColorsToWidget(gui->labelConsoleHotKey1, secondColor());
+    setBasicColorsToWidget(gui->labelConsoleHotKey2, secondColor());
+    setBasicColorsToWidget(gui->labelConsoleHotKey3, secondColor());
+    setBasicColorsToWidget(gui->labelConsoleHotKey4, secondColor());
     setCheckBoxColors(gui->checkboxConsoleEcho, baseColor(), thirdColor(), baseColor());
+    setCheckBoxColors(gui->checkboxConsoleCyclic, baseColor(), thirdColor(), baseColor());
+    gui->spinboxConsoleCyclicInterval->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrow, spinboxUpArrow, baseColor()));
+    gui->lineEditConsoleHotKey1->setStyleSheet(getInputFieldStyleSheet(baseColor()));
+    gui->lineEditConsoleHotKey2->setStyleSheet(getInputFieldStyleSheet(baseColor()));
+    gui->lineEditConsoleHotKey3->setStyleSheet(getInputFieldStyleSheet(baseColor()));
+    gui->lineEditConsoleHotKey4->setStyleSheet(getInputFieldStyleSheet(baseColor()));
+    // Вкладка Logs
+    setBasicColorsToWidget(gui->labelSectionLog, secondColor());
+    setBasicColorsToWidget(gui->labelLogEnable, secondColor());
+    setBasicColorsToWidget(gui->labelLogPath, secondColor());
+    setBasicColorsToWidget(gui->labelLogSpace, secondColor());
+    setBasicColorsToWidget(gui->labelLogColomnSize, secondColor());
+    setCheckBoxColors(gui->checkBoxLogEnable, baseColor(), thirdColor(), baseColor());
+    gui->lineEditLogPath->setStyleSheet(getInputFieldStyleSheet(baseColor()));
+    gui->buttonLogApply->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 50, 15, 5, 5, 5, 5));
+    gui->spinBoxLogSpace->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrow, spinboxUpArrow, baseColor()));
+    gui->spinBoxLogColumnSize->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrow, spinboxUpArrow, baseColor()));
 }
 void Decorator::validateColor(Color &color){
     color.background&=0xffffff;
@@ -224,6 +264,8 @@ void Decorator::setIconMode(IconMode mode){
         settingsIconUrl   = ":/dark/resources/icons/dark/settings.png";
         checkBoxCheckUrl  = ":/dark/resources/icons/dark/checkbox.png";
         comboBoxArrowUrl  = ":/dark/resources/icons/dark/combobox.png";
+        spinboxDownArrow  = ":/dark/resources/icons/dark/down-arrow.png";
+        spinboxUpArrow    = ":/dark/resources/icons/dark/up-arrow.png";
     }
     else{
         appIconlUrl       = ":/light/resources/icons/light/label.png";
@@ -237,6 +279,8 @@ void Decorator::setIconMode(IconMode mode){
         settingsIconUrl   = ":/light/resources/icons/light/settings.png";
         checkBoxCheckUrl  = ":/light/resources/icons/light/checkbox.png";
         comboBoxArrowUrl  = ":/light/resources/icons/light/combobox.png";
+        spinboxDownArrow  = ":/light/resources/icons/light/down-arrow.png";
+        spinboxUpArrow    = ":/light/resources/icons/light/up-arrow.png";
     }
 }
 void Decorator::setBasicColorsToWidget(QWidget *widget, Color colors){
@@ -245,7 +289,6 @@ void Decorator::setBasicColorsToWidget(QWidget *widget, Color colors){
 void Decorator::setComboBoxColors(QComboBox *comboBox, Color activeColor, Color disableColor, Color listColor){
     comboBox->setStyleSheet(getComboBoxStyleSheet(comboBoxArrowUrl, activeColor, disableColor, listColor));
     comboBox->view()->setStyleSheet(getComboBoxStyleSheet(comboBoxArrowUrl, activeColor, disableColor, listColor));
-    comboBox->lineEdit();//->setStyleSheet(getComboBoxStyleSheet(baseColor(), textColor(), selectionColor(), selectionTextColor()));
 }
 void Decorator::setCheckBoxColors(QCheckBox *checkBox, Color color, Color hoverColor, Color pressedColor){
     checkBox->setStyleSheet(getCheckBoxStyleSheet(checkBoxCheckUrl, color, hoverColor, pressedColor));
@@ -543,6 +586,36 @@ QString Decorator::getButtonStyleSheet(Color baseColor, Color hoverColor, Color 
                      .arg(QString::number(rightBottomRadius))
                      .arg(QString::number(rightUpperRadius))
                      .arg(QString::number(leftUpperRadius));
+}
+QString Decorator::getSpinBoxStyleSheet(QString& downArrowUrl,
+                                        QString& upArrowUrl,
+                                        Color color){
+    QString styleSheet(
+                "QSpinBox {"
+                    "%1"
+                    "padding-top:      5px;"
+                    "padding-bottom:   5px;"
+                    "padding-right:    30px;"
+                    "padding-left:     10px;"
+                    "border-radius:    5px;"
+                "}"
+                "QSpinBox::up-button{"
+                    "subcontrol-origin: margin;"
+                    "subcontrol-position: center right;"
+                    "right: 30px;"
+                    "width: 30px;"
+                    "image: url(%2) 1;"
+                "}"
+                "QSpinBox::down-button {"
+                    "subcontrol-origin: margin;"
+                    "subcontrol-position: center right;"
+                    "width: 30px;"
+                    "image: url(%3) 1;"
+                "}"
+                );
+    return styleSheet.arg(colorToString(color))
+                     .arg(upArrowUrl)
+                     .arg(downArrowUrl);
 }
 QString Decorator::colorToString(Color color){
     validateColor(color);
