@@ -1035,7 +1035,14 @@
                         </property>
                        </widget>
                       </item>
-                      <item row="3" column="0">
+                      <item row="4" column="0">
+                       <widget class="QLabel" name="labelLogColomnSize">
+                        <property name="text">
+                         <string>TextLabel</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="6" column="0">
                        <spacer name="verticalSpacer_9">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
@@ -1043,7 +1050,7 @@
                         <property name="sizeHint" stdset="0">
                          <size>
                           <width>20</width>
-                          <height>471</height>
+                          <height>390</height>
                          </size>
                         </property>
                        </spacer>
@@ -1069,8 +1076,28 @@
                         </property>
                        </widget>
                       </item>
+                      <item row="3" column="0">
+                       <widget class="QLabel" name="labelLogSpace">
+                        <property name="text">
+                         <string>TextLabel</string>
+                        </property>
+                       </widget>
+                      </item>
                       <item row="2" column="1">
                        <widget class="QLineEdit" name="lineEditLogPath"/>
+                      </item>
+                      <item row="5" column="0" colspan="3">
+                       <widget class="QPushButton" name="buttonLogApply">
+                        <property name="text">
+                         <string>PushButton</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="3" column="1" colspan="2">
+                       <widget class="QSpinBox" name="spinBoxLogSpace"/>
+                      </item>
+                      <item row="4" column="1" colspan="2">
+                       <widget class="QSpinBox" name="spinBoxLogColumnSize"/>
                       </item>
                      </layout>
                     </widget>

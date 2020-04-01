@@ -96,6 +96,8 @@ MainWidget::MainWidget(FramelessWindow *parent)
 
     connect(settings, &GuiController::logEnableChanged, logger, &Logger::setEnabled);
     connect(settings, &GuiController::logPathChanged, logger, &Logger::setPath);
+    connect(settings, &GuiController::logColumnSizeChanged, logger, &Logger::setBytesInRow);
+    connect(settings, &GuiController::logColumnSpacing, logger, &Logger::setColumnSpace);
 }
 
 MainWidget::~MainWidget(){
@@ -232,6 +234,8 @@ void MainWidget::saveSettings(){
     savedSettings.beginGroup("log");
     savedSettings.setValue("enable", ui->checkBoxLogEnable->checkState());
     savedSettings.setValue("path", ui->lineEditLogPath->text());
+    savedSettings.setValue("column_size", ui->spinBoxLogColumnSize->value());
+    savedSettings.setValue("column_spacing", ui->spinBoxLogSpace->value());
     savedSettings.endGroup();
 }
 void MainWidget::restoreSettings(){
@@ -288,7 +292,11 @@ void MainWidget::restoreSettings(){
     savedSettings.beginGroup("log");
     ui->checkBoxLogEnable->setCheckState(savedSettings.value("enable", logger->enabled()).value<Qt::CheckState>());
     ui->lineEditLogPath->setText(savedSettings.value("path", logger->path()).toString());
+    ui->spinBoxLogColumnSize->setValue(savedSettings.value("column_size", logger->bytesInRow()).toInt());
+    ui->spinBoxLogSpace->setValue(savedSettings.value("column_spacing", logger->columnSpace()).toInt());
     logger->setPath(ui->lineEditLogPath->text());
     logger->setEnabled(ui->checkBoxLogEnable->checkState()==Qt::Checked ? true : false);
+    logger->setBytesInRow(ui->spinBoxLogColumnSize->value());
+    logger->setColumnSpace(ui->spinBoxLogSpace->value());
     savedSettings.endGroup();
 }

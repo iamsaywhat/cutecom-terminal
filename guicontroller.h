@@ -35,6 +35,7 @@ public:
     void setPropertiesSectionConsole(void);
     void setPropertiesSectionTable(void);
     void setPropertiesSectionLogs(void);
+    void setPropertiesSectionBinds(void);
     void retranstate(void);
 
     void setLanguageList(QStringList* list);
@@ -70,6 +71,8 @@ signals:
 
     void logEnableChanged(bool);
     void logPathChanged(QString);
+    void logColumnSizeChanged(int);
+    void logColumnSpacing(int);
 
 private slots:
     void consoleHotkeys(void);

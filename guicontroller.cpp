@@ -41,12 +41,13 @@ GuiController::GuiController(QObject *parent, Ui::MainWidget* gui) : QObject(par
     connect(gui->bindsContentButton,       &QPushButton::clicked,
             [=](){gui->rightStackedPanel->setCurrentIndex(settingsIndexBinds);});
     // Вкладка General
-    connect(gui->comboBoxTheme, QOverload<int>::of(&QComboBox::currentIndexChanged),
-            this, &GuiController::currentThemeChanged);
-    connect(gui->comboBoxCodec, QOverload<int>::of(&QComboBox::currentIndexChanged),
-            this, &GuiController::currentTextCodecChanged);
-    connect(gui->comboBoxLanguage, QOverload<int>::of(&QComboBox::currentIndexChanged),
-            this, &GuiController::currentLanguageChanged);
+    connect(gui->buttonGeneralApply, &QPushButton::pressed, [=](){
+            emit currentThemeChanged(gui->comboBoxTheme->currentIndex());
+            emit currentTextCodecChanged(gui->comboBoxCodec->currentIndex());
+            emit currentLanguageChanged(gui->comboBoxLanguage->currentIndex());
+            emit captureTimeChanges(gui->spinBoxCaptureTime->value());
+            emit captureBytesChanges(gui->spinBoxCaptureBytes->value());
+    });
     // Вкладка Console
     connect(gui->checkboxConsoleEcho, &QCheckBox::stateChanged,
             [=](int state){ if(state == Qt::CheckState::Checked)
@@ -78,6 +79,10 @@ GuiController::GuiController(QObject *parent, Ui::MainWidget* gui) : QObject(par
                             else
                                 emit this->logEnableChanged(false);});
     connect(gui->buttonLogPath, &QToolButton::clicked, this, &GuiController::selectLogPath);
+    connect(gui->buttonLogApply, &QPushButton::pressed, [=](){
+            emit logColumnSizeChanged(gui->spinBoxLogColumnSize->value());
+            emit logColumnSpacing(gui->spinBoxLogSpace->value());
+    });
 
     gui->checkboxConsoleEcho->setCheckState(Qt::CheckState::Checked);
     gui->checkboxTableEcho->setCheckState(Qt::CheckState::Checked);
@@ -93,6 +98,7 @@ void GuiController::setProperties (void){
     setPropertiesSectionConsole();
     setPropertiesSectionTable();
     setPropertiesSectionLogs();
+    setPropertiesSectionBinds();
 }
 void GuiController::setPropertiesMainWidget(void){
     gui->centralWidget->layout()->setMargin(0);
@@ -199,6 +205,13 @@ void GuiController::setPropertiesSectionLogs (void){
     gui->labelLogPath->setText(tr("Path:"));
     gui->lineEditLogPath->setReadOnly(true);
     gui->checkBoxLogEnable->setText("");
+    gui->labelLogSpace->setText("Сolumn spacing:");
+    gui->labelLogColomnSize->setText("Сolumn size, byte:");
+    gui->spinBoxLogSpace->setRange(1, 50);
+    gui->spinBoxLogColumnSize->setRange(1, 50);
+}
+void GuiController::setPropertiesSectionBinds(void){
+    gui->bindsContentButton->hide();
 }
 void GuiController::setLanguageList(QStringList* list){
     gui->comboBoxLanguage->clear();
