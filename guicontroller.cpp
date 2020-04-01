@@ -71,7 +71,12 @@ GuiController::GuiController(QObject *parent, Ui::MainWidget* gui) : QObject(par
     connect(gui->lineEditTableHotKey2, &QLineEdit::textChanged, this, &GuiController::hexDelimiters);
     connect(gui->lineEditTableHotKey3, &QLineEdit::textChanged, this, &GuiController::hexDelimiters);
     connect(gui->lineEditTableHotKey4, &QLineEdit::textChanged, this, &GuiController::hexDelimiters);
-
+    // Вкладка Log
+    connect(gui->checkBoxLogEnable, &QCheckBox::stateChanged,
+            [=](int state){ if(state == Qt::CheckState::Checked)
+                                emit this->logEnableChanged(true);
+                            else
+                                emit this->logEnableChanged(false);});
     connect(gui->buttonLogPath, &QToolButton::clicked, this, &GuiController::selectLogPath);
 
     gui->checkboxConsoleEcho->setCheckState(Qt::CheckState::Checked);
@@ -366,4 +371,5 @@ void GuiController::selectLogPath(void){
         gui->lineEditLogPath->setText(previousPath);
     else
         gui->lineEditLogPath->setText(path);
+    emit logPathChanged(gui->lineEditLogPath->text());
 }

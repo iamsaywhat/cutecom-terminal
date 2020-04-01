@@ -92,6 +92,7 @@ void Logger::closeFile(void){
     if(file!=nullptr && file->isOpen())
         file->close();
     delete file;
+    file = nullptr;
 }
 void Logger::write(DirectionType direction, QByteArray& data){
     QStringList ascii;

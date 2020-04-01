@@ -12,6 +12,8 @@
 class SerialGui : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(int captureTime READ captureTime WRITE setCaptureTime NOTIFY captureTimeChanged)
+    Q_PROPERTY(qint64 captureSize READ captureSize WRITE setCaptureSize NOTIFY captureSizeChanged)
 
 public:
     explicit SerialGui(QComboBox*   ports,              // ComboBox c доступными Com портами
@@ -35,9 +37,11 @@ public:
     static void fillFlowControlList(QComboBox *comboBox);
     // Узнать состояние подключения
     ConnectionStatus getConnectionStatus (void);
-    void setCaptureInterval(int interval);
-    void setCaptureSize(qint64 size);
+    void setCaptureTime(int);
+    void setCaptureSize(qint64);
     void retranslate (void);
+    int captureTime() const;
+    qint64 captureSize() const;
 
 private:
     // Элементы GUI
@@ -53,6 +57,8 @@ private:
     QThread         *otherThread;                // Поток для serial
     Serial          *port;                       // Базовый класс для работы с com-портом
     ConnectionStatus connectionStatus = CLOSED;  // Статус подключения
+    int             _captureTime = 20;
+    qint64          _captureSize = 20;
 
 signals:
     void setSettings(Serial::Settings);       // Отправка настроек базовому классу
@@ -61,11 +67,15 @@ signals:
     void open();                              // Открыть порт
     void close();                             // Закрыть порт
     void error(QString);
+    void captureTimeChanged(int);
+    void captureSizeChanged(qint64);
 
 private slots:
      void portStatusChanged(bool);
      void receivedData(QByteArray);
      void openOrCloseByButton(void);
+     void portCaptureTimeChanged(int);
+     void portCaptureSizeChanged(qint64);
 };
 
 #endif // SERIALGUI_H

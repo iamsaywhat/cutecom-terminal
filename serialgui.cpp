@@ -1,12 +1,8 @@
 #include "serialgui.h"
-#include <QDebug>
 #include <QLineEdit>
 
-//#define DEBUG
-
-#ifdef DEBUG
 #include <QDebug>
-#endif
+
 
 SerialGui::SerialGui(QComboBox*   ports,              // ComboBox c доступными Com портами
                      QComboBox*   baudrate,           // ComboBox с настройками скорости
@@ -16,9 +12,6 @@ SerialGui::SerialGui(QComboBox*   ports,              // ComboBox c доступ
                      QComboBox*   flowControl,        // ComboBox с настройками контроля
                      QPushButton* connectButton)      // Кнопка подключения/отключения
 {
-#ifdef DEBUG
-    qDebug() << "From SerialGui::SerialGui";
-#endif
     // Фиксируем внутри класса указатели на элементы управления
     _ports             = ports;
     _baudrate          = baudrate;
@@ -65,22 +58,19 @@ SerialGui::SerialGui(QComboBox*   ports,              // ComboBox c доступ
     connect(this, &SerialGui::close, port, &Serial::close);
     connect(this, &SerialGui::setSettings, port, &Serial::setSettings);
     connect(port, &Serial::errorInfo, this, &SerialGui::error);
+    connect(port, &Serial::captureIntervalChanged, this, &SerialGui::portCaptureTimeChanged);
+    connect(port, &Serial::capturePacketSizeChanged, this, &SerialGui::portCaptureSizeChanged);
     // События от Gui
     connect(_connectButton, &QPushButton::clicked, this, &SerialGui::openOrCloseByButton);
 
     // Запускаем поток
     otherThread->start();
 
-#ifdef DEBUG
-    qDebug() << "From SerialGui::SerialGui: port in" << port->thread();
-    qDebug() << "From SerialGui::SerialGui: i am in " << this->thread();
-#endif
+    setCaptureTime(20);
+    setCaptureSize(20);
 }
 
 SerialGui::~SerialGui(){
-#ifdef DEBUG
-    qDebug("From SerialGui::~SerialGui");
-#endif
     delete baudrateValidator;
 }
 
@@ -116,16 +106,10 @@ SerialGui::ConnectionStatus SerialGui::getConnectionStatus (void){
 }
 
 void SerialGui::receivedData(QByteArray data){
-#ifdef DEBUG
-    qDebug() << "Received data: " << data;
-#endif
    received(data);
 }
 
 void SerialGui::openOrCloseByButton(void){
-#ifdef DEBUG
-        qDebug("From SerialGui::openOrCloseByButton");
-#endif
     if(!(connectionStatus == OPEN)){
         Serial::Settings settings;
         settings.name        = _ports->currentText();
@@ -145,11 +129,25 @@ void SerialGui::openOrCloseByButton(void){
     else
         emit close();
 }
-void SerialGui::setCaptureInterval(int interval){
-    port->setCaptureInterval(interval);
+void SerialGui::setCaptureTime(int time){
+    port->setCaptureInterval(time);
 }
 void SerialGui::setCaptureSize(qint64 size){
     port->setCapturePacketSize(size);
+}
+int SerialGui::captureTime(void) const{
+    return _captureTime;
+}
+qint64 SerialGui::captureSize(void) const{
+    return _captureSize;
+}
+void SerialGui::portCaptureTimeChanged(int time){
+    _captureTime = time;
+    emit captureTimeChanged(time);
+}
+void SerialGui::portCaptureSizeChanged(qint64 size){
+    _captureSize = size;
+    emit captureSizeChanged(size);
 }
 void SerialGui::retranslate(void){
     if(connectionStatus == OPEN)
@@ -157,10 +155,6 @@ void SerialGui::retranslate(void){
     else
         _connectButton->setText(tr("Connect"));
 }
-
-/*********************************************************************************
- * updatePortsList - Обновление в списка доступных портов
-**********************************************************************************/
 void SerialGui::updatePortsList(QComboBox *comboBox){
     /* Перед обновлением списка портов запоминаем текущий порт,
      * чтобы после того установить его же как текущий, несмотря на то,

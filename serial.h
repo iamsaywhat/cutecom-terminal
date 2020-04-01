@@ -11,6 +11,7 @@ class Serial : public QObject
     Q_OBJECT
     Q_PROPERTY(int _captureInterval READ captureInterval WRITE setCaptureInterval NOTIFY captureIntervalChanged)
     Q_PROPERTY(qint64 _capturePacketSize READ capturePacketSize WRITE setCapturePacketSize NOTIFY capturePacketSizeChanged)
+
 public:
     explicit Serial(QObject *parent = nullptr);
     ~Serial(void);

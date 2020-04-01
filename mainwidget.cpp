@@ -19,6 +19,9 @@ MainWidget::MainWidget(FramelessWindow *parent)
 {
     ui->setupUi(this);
     this->setMinimumSize(600, 300);
+    parent->setWindowTitle("Advanced Terminal");
+    parent->setWindowIcon(QIcon(":/light/resources/icons/light/consolemode.png"));
+
 
     // Выполняем связку класса работы с портом окном настроек
     serial = new SerialGui(ui->boxPorts,                   // ComboBox c доступными Com портами
@@ -28,8 +31,6 @@ MainWidget::MainWidget(FramelessWindow *parent)
                            ui->boxStopBits,                // ComboBox с настройками стоп-бит
                            ui->boxFlowControl,             // ComboBox с настройками контроля
                            ui->buttonConnectDisconnect);   // Кнопка подключения/отключения
-    serial->setCaptureInterval(20);
-    serial->setCaptureSize(10);
     // Выполняем связку класса работы с консолью с формами
     console = new ConsoleWidget(this,
                                 serial,                    // Указатель на SerialSettings экземпляр
@@ -53,25 +54,16 @@ MainWidget::MainWidget(FramelessWindow *parent)
                               ui->converterSourceBox,      // QComboBox селектор исходного формата
                               ui->converterResultBox);     // QComboBox селектор формата вывода
 
-    logger = new Logger(this, serial);
-    logger->setEnabled(true);
-
+    logger       = new Logger(this, serial);
     settings     = new GuiController(this, ui);
     codecList    = new QStringList;
     languageList = new QStringList;
     themeList    = new QList<Decorator*>;
 
     setAppFont();
-
     fillLanguageList();
     fillCodecList();
     fillThemeList();
-
-
-    //applyColorScheme(0);
-    parent->setWindowTitle("Advanced Terminal");
-    parent->setWindowIcon(QIcon(":/light/resources/icons/light/consolemode.png"));
-
     restoreSettings();
 
 
@@ -99,8 +91,11 @@ MainWidget::MainWidget(FramelessWindow *parent)
     connect(settings, &GuiController::tableStartCycle, tableConsole, &TableConsole::startCyclicSending);
     connect(settings, &GuiController::tableStopCycle, tableConsole, &TableConsole::stopCyclicSending);
 
-    connect(settings, &GuiController::captureTimeChanges, serial, &SerialGui::setCaptureInterval);
+    connect(settings, &GuiController::captureTimeChanges, serial, &SerialGui::setCaptureTime);
     connect(settings, &GuiController::captureBytesChanges, serial, &SerialGui::setCaptureSize);
+
+    connect(settings, &GuiController::logEnableChanged, logger, &Logger::setEnabled);
+    connect(settings, &GuiController::logPathChanged, logger, &Logger::setPath);
 }
 
 MainWidget::~MainWidget(){
@@ -246,12 +241,12 @@ void MainWidget::restoreSettings(){
     ui->comboBoxTheme->setCurrentIndex(savedSettings.value("theme", 0).toInt());
     ui->comboBoxLanguage->setCurrentIndex(savedSettings.value("language", 0).toInt());
     ui->comboBoxCodec->setCurrentIndex(savedSettings.value("text codec", 0).toInt());
-    ui->spinBoxCaptureTime->setValue(savedSettings.value("capture_time", 20).toInt());
-    ui->spinBoxCaptureBytes->setValue(savedSettings.value("capture_bytes", 20).toInt());
+    ui->spinBoxCaptureTime->setValue(savedSettings.value("capture_time", serial->captureTime()).toInt());
+    ui->spinBoxCaptureBytes->setValue(savedSettings.value("capture_bytes", serial->captureSize()).toInt());
     applyColorScheme(ui->comboBoxTheme->currentIndex());
     setAppLanguage(ui->comboBoxLanguage->currentIndex());
     setAppTextCodec(ui->comboBoxCodec->currentIndex());
-    serial->setCaptureInterval(ui->spinBoxCaptureTime->value());
+    serial->setCaptureTime(ui->spinBoxCaptureTime->value());
     serial->setCaptureSize(ui->spinBoxCaptureBytes->value());
     savedSettings.endGroup();
 

@@ -68,6 +68,9 @@ signals:
     void tableStartCycle(void);
     void tableStopCycle(void);
 
+    void logEnableChanged(bool);
+    void logPathChanged(QString);
+
 private slots:
     void consoleHotkeys(void);
     void tableHotkeys(void);
