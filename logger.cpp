@@ -34,7 +34,6 @@ void Logger::setColumnSpace(int columnSpace){
 void Logger::setPath(QString path){
     QDir dir(path);
     if(!dir.exists()){
-        qDebug("Не существует");
         if(!dir.mkpath(path)){
             qDebug("Создать не получилось");
             return;
