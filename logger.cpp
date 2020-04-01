@@ -4,11 +4,13 @@
 
 Logger::Logger(QObject *parent, SerialGui *port) : QObject(parent){
     _port = port;
-    setPath(QApplication::applicationDirPath()+"/logs/");
+    setPath(QApplication::applicationDirPath()+"/logs");  // По-умолчанию путь находится в директории приложения
 }
 Logger::~Logger(){
-    file->close();
-    delete file;
+    if(file->isOpen())
+        file->close();
+    if(file != nullptr)
+        delete file;
 }
 bool Logger::enabled() const{
     return _enabled;
@@ -33,11 +35,10 @@ void Logger::setColumnSpace(int columnSpace){
 }
 void Logger::setPath(QString path){
     QDir dir(path);
-    if(!dir.exists()){
-        if(!dir.mkpath(path)){
-            qDebug("Создать не получилось");
-            return;
-        }
+    if(!dir.exists()){            // Проверим существует ли директория файла
+        if(!dir.mkpath(path)){    // Если не существует, то пробуем создать
+            return;               // Если создать не получилось, остальное
+        }                         // неважно, выходим
     }
     _path = path;
     emit pathChanged(path);
@@ -55,8 +56,8 @@ void Logger::setEnabled(bool state){
     else {
         disconnect(_port, &SerialGui::send, this, &Logger::outgoing);
         disconnect(_port, &SerialGui::received, this, &Logger::incoming);
-        connect(_port, &SerialGui::open, this, &Logger::openFile);
-        connect(_port, &SerialGui::close, this, &Logger::closeFile);
+        disconnect(_port, &SerialGui::open, this, &Logger::openFile);
+        disconnect(_port, &SerialGui::close, this, &Logger::closeFile);
         closeFile();
     }
 }
@@ -68,6 +69,8 @@ void Logger::setBytesInRow(int size){
 }
 void Logger::openFile(void){
     QString name;
+    // Собираем название файла
+    name.append("/");
     name.append(QString::number(QDate::currentDate().year()).rightJustified(4, '0'));
     name.append("_");
     name.append(QString::number(QDate::currentDate().month()).rightJustified(2, '0'));
@@ -79,21 +82,15 @@ void Logger::openFile(void){
     name.append(QString::number(QTime::currentTime().minute()).rightJustified(2, '0'));
     name.append("_");
     name.append(QString::number(QTime::currentTime().second()).rightJustified(2, '0'));
-    name.append(".log");
-    name.prepend(path());
-    QDir dir(path());
-    if(!dir.exists()){
-        qDebug("Не существует");
-        if(!dir.mkpath(path())){
-            qDebug("Создать не получилось");
-            return;
-        }
-    }
-    file = new QFile(name);
-    file->open(QIODevice::WriteOnly | QIODevice::Text);
+    name.append(".log");                       // Формат файла
+    name.prepend(path());                      // В начало добавляем путь файла
+    file = new QFile(name);                    // С директорией  все впорядке
+    file->open(QIODevice::WriteOnly |          // Открываем на запись
+               QIODevice::Text);               // Текстовый формат
 }
 void Logger::closeFile(void){
     file->close();
+    delete file;
 }
 void Logger::write(DirectionType direction, QByteArray& data){
     QStringList ascii;
@@ -103,50 +100,56 @@ void Logger::write(DirectionType direction, QByteArray& data){
     const int timestampColumnSize = 13;
     const int directionColumnSize = 8;
     int hexColumnSize = 3*bytesInRow()-1;
+    /* Здесь определяем позиции столбцов текста */
     int directionColumnPosition  = timestampColumnSize+columnSpace();
     int hexColumnPosition        = directionColumnPosition+directionColumnSize+columnSpace();
     int asciiColumnPosition      = hexColumnPosition+hexColumnSize+columnSpace();
-
-    toHexStrings(hex, data, bytesInRow());
-    replaceSymbols(data, '.');
-    toAsciiStrings(ascii, data,  bytesInRow());
-    textStream.setCodec(Converter::currentCodec());
-
+    /* Здесь байтовый массив нужно сконверировать в нужные форматы
+       и нарезать их в строки по bytesInRow байт */
+    toHexStrings(hex, data, bytesInRow());            // Байтовый массив в список нарезанных строк hex кодов
+    replaceSymbols(data, '.');                        // Перед конвертацией в ascii, нужно все непечаные символы
+    toAsciiStrings(ascii, data,  bytesInRow());       // заменить чем-то, а только после байтовый массив сконверитровать
+    textStream.setCodec(Converter::currentCodec());   // Печатать будет через TextStream, чтобы можно было настроить кодировку
+    /* Здесь начинаем писать строки в файл,
+     * строго соблюдая форматирование */
     for(int i = 0; i < ascii.count(); i++){
-        QString text = QTime::currentTime().toString("hh:mm:ss:ms");
-        textStream << text;
+        QString text;
+        text = QTime::currentTime().toString("hh:mm:ss:ms");
+        textStream << text;                               // Столбец временной метки
         cursorPosition += text.count();
-        while(cursorPosition < directionColumnPosition){
+        while(cursorPosition < directionColumnPosition){  // Заполняем пробелами место до следующего столбца
             cursorPosition++;
             textStream << " ";
         }
-        if(direction == INCOMING)
+        if(direction == INCOMING)                          // Столбец направления
             text = "incoming";
         else
             text = "outgoing";
         textStream << text;
         cursorPosition += text.count();
-        while(cursorPosition < hexColumnPosition){
+        while(cursorPosition < hexColumnPosition){         // Заполняем пробелами место до следующего столбца
             cursorPosition++;
             textStream << " ";
         }
-        textStream << hex.at(i);
+        textStream << hex.at(i);                           // Столбец HEX-кодов
         cursorPosition += hex.at(i).count();
-        while(cursorPosition < asciiColumnPosition){
+        while(cursorPosition < asciiColumnPosition){       // Заполняем пробелами место до следующего столбца
             cursorPosition++;
             textStream << " ";
         }
-        textStream << ascii.at(i);
+        textStream << ascii.at(i);                         // Столбец ASCII-кодов
         cursorPosition += hex.at(i).count();
-        textStream << "\n";
-        cursorPosition = 0;
+        textStream << "\n";                                // Здесь нужно перейти на следующую строку
+        cursorPosition = 0;                                // позицию курсора поэтому тоже сбрасываем
     }
 }
 void Logger::incoming(QByteArray data){
-    write(INCOMING, data);
+    if(file!=nullptr && file->isOpen() && enabled())
+        write(INCOMING, data);
 }
 void Logger::outgoing(QByteArray data){
-    write(OUTGOING, data);
+    if(file!=nullptr && file->isOpen() && enabled())
+        write(OUTGOING, data);
 }
 void Logger::toHexStrings(QStringList& list, QByteArray& data, int length){
     QString hex;
