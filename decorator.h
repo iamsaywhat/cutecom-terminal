@@ -87,24 +87,24 @@ public:
     static QString getAppLabelStyleSheet(QString iconUrl);
     static QString getWindowButtonStyleSheet(QString iconUrl, Color baseColor, Color hoverColor, Color pressedColor);
     static QString getQuickPanelButtonStyleSheet(QString iconUrl, Color baseColor, Color hoverColor, Color pressedColor);
-    // Специальные таблицы стилей для базовых элементов
-    static QString getInputFieldStyleSheet (Color color);
-    static QString getConsoleStyleSheet(Color color);
+    static QString getRunButton(QString& playUrl, QString& stopUrl, Color color);
     // Общая таблица стилей элементов
     static QString getScrollBarStyleSheet (Color handleColor, Color pageColor);
     static QString getTableStyleSheet(Color tableColor, Color headerColor);
-    static QString getSipmleWidgetStyleSheet(Color color);
+    static QString getWidgetStyleSheet(Color color);
     static QString getComboBoxStyleSheet(QString &arrowUrl,Color activeColor, Color disableColor, Color listColor);
     static QString getCheckBoxStyleSheet(QString &checkUrl, Color color, Color hoverColor, Color pressedColor);
-    static QString getPlainTextStyleSheet(Color color);
+    static QString getPlainTextStyleSheet(Color color, int verticalMargin, int horizontalMargin,
+                                          int verticalPadding, int horizontalPadding);
     static QString getButtonStyleSheet(Color baseColor, Color hoverColor, Color pressedColor,
-                                       int horizontalPadding, int verticalPadding,
-                                       int leftUpperRadius,   int leftBottomRadius,
-                                       int rightUpperRadius,  int rightBottomRadius);
+                                       int verticalMargin, int horizontalMargin,
+                                       int verticalPadding, int horizontalPadding);
     static QString getSpinBoxStyleSheet(QString& downArrowUrl,
                                         QString& upArrowUrl,
                                         Color color);
-    static QString getRunButton(QString& playUrl, QString& stopUrl, Color color);
+
+    static QString getLineEditStyleSheet (Color color, int verticalMargin, int horizontalMargin,
+                                                             int verticalPadding, int horizontalPadding);
 
 private:
     QString _name;                    // Имя цветовой схемы
@@ -138,6 +138,7 @@ private:
 
     static void validateColor(Color &color);
     static QString colorToString(Color color);
+    static QString urlToStyleSheet(QString& url);
 
     void applyToMainWidget(void);
     void applyToConsole(void);
