@@ -47,6 +47,13 @@ private:
     QRegularExpressionValidator *hexValidator = new QRegularExpressionValidator(
                                                     QRegularExpression("[0-9A-Fa-f ]+"));
     bool eventFilter(QObject *target, QEvent *event);
+    void connectQuickMenu(void);
+    void connectSettingsMenu(void);
+    void connectSectionConnection(void);
+    void connectSectionGeneral(void);
+    void connectSectionConsole(void);
+    void connectSectionTable(void);
+    void connectSectionLog(void);
 
 signals:
     void currentThemeChanged(int index);
@@ -75,10 +82,10 @@ signals:
     void logColumnSpacing(int);
 
 private slots:
-    void consoleHotkeys(void);
-    void tableHotkeys(void);
-    void hexDelimiters(const QString&);
-    void selectLogPath(void);
+    void consoleHotkeys(void);                // Обработка нажатий горячих клавиш "консоли"
+    void tableHotkeys(void);                  // Обработка нажатий горячих клавиш "таблицы"
+    void hexDelimiters(const QString&);       // Авторасстановка разделителей hex-кодов
+    void selectLogPath(void);                 // Обработка кнопки выбора папки для логов
 
 public slots:
     void consoleCyclicStoped(void);

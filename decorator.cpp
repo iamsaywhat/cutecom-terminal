@@ -4,8 +4,7 @@
 
 Ui::MainWidget* Decorator::gui = nullptr;
 
-Decorator::Decorator(QString name, IconMode icon, Color base, Color second, Color third)
-{
+Decorator::Decorator(QString name, IconMode icon, Color base, Color second, Color third){
     /* Устанавливаем основные цвета */
     setBaseColor(base);
     setSecondColor(second);
@@ -20,8 +19,7 @@ Decorator::Decorator(QString name, IconMode icon, Color base, Color second, Colo
     setMinimizeHoverColor(thirdColor());
     setMinimizePressedColor(secondColor());
 }
-Decorator::Decorator(void)
-{
+Decorator::Decorator(void){
     /* Устанавливаем основные цвета */
     setBaseColor({0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF});
     setSecondColor({0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF});
@@ -73,150 +71,6 @@ void Decorator::apply(void){
     applyToTable();        // Виджет таблицы
     applyToConverter();    // Конвертер
     applyToSettings();     // Виджет настроек
-}
-void Decorator::applyToMainWidget(void){
-    setBasicColorsToWidget(gui->centralWidget, baseColor());
-    setBasicColorsToWidget(gui->workspaceWidget, baseColor());
-    gui->appName->setStyleSheet(getAppLabelStyleSheet(appIconlUrl));
-    gui->closeButton->setStyleSheet(getWindowButtonStyleSheet(closeIconUrl, closeIconUrl, baseColor(), closeHoverColor(), closePressedColor()));
-    gui->maximazeButton->setStyleSheet(getWindowButtonStyleSheet(maximizeIconUrl, normalizeIconUrl, baseColor(), maximizeHoverColor(), maximizePressedColor()));
-    gui->minimizeButton->setStyleSheet(getWindowButtonStyleSheet(minimizeIconUrl, minimizeIconUrl, baseColor(), minimizeHoverColor(), minimizePressedColor()));
-    gui->showConnectionButton->setStyleSheet(getQuickPanelButtonStyleSheet(connectionIconUrl, baseColor(), thirdColor(), secondColor()));
-    gui->switchToConsoleButton->setStyleSheet(getQuickPanelButtonStyleSheet(consoleIconUrl, baseColor(), thirdColor(), secondColor()));
-    gui->switchToTableButton->setStyleSheet(getQuickPanelButtonStyleSheet(tableIconUrl, baseColor(), thirdColor(), secondColor()));
-    gui->switchToConverterButton->setStyleSheet(getQuickPanelButtonStyleSheet(converterIconUrl, baseColor(), thirdColor(), secondColor()));
-    gui->showSettingsButton->setStyleSheet(getQuickPanelButtonStyleSheet(settingsIconUrl, baseColor(), thirdColor(), secondColor()));
-}
-void Decorator::applyToConsole(void){
-    gui->consoleField->setStyleSheet(getPlainTextStyleSheet(secondColor(), 0, 0, 10, 10));
-    gui->consoleField->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
-    gui->inputConsoleField->setStyleSheet(getLineEditStyleSheet(secondColor(), 5, 0, 5, 10));
-    gui->sendConsoleButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 5, 20));
-    gui->clearConsoleButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 5, 20));
-}
-void Decorator::applyToTable(void){
-    gui->tableField->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
-    gui->tableField->horizontalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
-    gui->tableField->setStyleSheet(getTableStyleSheet(secondColor(), baseColor()));
-    gui->inputTableField->setStyleSheet(getLineEditStyleSheet(secondColor(), 5, 0, 5, 10));
-    gui->sendTableButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 5, 20));
-    gui->clearTableButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 5, 20));
-}
-void Decorator::applyToConverter(void){
-    setBasicColorsToWidget(gui->converterPage, baseColor());
-    gui->converterSource->setStyleSheet(getPlainTextStyleSheet(secondColor(), 0, 0, 10, 10));
-    gui->converterResult->setStyleSheet(getPlainTextStyleSheet(secondColor(), 0, 0, 10, 10));
-    gui->converterSource->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
-    gui->converterResult->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
-    setComboBoxColors(gui->converterSourceBox, secondColor(), baseColor(), secondColor());
-    setComboBoxColors(gui->converterResultBox, secondColor(), baseColor(), secondColor());
-    gui->converterResultBox->view()->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(baseColor(), secondColor()));
-    gui->converterSourceBox->view()->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(baseColor(), secondColor()));
-    gui->converterConvertButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 20, 40));
-    gui->converterSwapButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 20, 40));
-    gui->converterClearButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 20, 40));
-}
-void Decorator::applyToSettings(void){
-    setBasicColorsToWidget  (gui->leftPanelContents, baseColor());
-    setBasicColorsToWidget  (gui->settingsPage, baseColor());
-    gui->connectionContentsButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 20, 50));
-    gui->generalContentButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 20, 50));
-    gui->consoleContentButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 20, 50));
-    gui->tableContentButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 20, 50));
-    gui->logsContentButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 20, 50));
-    gui->bindsContentButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 20, 50));
-    gui->settingsLeftPanel->horizontalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
-    gui->settingsLeftPanel->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
-    gui->settingsRightPanel->horizontalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
-    gui->settingsRightPanel->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
-    setBasicColorsToWidget(gui->rightPanelContents, secondColor());
-    setBasicColorsToWidget(gui->rightStackedPanel, secondColor());
-    setBasicColorsToWidget(gui->labelSectionConnection, secondColor());
-    setBasicColorsToWidget(gui->labelPorts, secondColor());
-    setBasicColorsToWidget(gui->labelBaudrate, secondColor());
-    setBasicColorsToWidget(gui->labelData, secondColor());
-    setBasicColorsToWidget(gui->labelParity, secondColor());
-    setBasicColorsToWidget(gui->labelStopBits, secondColor());
-    setBasicColorsToWidget(gui->labelFlowControl, secondColor());
-    // Вкладка Connection
-    setComboBoxColors(gui->boxPorts, baseColor(), secondColor(), baseColor());
-    setComboBoxColors(gui->boxData, baseColor(), secondColor(), baseColor());
-    setComboBoxColors(gui->boxParity, baseColor(), secondColor(), baseColor());
-    setComboBoxColors(gui->boxBaudrate, baseColor(), secondColor(), baseColor());
-    setComboBoxColors(gui->boxStopBits, baseColor(), secondColor(), baseColor());
-    setComboBoxColors(gui->boxFlowControl, baseColor(), secondColor(), baseColor());
-    gui->buttonConnectDisconnect->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 2, 2, 20, 40));
-    // Вкладка General
-    setComboBoxColors(gui->comboBoxTheme, baseColor(), secondColor(), baseColor());
-    setComboBoxColors(gui->comboBoxLanguage, baseColor(), secondColor(), baseColor());
-    setComboBoxColors(gui->comboBoxCodec, baseColor(), secondColor(), baseColor());
-    setBasicColorsToWidget(gui->labelTheme, secondColor());
-    setBasicColorsToWidget(gui->labelCodec, secondColor());
-    setBasicColorsToWidget(gui->labelLanguage, secondColor());
-    setBasicColorsToWidget(gui->labelSectionGeneral, secondColor());
-    setBasicColorsToWidget(gui->labelCaptureTime, secondColor());
-    setBasicColorsToWidget(gui->labelCaptureBytes, secondColor());
-    gui->spinBoxCaptureTime->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrowUrl, spinboxUpArrowUrl, baseColor()));
-    gui->spinBoxCaptureBytes->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrowUrl, spinboxUpArrowUrl, baseColor()));
-    gui->buttonGeneralApply->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 2, 2, 20, 40));
-    // Вкладка Table
-    setBasicColorsToWidget(gui->labelSectionTable, secondColor());
-    setBasicColorsToWidget(gui->labelTableEcho, secondColor());
-    setBasicColorsToWidget(gui->labelTableCyclicMode, secondColor());
-    setBasicColorsToWidget(gui->labelTableCyclicInterval, secondColor());
-    setBasicColorsToWidget(gui->labelTableHotKey1, secondColor());
-    setBasicColorsToWidget(gui->labelTableHotKey2, secondColor());
-    setBasicColorsToWidget(gui->labelTableHotKey3, secondColor());
-    setBasicColorsToWidget(gui->labelTableHotKey4, secondColor());
-    setCheckBoxColors(gui->checkboxTableEcho, baseColor(), thirdColor(), baseColor());
-    setCheckBoxColors(gui->checkboxTableCyclic, baseColor(), thirdColor(), baseColor());
-    gui->spinboxTableCyclicInterval->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrowUrl, spinboxUpArrowUrl, baseColor()));
-    gui->lineEditTableHotKey1->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
-    gui->lineEditTableHotKey2->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
-    gui->lineEditTableHotKey3->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
-    gui->lineEditTableHotKey4->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
-    gui->buttonTableHotKey1->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
-    gui->buttonTableHotKey2->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
-    gui->buttonTableHotKey3->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
-    gui->buttonTableHotKey4->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
-    // Вкладка Console
-    setBasicColorsToWidget(gui->labelSectionConsole, secondColor());
-    setBasicColorsToWidget(gui->labelConsoleEcho, secondColor());
-    setBasicColorsToWidget(gui->labelConsoleCyclic, secondColor());
-    setBasicColorsToWidget(gui->labelConsoleCyclicInterval, secondColor());
-    setBasicColorsToWidget(gui->labelConsoleHotKey1, secondColor());
-    setBasicColorsToWidget(gui->labelConsoleHotKey2, secondColor());
-    setBasicColorsToWidget(gui->labelConsoleHotKey3, secondColor());
-    setBasicColorsToWidget(gui->labelConsoleHotKey4, secondColor());
-    setCheckBoxColors(gui->checkboxConsoleEcho, baseColor(), thirdColor(), baseColor());
-    setCheckBoxColors(gui->checkboxConsoleCyclic, baseColor(), thirdColor(), baseColor());
-    gui->spinboxConsoleCyclicInterval->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrowUrl, spinboxUpArrowUrl, baseColor()));
-    gui->lineEditConsoleHotKey1->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
-    gui->lineEditConsoleHotKey2->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
-    gui->lineEditConsoleHotKey3->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
-    gui->lineEditConsoleHotKey4->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
-    gui->buttonConsoleHotKey1->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
-    gui->buttonConsoleHotKey2->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
-    gui->buttonConsoleHotKey3->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
-    gui->buttonConsoleHotKey4->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
-    // Вкладка Logs
-    setBasicColorsToWidget(gui->labelSectionLog, secondColor());
-    setBasicColorsToWidget(gui->labelLogEnable, secondColor());
-    setBasicColorsToWidget(gui->labelLogPath, secondColor());
-    setBasicColorsToWidget(gui->labelLogSpace, secondColor());
-    setBasicColorsToWidget(gui->labelLogColomnSize, secondColor());
-    setCheckBoxColors(gui->checkBoxLogEnable, baseColor(), thirdColor(), baseColor());
-    gui->lineEditLogPath->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
-    gui->buttonLogApply->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 2, 2, 20, 40));
-    gui->spinBoxLogSpace->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrowUrl, spinboxUpArrowUrl, baseColor()));
-    gui->spinBoxLogColumnSize->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrowUrl, spinboxUpArrowUrl, baseColor()));
-    gui->buttonLogPath->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 2, 0, 5, 5));
-}
-void Decorator::validateColor(Color &color){
-    color.background&=0xffffff;
-    color.text&=0xffffff;
-    color.selectedText&=0xffffff;
-    color.selectionColor&=0xffffff;
 }
 void Decorator::setTargetGui(Ui::MainWidget* target){
     gui = target;
@@ -299,6 +153,168 @@ void Decorator::setIconMode(IconMode mode){
         stopIconUrl         = ":/light/resources/icons/light/stop.png";
     }
 }
+void Decorator::applyToMainWidget(void){
+    setBasicColorsToWidget(gui->centralWidget, baseColor());
+    setBasicColorsToWidget(gui->workspaceWidget, baseColor());
+    gui->appName->setStyleSheet(getAppLabelStyleSheet(appIconlUrl));
+    gui->closeButton->setStyleSheet(getWindowButtonStyleSheet(closeIconUrl, closeIconUrl, baseColor(), closeHoverColor(), closePressedColor()));
+    gui->maximazeButton->setStyleSheet(getWindowButtonStyleSheet(maximizeIconUrl, normalizeIconUrl, baseColor(), maximizeHoverColor(), maximizePressedColor()));
+    gui->minimizeButton->setStyleSheet(getWindowButtonStyleSheet(minimizeIconUrl, minimizeIconUrl, baseColor(), minimizeHoverColor(), minimizePressedColor()));
+    gui->showConnectionButton->setStyleSheet(getQuickPanelButtonStyleSheet(connectionIconUrl, baseColor(), thirdColor(), secondColor()));
+    gui->switchToConsoleButton->setStyleSheet(getQuickPanelButtonStyleSheet(consoleIconUrl, baseColor(), thirdColor(), secondColor()));
+    gui->switchToTableButton->setStyleSheet(getQuickPanelButtonStyleSheet(tableIconUrl, baseColor(), thirdColor(), secondColor()));
+    gui->switchToConverterButton->setStyleSheet(getQuickPanelButtonStyleSheet(converterIconUrl, baseColor(), thirdColor(), secondColor()));
+    gui->showSettingsButton->setStyleSheet(getQuickPanelButtonStyleSheet(settingsIconUrl, baseColor(), thirdColor(), secondColor()));
+    gui->showConnectionButton->setMinimumSize(50,50);
+    gui->showConnectionButton->setMinimumSize(50,50);
+    gui->showSettingsButton->setMinimumSize(50,50);
+    gui->switchToConsoleButton->setMinimumSize(50,50);
+    gui->switchToTableButton->setMinimumSize(50,50);
+    gui->switchToConverterButton->setMinimumSize(50,50);
+}
+void Decorator::applyToConsole(void){
+    gui->consoleField->setStyleSheet(getPlainTextStyleSheet(secondColor(), 0, 0, 10, 10));
+    gui->consoleField->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
+    gui->inputConsoleField->setStyleSheet(getLineEditStyleSheet(secondColor(), 5, 0, 5, 10));
+    gui->sendConsoleButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 5, 20));
+    gui->clearConsoleButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 5, 20));
+}
+void Decorator::applyToTable(void){
+    gui->tableField->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
+    gui->tableField->horizontalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
+    gui->tableField->setStyleSheet(getTableStyleSheet(secondColor(), baseColor()));
+    gui->inputTableField->setStyleSheet(getLineEditStyleSheet(secondColor(), 5, 0, 5, 10));
+    gui->sendTableButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 5, 20));
+    gui->clearTableButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 5, 20));
+}
+void Decorator::applyToConverter(void){
+    setBasicColorsToWidget(gui->converterPage, baseColor());
+    gui->converterSource->setStyleSheet(getPlainTextStyleSheet(secondColor(), 0, 0, 10, 10));
+    gui->converterResult->setStyleSheet(getPlainTextStyleSheet(secondColor(), 0, 0, 10, 10));
+    gui->converterSource->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
+    gui->converterResult->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
+    setComboBoxColors(gui->converterSourceBox, secondColor(), baseColor(), secondColor());
+    setComboBoxColors(gui->converterResultBox, secondColor(), baseColor(), secondColor());
+    gui->converterResultBox->view()->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(baseColor(), secondColor()));
+    gui->converterSourceBox->view()->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(baseColor(), secondColor()));
+    gui->converterConvertButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 20, 40));
+    gui->converterSwapButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 20, 40));
+    gui->converterClearButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 20, 40));
+}
+void Decorator::applyToSettings(void){
+    setBasicColorsToWidget  (gui->leftPanelContents, baseColor());
+    setBasicColorsToWidget  (gui->settingsPage, baseColor());
+    gui->connectionContentsButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 20, 50));
+    gui->generalContentButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 20, 50));
+    gui->consoleContentButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 20, 50));
+    gui->tableContentButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 20, 50));
+    gui->logsContentButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 20, 50));
+    gui->bindsContentButton->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 5, 5, 20, 50));
+    gui->settingsLeftPanel->horizontalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
+    gui->settingsLeftPanel->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
+    gui->settingsRightPanel->horizontalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
+    gui->settingsRightPanel->verticalScrollBar()->setStyleSheet(getScrollBarStyleSheet(secondColor(), baseColor()));
+    setBasicColorsToWidget(gui->rightPanelContents, secondColor());
+    setBasicColorsToWidget(gui->rightStackedPanel, secondColor());
+    setBasicColorsToWidget(gui->labelSectionConnection, secondColor());
+    setBasicColorsToWidget(gui->labelPorts, secondColor());
+    setBasicColorsToWidget(gui->labelBaudrate, secondColor());
+    setBasicColorsToWidget(gui->labelData, secondColor());
+    setBasicColorsToWidget(gui->labelParity, secondColor());
+    setBasicColorsToWidget(gui->labelStopBits, secondColor());
+    setBasicColorsToWidget(gui->labelFlowControl, secondColor());
+
+    applyToConnectionSettings();
+    applyToGeneralSettings();
+    applyToConsoleSettings();
+    applyToTableSettings();
+    applyToLogSettings();
+}
+void Decorator::applyToConnectionSettings(void){
+    setComboBoxColors(gui->boxPorts, baseColor(), secondColor(), baseColor());
+    setComboBoxColors(gui->boxData, baseColor(), secondColor(), baseColor());
+    setComboBoxColors(gui->boxParity, baseColor(), secondColor(), baseColor());
+    setComboBoxColors(gui->boxBaudrate, baseColor(), secondColor(), baseColor());
+    setComboBoxColors(gui->boxStopBits, baseColor(), secondColor(), baseColor());
+    setComboBoxColors(gui->boxFlowControl, baseColor(), secondColor(), baseColor());
+    gui->buttonConnectDisconnect->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 2, 2, 20, 40));
+}
+void Decorator::applyToGeneralSettings(void){
+    setComboBoxColors(gui->comboBoxTheme, baseColor(), secondColor(), baseColor());
+    setComboBoxColors(gui->comboBoxLanguage, baseColor(), secondColor(), baseColor());
+    setComboBoxColors(gui->comboBoxCodec, baseColor(), secondColor(), baseColor());
+    setBasicColorsToWidget(gui->labelTheme, secondColor());
+    setBasicColorsToWidget(gui->labelCodec, secondColor());
+    setBasicColorsToWidget(gui->labelLanguage, secondColor());
+    setBasicColorsToWidget(gui->labelSectionGeneral, secondColor());
+    setBasicColorsToWidget(gui->labelCaptureTime, secondColor());
+    setBasicColorsToWidget(gui->labelCaptureBytes, secondColor());
+    gui->spinBoxCaptureTime->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrowUrl, spinboxUpArrowUrl, baseColor()));
+    gui->spinBoxCaptureBytes->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrowUrl, spinboxUpArrowUrl, baseColor()));
+    gui->buttonGeneralApply->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 2, 2, 20, 40));
+}
+void Decorator::applyToConsoleSettings(void){
+    setBasicColorsToWidget(gui->labelSectionConsole, secondColor());
+    setBasicColorsToWidget(gui->labelConsoleEcho, secondColor());
+    setBasicColorsToWidget(gui->labelConsoleCyclic, secondColor());
+    setBasicColorsToWidget(gui->labelConsoleCyclicInterval, secondColor());
+    setBasicColorsToWidget(gui->labelConsoleHotKey1, secondColor());
+    setBasicColorsToWidget(gui->labelConsoleHotKey2, secondColor());
+    setBasicColorsToWidget(gui->labelConsoleHotKey3, secondColor());
+    setBasicColorsToWidget(gui->labelConsoleHotKey4, secondColor());
+    gui->checkboxConsoleEcho->setStyleSheet(getCheckBoxStyleSheet(checkBoxCheckUrl, baseColor(), thirdColor(), baseColor()));
+    gui->checkboxConsoleCyclic->setStyleSheet(getCheckBoxStyleSheet(checkBoxCheckUrl, baseColor(), thirdColor(), baseColor()));
+    gui->spinboxConsoleCyclicInterval->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrowUrl, spinboxUpArrowUrl, baseColor()));
+    gui->lineEditConsoleHotKey1->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
+    gui->lineEditConsoleHotKey2->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
+    gui->lineEditConsoleHotKey3->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
+    gui->lineEditConsoleHotKey4->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
+    gui->buttonConsoleHotKey1->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
+    gui->buttonConsoleHotKey2->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
+    gui->buttonConsoleHotKey3->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
+    gui->buttonConsoleHotKey4->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
+}
+void Decorator::applyToTableSettings(void){
+    setBasicColorsToWidget(gui->labelSectionTable, secondColor());
+    setBasicColorsToWidget(gui->labelTableEcho, secondColor());
+    setBasicColorsToWidget(gui->labelTableCyclicMode, secondColor());
+    setBasicColorsToWidget(gui->labelTableCyclicInterval, secondColor());
+    setBasicColorsToWidget(gui->labelTableHotKey1, secondColor());
+    setBasicColorsToWidget(gui->labelTableHotKey2, secondColor());
+    setBasicColorsToWidget(gui->labelTableHotKey3, secondColor());
+    setBasicColorsToWidget(gui->labelTableHotKey4, secondColor());
+    gui->checkboxTableEcho->setStyleSheet(getCheckBoxStyleSheet(checkBoxCheckUrl, baseColor(), thirdColor(), baseColor()));
+    gui->checkboxTableCyclic->setStyleSheet(getCheckBoxStyleSheet(checkBoxCheckUrl, baseColor(), thirdColor(), baseColor()));
+    gui->spinboxTableCyclicInterval->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrowUrl, spinboxUpArrowUrl, baseColor()));
+    gui->lineEditTableHotKey1->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
+    gui->lineEditTableHotKey2->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
+    gui->lineEditTableHotKey3->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
+    gui->lineEditTableHotKey4->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
+    gui->buttonTableHotKey1->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
+    gui->buttonTableHotKey2->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
+    gui->buttonTableHotKey3->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
+    gui->buttonTableHotKey4->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
+}
+void Decorator::applyToLogSettings(void){
+    setBasicColorsToWidget(gui->labelSectionLog, secondColor());
+    setBasicColorsToWidget(gui->labelLogEnable, secondColor());
+    setBasicColorsToWidget(gui->labelLogPath, secondColor());
+    setBasicColorsToWidget(gui->labelLogSpace, secondColor());
+    setBasicColorsToWidget(gui->labelLogColomnSize, secondColor());
+    gui->checkBoxLogEnable->setStyleSheet(getCheckBoxStyleSheet(checkBoxCheckUrl, baseColor(), thirdColor(), baseColor()));
+    gui->lineEditLogPath->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
+    gui->buttonLogApply->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 2, 2, 20, 40));
+    gui->spinBoxLogSpace->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrowUrl, spinboxUpArrowUrl, baseColor()));
+    gui->spinBoxLogColumnSize->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrowUrl, spinboxUpArrowUrl, baseColor()));
+    gui->buttonLogPath->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 2, 0, 5, 5));
+    gui->buttonLogPath->setMinimumSize(10,10);
+}
+void Decorator::validateColor(Color &color){
+    color.background&=0xffffff;
+    color.text&=0xffffff;
+    color.selectedText&=0xffffff;
+    color.selectionColor&=0xffffff;
+}
 void Decorator::setBasicColorsToWidget(QWidget *widget, Color colors){
     widget->setStyleSheet(getWidgetStyleSheet(colors));
 }
@@ -306,15 +322,30 @@ void Decorator::setComboBoxColors(QComboBox *comboBox, Color activeColor, Color 
     comboBox->setStyleSheet(getComboBoxStyleSheet(comboBoxArrowUrl, activeColor, disableColor, listColor));
     comboBox->view()->setStyleSheet(getComboBoxStyleSheet(comboBoxArrowUrl, activeColor, disableColor, listColor));
 }
-void Decorator::setCheckBoxColors(QCheckBox *checkBox, Color color, Color hoverColor, Color pressedColor){
-    checkBox->setStyleSheet(getCheckBoxStyleSheet(checkBoxCheckUrl, color, hoverColor, pressedColor));
+QString Decorator::colorToString(Color color){
+    validateColor(color);
+    QString styleSheet(
+                "background-color:           #%1;"
+                "color:                      #%2;"
+                "selection-background-color: #%3;"
+                "selection-color:            #%4;");
+    return styleSheet.arg(QString::number(color.background, 16).rightJustified(6,'0'))
+                     .arg(QString::number(color.text, 16).rightJustified(6,'0'))
+                     .arg(QString::number(color.selectionColor, 16).rightJustified(6,'0'))
+                     .arg(QString::number(color.selectedText, 16).rightJustified(6,'0'));
+}
+QString Decorator::urlToStyleSheet(QString& url){
+    QString styleSheet(
+                "image: url(%1);");
+    return styleSheet.arg(url);
 }
 /* Специальные таблицы стилей для главного окна ******************************************************************/
 QString Decorator::getWindowButtonStyleSheet(QString iconUrl,
                                              QString iconUrlChecked,
                                              Color baseColor,
                                              Color hoverColor,
-                                             Color pressedColor){
+                                             Color pressedColor)
+{
     QString styleSheet (
            "QToolButton { "
                 "image:                      url(%1);"
@@ -377,10 +408,6 @@ QString Decorator::getQuickPanelButtonStyleSheet(QString iconUrl,
                      .arg(colorToString(hoverColor))
                      .arg(colorToString(pressedColor));
 }
-
-
-/* Специальные таблицы стилей  для базовых элементов gui *****************************************/
-
 /* Таблицы стилей базовых элементов gui **************************************************************************/
 QString Decorator::getScrollBarStyleSheet (Color handleColor, Color pageColor) {
     QString styleSheet (
@@ -509,9 +536,10 @@ QString Decorator::getCheckBoxStyleSheet(QString &checkUrl, Color color, Color h
                 "QCheckBox {"
                 "}"
                 "QCheckBox::indicator {"
-                    "width:           15px;"
-                    "height:          15px;"
+                    "width:           20px;"
+                    "height:          20px;"
                     "border-radius:   4px;"
+                    "margin:          2px;"
                     "%1"
                 "}"
                 "QCheckBox::indicator:unchecked {"
@@ -540,7 +568,7 @@ QString Decorator::getCheckBoxStyleSheet(QString &checkUrl, Color color, Color h
                      .arg(checkUrl);
 }
 QString Decorator::getPlainTextStyleSheet(Color color, int verticalMargin, int horizontalMargin,
-                                           int verticalPadding, int horizontalPadding) {
+                                          int verticalPadding, int horizontalPadding) {
      QString styleSheet (
                  "QPlainTextEdit { "
                      "%1;"
@@ -565,7 +593,8 @@ QString Decorator::getPlainTextStyleSheet(Color color, int verticalMargin, int h
 }
 QString Decorator::getButtonStyleSheet(Color baseColor, Color hoverColor, Color pressedColor,
                                        int verticalMargin, int horizontalMargin,
-                                       int verticalPadding, int horizontalPadding) {
+                                       int verticalPadding, int horizontalPadding)
+{
     QString styleSheet(
                 "QPushButton, QToolButton {"
                        "%1;"
@@ -594,9 +623,9 @@ QString Decorator::getButtonStyleSheet(Color baseColor, Color hoverColor, Color 
                      .arg(verticalPadding)
                      .arg(horizontalPadding);
 }
-QString Decorator::getSpinBoxStyleSheet(QString& downArrowUrl,
-                                        QString& upArrowUrl,
-                                        Color color){
+QString Decorator::getSpinBoxStyleSheet(QString& downArrowUrl, QString& upArrowUrl,
+                                        Color color)
+{
     QString styleSheet(
                 "QSpinBox {"
                     "%1"
@@ -625,17 +654,18 @@ QString Decorator::getSpinBoxStyleSheet(QString& downArrowUrl,
                      .arg(downArrowUrl);
 }
 QString Decorator::getRunButton(QString& playUrl, QString& stopUrl, Color color){
-
     QString styleSheet(
                 "QToolButton {"
-                    "padding:           5px;"
-                    "border:            none;"
-                    "border-radius:     5px;"
-                    "image:             url(%1);"
+                    "padding:       5px;"
+                    "width:         15px;"
+                    "height:        15px;"
+                    "border:        none;"
+                    "border-radius: 5px;"
+                    "image:         url(%1);"
                     "%3"
                 "}"
                 "QToolButton:checked {"
-                    "image:             url(%2);"
+                    "image:         url(%2);"
                 "}"
                 );
     return styleSheet.arg(playUrl)
@@ -643,20 +673,21 @@ QString Decorator::getRunButton(QString& playUrl, QString& stopUrl, Color color)
                      .arg(colorToString(color));
 }
 QString Decorator::getLineEditStyleSheet (Color color, int verticalMargin, int horizontalMargin,
-                                          int verticalPadding, int horizontalPadding) {
+                                          int verticalPadding, int horizontalPadding)
+{
     QString styleSheet (
                 "QLineEdit { "
                     "%1;"
-                    "border:          none;"
-                    "margin-top:      %2px;"
-                    "margin-bottom:   %2px;"
-                    "margin-left:     %3px;"
-                    "margin-right:    %3px;"
-                    "padding-top:     %4px;"
-                    "padding-bottom:  %4px;"
-                    "padding-left:    %5px;"
-                    "padding-right:   %5px;"
-                    "border-radius:   5px;"
+                    "border:         none;"
+                    "margin-top:     %2px;"
+                    "margin-bottom:  %2px;"
+                    "margin-left:    %3px;"
+                    "margin-right:   %3px;"
+                    "padding-top:    %4px;"
+                    "padding-bottom: %4px;"
+                    "padding-left:   %5px;"
+                    "padding-right:  %5px;"
+                    "border-radius:  5px;"
 
                 "}"
                 );
@@ -665,21 +696,4 @@ QString Decorator::getLineEditStyleSheet (Color color, int verticalMargin, int h
                      .arg(horizontalMargin)
                      .arg(verticalPadding)
                      .arg(horizontalPadding);
-}
-QString Decorator::colorToString(Color color){
-    validateColor(color);
-    QString styleSheet(
-                "background-color:           #%1;"
-                "color:                      #%2;"
-                "selection-background-color: #%3;"
-                "selection-color:            #%4;");
-    return styleSheet.arg(QString::number(color.background, 16).rightJustified(6,'0'))
-                     .arg(QString::number(color.text, 16).rightJustified(6,'0'))
-                     .arg(QString::number(color.selectionColor, 16).rightJustified(6,'0'))
-                     .arg(QString::number(color.selectedText, 16).rightJustified(6,'0'));
-}
-QString Decorator::urlToStyleSheet(QString& url){
-    QString styleSheet(
-                "image: url(%1);");
-    return styleSheet.arg(url);
 }

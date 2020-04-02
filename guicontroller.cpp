@@ -14,8 +14,18 @@ GuiController::GuiController(QObject *parent, Ui::MainWidget* gui) : QObject(par
     GuiController::gui = gui;
     parent->installEventFilter(this);
     setProperties();
-
-    // Обслуживание основного меню
+    connectQuickMenu();
+    connectSettingsMenu();
+    connectSectionConnection();
+    connectSectionGeneral();
+    connectSectionConsole();
+    connectSectionTable();
+    connectSectionLog();
+}
+GuiController::~GuiController(){
+    delete hexValidator;
+}
+void GuiController::connectQuickMenu(void){
     connect(gui->showConnectionButton,    &QPushButton::clicked,
             [=](){gui->workspaceWidget->setCurrentIndex(quickIndexSettings);
                      gui->rightStackedPanel->setCurrentIndex(GuiController::settingsMenu::settingsIndexConnection);});
@@ -27,7 +37,8 @@ GuiController::GuiController(QObject *parent, Ui::MainWidget* gui) : QObject(par
             [=](){gui->workspaceWidget->setCurrentIndex(quickIndexConverter);});
     connect(gui->showSettingsButton,      &QPushButton::clicked,
             [=](){gui->workspaceWidget->setCurrentIndex(quickIndexSettings);});
-    // Переключение между вкладками
+}
+void GuiController::connectSettingsMenu(void){
     connect(gui->connectionContentsButton, &QPushButton::clicked,
             [=](){gui->rightStackedPanel->setCurrentIndex(settingsIndexConnection);});
     connect(gui->generalContentButton,     &QPushButton::clicked,
@@ -40,15 +51,40 @@ GuiController::GuiController(QObject *parent, Ui::MainWidget* gui) : QObject(par
             [=](){gui->rightStackedPanel->setCurrentIndex(settingsIndexLogs);});
     connect(gui->bindsContentButton,       &QPushButton::clicked,
             [=](){gui->rightStackedPanel->setCurrentIndex(settingsIndexBinds);});
-    // Вкладка General
+}
+void GuiController::connectSectionConnection(void){
+
+}
+void GuiController::connectSectionGeneral(void){
     connect(gui->buttonGeneralApply, &QPushButton::pressed, [=](){
+        static int themeIndex = 0;
+        static int codecIndex = 0;
+        static int languageIndex = 0;
+        static int captureTime = 0;
+        static int captureBytes = 0;
+        if(themeIndex != gui->comboBoxTheme->currentIndex()){
             emit currentThemeChanged(gui->comboBoxTheme->currentIndex());
+            themeIndex = gui->comboBoxTheme->currentIndex();
+        }
+        if(codecIndex != gui->comboBoxCodec->currentIndex()){
             emit currentTextCodecChanged(gui->comboBoxCodec->currentIndex());
+            codecIndex = gui->comboBoxCodec->currentIndex();
+        }
+        if(languageIndex != gui->comboBoxLanguage->currentIndex()){
             emit currentLanguageChanged(gui->comboBoxLanguage->currentIndex());
+            languageIndex = gui->comboBoxLanguage->currentIndex();
+        }
+        if(captureTime != gui->spinBoxCaptureTime->value()){
             emit captureTimeChanges(gui->spinBoxCaptureTime->value());
+            captureTime = gui->spinBoxCaptureTime->value();
+        }
+        if(captureBytes != gui->spinBoxCaptureBytes->value()){
             emit captureBytesChanges(gui->spinBoxCaptureBytes->value());
+            captureBytes = gui->spinBoxCaptureBytes->value();
+        }
     });
-    // Вкладка Console
+}
+void GuiController::connectSectionConsole(void){
     connect(gui->checkboxConsoleEcho, &QCheckBox::stateChanged,
             [=](int state){ if(state == Qt::CheckState::Checked)
                                 emit this->consoleEchoChanged(true);
@@ -58,7 +94,8 @@ GuiController::GuiController(QObject *parent, Ui::MainWidget* gui) : QObject(par
     connect(gui->buttonConsoleHotKey2, &QToolButton::clicked, this, &GuiController::consoleHotkeys);
     connect(gui->buttonConsoleHotKey3, &QToolButton::clicked, this, &GuiController::consoleHotkeys);
     connect(gui->buttonConsoleHotKey4, &QToolButton::clicked, this, &GuiController::consoleHotkeys);
-    // Вкладка Table
+}
+void GuiController::connectSectionTable(void){
     connect(gui->checkboxTableEcho, &QCheckBox::stateChanged,
             [=](int state){ if(state == Qt::CheckState::Checked)
                                 emit this->tableEchoChanged(true);
@@ -72,7 +109,8 @@ GuiController::GuiController(QObject *parent, Ui::MainWidget* gui) : QObject(par
     connect(gui->lineEditTableHotKey2, &QLineEdit::textChanged, this, &GuiController::hexDelimiters);
     connect(gui->lineEditTableHotKey3, &QLineEdit::textChanged, this, &GuiController::hexDelimiters);
     connect(gui->lineEditTableHotKey4, &QLineEdit::textChanged, this, &GuiController::hexDelimiters);
-    // Вкладка Log
+}
+void GuiController::connectSectionLog(void){
     connect(gui->checkBoxLogEnable, &QCheckBox::stateChanged,
             [=](int state){ if(state == Qt::CheckState::Checked)
                                 emit this->logEnableChanged(true);
@@ -83,12 +121,6 @@ GuiController::GuiController(QObject *parent, Ui::MainWidget* gui) : QObject(par
             emit logColumnSizeChanged(gui->spinBoxLogColumnSize->value());
             emit logColumnSpacing(gui->spinBoxLogSpace->value());
     });
-
-    gui->checkboxConsoleEcho->setCheckState(Qt::CheckState::Checked);
-    gui->checkboxTableEcho->setCheckState(Qt::CheckState::Checked);
-}
-GuiController::~GuiController(){
-    delete hexValidator;
 }
 void GuiController::setProperties (void){
     setPropertiesMainWidget();
@@ -108,12 +140,6 @@ void GuiController::setPropertiesMainWidget(void){
     gui->minimizeButton->setText("");
     gui->appName->setText("");
     gui->appName->setAttribute(Qt::WA_TransparentForMouseEvents, true);
-    gui->showConnectionButton->setMinimumSize(50,50);
-    gui->showConnectionButton->setMinimumSize(50,50);
-    gui->showSettingsButton->setMinimumSize(50,50);
-    gui->switchToConsoleButton->setMinimumSize(50,50);
-    gui->switchToTableButton->setMinimumSize(50,50);
-    gui->switchToConverterButton->setMinimumSize(50,50);
     gui->showConnectionButton->setText("");
     gui->showConnectionButton->setText("");
     gui->showSettingsButton->setText("");

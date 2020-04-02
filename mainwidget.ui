@@ -175,7 +175,7 @@
         <item>
          <widget class="QStackedWidget" name="workspaceWidget">
           <property name="currentIndex">
-           <number>0</number>
+           <number>3</number>
           </property>
           <widget class="QWidget" name="consolePage">
            <layout class="QGridLayout" name="gridLayout_2">
@@ -511,7 +511,7 @@
                      </sizepolicy>
                     </property>
                     <property name="currentIndex">
-                     <number>4</number>
+                     <number>1</number>
                     </property>
                     <widget class="QWidget" name="connectionPage">
                      <layout class="QGridLayout" name="gridLayout_6">
@@ -672,6 +672,13 @@
                       <item row="1" column="1">
                        <widget class="QComboBox" name="comboBoxTheme"/>
                       </item>
+                      <item row="6" column="0" colspan="2">
+                       <widget class="QPushButton" name="buttonGeneralApply">
+                        <property name="text">
+                         <string>PushButton</string>
+                        </property>
+                       </widget>
+                      </item>
                       <item row="3" column="1">
                        <widget class="QComboBox" name="comboBoxCodec"/>
                       </item>
@@ -712,13 +719,6 @@
                        <widget class="QLabel" name="labelCaptureTime">
                         <property name="text">
                          <string>TextLabel</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item row="6" column="0" colspan="2">
-                       <widget class="QPushButton" name="buttonGeneralApply">
-                        <property name="text">
-                         <string>PushButton</string>
                         </property>
                        </widget>
                       </item>

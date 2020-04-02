@@ -19,11 +19,11 @@
 class Decorator : public QObject
 {
     Q_OBJECT    
-    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-    Q_PROPERTY(IconMode iconMode READ iconMode WRITE setIconMode NOTIFY iconModeChanged)
-    Q_PROPERTY(Color baseColor READ baseColor WRITE setBaseColor NOTIFY baseColorChanged)
-    Q_PROPERTY(Color secondColor READ secondColor WRITE setSecondColor NOTIFY secondColorChanged)
-    Q_PROPERTY(Color thirdColor READ thirdColor WRITE setThirdColor NOTIFY thirdColorChanged)
+    Q_PROPERTY(QString name               READ name                 WRITE setName                 NOTIFY nameChanged)
+    Q_PROPERTY(IconMode iconMode          READ iconMode             WRITE setIconMode             NOTIFY iconModeChanged)
+    Q_PROPERTY(Color baseColor            READ baseColor            WRITE setBaseColor            NOTIFY baseColorChanged)
+    Q_PROPERTY(Color secondColor          READ secondColor          WRITE setSecondColor          NOTIFY secondColorChanged)
+    Q_PROPERTY(Color thirdColor           READ thirdColor           WRITE setThirdColor           NOTIFY thirdColorChanged)
     Q_PROPERTY(Color closeHoverColor      READ closeHoverColor      WRITE setCloseHoverColor      NOTIFY closeHoverColorChanged)
     Q_PROPERTY(Color closePressedColor    READ closePressedColor    WRITE setClosePressedColor    NOTIFY closePressedColorChanged)
     Q_PROPERTY(Color maximizeHoverColor   READ maximizeHoverColor   WRITE setMaximizeHoverColor   NOTIFY maximizeHoverColorChanged)
@@ -49,12 +49,8 @@ public:
     Decorator &operator=(const Decorator &source);
 
     void apply(void);
-
-    // Установка стиля для базовых виджетов
     void setBasicColorsToWidget(QWidget *widget, Color color);
     void setComboBoxColors(QComboBox *comboBox, Color activeColor, Color disableColor, Color listColor);
-    void setCheckBoxColors(QCheckBox *checkBox, Color color, Color hoverColor, Color pressedColor);
-
 
     Ui::MainWidget* TargetGui(void) const  {return gui;}
     Color baseColor(void) const            {return _baseColor;}
@@ -83,28 +79,23 @@ public:
     void setIconMode(IconMode mode);
 
 
-    // Специальные таблицы стилей для главного окна
+    // Уникальные таблицы стилей для главного окна
     static QString getAppLabelStyleSheet(QString iconUrl);
     static QString getWindowButtonStyleSheet(QString iconUrl,QString iconUrlChecked, Color baseColor, Color hoverColor, Color pressedColor);
     static QString getQuickPanelButtonStyleSheet(QString iconUrl, Color baseColor, Color hoverColor, Color pressedColor);
     static QString getRunButton(QString& playUrl, QString& stopUrl, Color color);
-    // Общая таблица стилей элементов
+    // Таблица стилей базовых элементов
     static QString getScrollBarStyleSheet (Color handleColor, Color pageColor);
     static QString getTableStyleSheet(Color tableColor, Color headerColor);
     static QString getWidgetStyleSheet(Color color);
     static QString getComboBoxStyleSheet(QString &arrowUrl,Color activeColor, Color disableColor, Color listColor);
     static QString getCheckBoxStyleSheet(QString &checkUrl, Color color, Color hoverColor, Color pressedColor);
-    static QString getPlainTextStyleSheet(Color color, int verticalMargin, int horizontalMargin,
-                                          int verticalPadding, int horizontalPadding);
-    static QString getButtonStyleSheet(Color baseColor, Color hoverColor, Color pressedColor,
-                                       int verticalMargin, int horizontalMargin,
+    static QString getPlainTextStyleSheet(Color color, int verticalMargin, int horizontalMargin, int verticalPadding, int horizontalPadding);
+    static QString getSpinBoxStyleSheet(QString& downArrowUrl, QString& upArrowUrl, Color color);
+    static QString getLineEditStyleSheet (Color color, int verticalMargin, int horizontalMargin, int verticalPadding, int horizontalPadding);
+    static QString getButtonStyleSheet(Color baseColor, Color hoverColor, Color pressedColor,int verticalMargin, int horizontalMargin,
                                        int verticalPadding, int horizontalPadding);
-    static QString getSpinBoxStyleSheet(QString& downArrowUrl,
-                                        QString& upArrowUrl,
-                                        Color color);
 
-    static QString getLineEditStyleSheet (Color color, int verticalMargin, int horizontalMargin,
-                                                             int verticalPadding, int horizontalPadding);
 
 private:
     QString _name;                    // Имя цветовой схемы
@@ -135,6 +126,7 @@ private:
     QString playIconUrl;              // Путь к иконке play
     QString stopIconUrl;              // Путь к иконке stop
 
+
     static Ui::MainWidget *gui;       // Указатель на целевой виджет gui
 
     static void validateColor(Color &color);
@@ -146,6 +138,11 @@ private:
     void applyToTable(void);
     void applyToConverter(void);
     void applyToSettings(void);
+    void applyToConnectionSettings(void);
+    void applyToGeneralSettings(void);
+    void applyToConsoleSettings(void);
+    void applyToTableSettings(void);
+    void applyToLogSettings(void);
 
 signals:
     void baseColorChanged(void);
