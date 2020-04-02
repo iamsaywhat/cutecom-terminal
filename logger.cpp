@@ -124,9 +124,9 @@ void Logger::write(DirectionType direction, QByteArray& data){
             textStream << " ";
         }
         if(direction == INCOMING)                          // Столбец направления
-            text = "incoming";
+            text = tr("incoming");
         else
-            text = "outgoing";
+            text = tr("outgoing");
         textStream << text;
         cursorPosition += text.count();
         while(cursorPosition < hexColumnPosition){         // Заполняем пробелами место до следующего столбца

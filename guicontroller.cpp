@@ -57,11 +57,11 @@ void GuiController::connectSectionConnection(void){
 }
 void GuiController::connectSectionGeneral(void){
     connect(gui->buttonGeneralApply, &QPushButton::pressed, [=](){
-        static int themeIndex = 0;
-        static int codecIndex = 0;
-        static int languageIndex = 0;
-        static int captureTime = 0;
-        static int captureBytes = 0;
+        static int themeIndex = 99;
+        static int codecIndex = 99;
+        static int languageIndex = 99;
+        static int captureTime = 50000;
+        static int captureBytes = 50000;
         if(themeIndex != gui->comboBoxTheme->currentIndex()){
             emit currentThemeChanged(gui->comboBoxTheme->currentIndex());
             themeIndex = gui->comboBoxTheme->currentIndex();
@@ -195,10 +195,10 @@ void GuiController::setPropertiesSectionConsole (void){
     gui->labelConsoleCyclic->setText(tr("Cyclic mode:"));
     gui->labelConsoleCyclicInterval->setText(tr("Interval, ms:"));
     gui->checkboxConsoleCyclic->setText("");
-    gui->labelConsoleHotKey1->setText("1:");
-    gui->labelConsoleHotKey2->setText("2:");
-    gui->labelConsoleHotKey3->setText("3:");
-    gui->labelConsoleHotKey4->setText("4:");
+    gui->labelConsoleHotKey1->setText(tr("Hot key 1:"));
+    gui->labelConsoleHotKey2->setText(tr("Hot key 2:"));
+    gui->labelConsoleHotKey3->setText(tr("Hot key 3:"));
+    gui->labelConsoleHotKey4->setText(tr("Hot key 4:"));
     gui->buttonConsoleHotKey1->setText(" ");
     gui->buttonConsoleHotKey2->setText(" ");
     gui->buttonConsoleHotKey3->setText(" ");
@@ -218,10 +218,10 @@ void GuiController::setPropertiesSectionTable (void){
     gui->labelTableCyclicMode->setText(tr("Cyclic mode:"));
     gui->checkboxTableCyclic->setText("");
     gui->labelTableCyclicInterval->setText(tr("Interval, ms:"));
-    gui->labelTableHotKey1->setText(tr("1:"));
-    gui->labelTableHotKey2->setText(tr("2:"));
-    gui->labelTableHotKey3->setText(tr("3:"));
-    gui->labelTableHotKey4->setText(tr("4:"));
+    gui->labelTableHotKey1->setText(tr("Hot key 1:"));
+    gui->labelTableHotKey2->setText(tr("Hot key 2:"));
+    gui->labelTableHotKey3->setText(tr("Hot key 3:"));
+    gui->labelTableHotKey4->setText(tr("Hot key 4:"));
     gui->buttonTableHotKey1->setText(" ");
     gui->buttonTableHotKey2->setText(" ");
     gui->buttonTableHotKey3->setText(" ");
@@ -245,11 +245,11 @@ void GuiController::setPropertiesSectionLogs (void){
     gui->labelLogPath->setText(tr("Path:"));
     gui->lineEditLogPath->setReadOnly(true);
     gui->checkBoxLogEnable->setText("");
-    gui->labelLogSpace->setText("Сolumn spacing:");
-    gui->labelLogColomnSize->setText("Сolumn size, byte:");
+    gui->labelLogSpace->setText(tr("Сolumn spacing:"));
+    gui->labelLogColomnSize->setText(tr("Сolumn size, byte:"));
     gui->buttonLogApply->setText(tr("Apply"));
-    gui->spinBoxLogSpace->setRange(1, 50);
-    gui->spinBoxLogColumnSize->setRange(1, 50);
+    gui->spinBoxLogSpace->setRange(1, 60);
+    gui->spinBoxLogColumnSize->setRange(1, 60);
 }
 void GuiController::setPropertiesSectionBinds(void){
     gui->bindsContentButton->hide();
@@ -287,12 +287,34 @@ void GuiController::retranstate(void){
     gui->labelTheme->setText(tr("Theme:"));
     gui->labelLanguage->setText(tr("Language:"));
     gui->labelCodec->setText(tr("Text codec:"));
+    gui->labelCaptureTime->setText(tr("Capture time, ms:"));
+    gui->labelCaptureBytes->setText(tr("Capture bytes:"));
+    gui->buttonGeneralApply->setText(tr("Apply"));
 
     gui->labelSectionConsole->setText(tr("Console"));
     gui->labelConsoleEcho->setText(tr("Echo:"));
+    gui->labelConsoleCyclic->setText(tr("Cyclic mode:"));
+    gui->labelConsoleCyclicInterval->setText(tr("Interval, ms:"));
+    gui->labelConsoleHotKey1->setText(tr("Hot key 1:"));
+    gui->labelConsoleHotKey2->setText(tr("Hot key 2:"));
+    gui->labelConsoleHotKey3->setText(tr("Hot key 3:"));
+    gui->labelConsoleHotKey4->setText(tr("Hot key 4:"));
 
     gui->labelSectionTable->setText(tr("Table"));
     gui->labelTableEcho->setText(tr("Echo:"));
+    gui->labelTableCyclicMode->setText(tr("Cyclic mode:"));
+    gui->labelTableCyclicInterval->setText(tr("Interval, ms:"));
+    gui->labelTableHotKey1->setText(tr("Hot key 1:"));
+    gui->labelTableHotKey2->setText(tr("Hot key 2:"));
+    gui->labelTableHotKey3->setText(tr("Hot key 3:"));
+    gui->labelTableHotKey4->setText(tr("Hot key 4:"));
+
+    gui->labelSectionLog->setText(tr("Logs"));
+    gui->labelLogEnable->setText(tr("Enable:"));
+    gui->labelLogPath->setText(tr("Path:"));
+    gui->labelLogSpace->setText(tr("Сolumn spacing:"));
+    gui->labelLogColomnSize->setText(tr("Сolumn size, byte:"));
+    gui->buttonLogApply->setText(tr("Apply"));
 }
 bool GuiController::eventFilter(QObject *target, QEvent *event){
     if(event->type() != QKeyEvent::KeyPress || static_cast<QKeyEvent*>(event)->isAutoRepeat())

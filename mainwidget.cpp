@@ -196,6 +196,11 @@ void MainWidget::setAppLanguage(int index){
 void MainWidget::saveSettings(){
     QSettings savedSettings("settings.conf", QSettings::IniFormat );
 
+    savedSettings.beginGroup("app");
+    savedSettings.setValue("is_maximazed", parentWidget()->isMaximized());
+    savedSettings.setValue("window-size", parentWidget()->geometry());
+    savedSettings.endGroup();
+
     savedSettings.beginGroup("general");
     savedSettings.setValue("theme", ui->comboBoxTheme->currentIndex());
     savedSettings.setValue("language", ui->comboBoxLanguage->currentIndex());
@@ -242,6 +247,11 @@ void MainWidget::saveSettings(){
 }
 void MainWidget::restoreSettings(){
     QSettings savedSettings("settings.conf", QSettings::IniFormat );
+
+    savedSettings.beginGroup("app");
+    if(!savedSettings.value("is_maximazed", false).toBool())
+        parentWidget()->setGeometry(savedSettings.value("window-size", this->size()).toRect());
+    savedSettings.endGroup();
 
     savedSettings.beginGroup("general");
     ui->comboBoxTheme->setCurrentIndex(savedSettings.value("theme", 0).toInt());
