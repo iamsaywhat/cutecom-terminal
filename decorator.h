@@ -85,7 +85,7 @@ public:
 
     // Специальные таблицы стилей для главного окна
     static QString getAppLabelStyleSheet(QString iconUrl);
-    static QString getWindowButtonStyleSheet(QString iconUrl, Color baseColor, Color hoverColor, Color pressedColor);
+    static QString getWindowButtonStyleSheet(QString iconUrl,QString iconUrlChecked, Color baseColor, Color hoverColor, Color pressedColor);
     static QString getQuickPanelButtonStyleSheet(QString iconUrl, Color baseColor, Color hoverColor, Color pressedColor);
     static QString getRunButton(QString& playUrl, QString& stopUrl, Color color);
     // Общая таблица стилей элементов
@@ -122,6 +122,7 @@ private:
     QString closeIconUrl;             // Путь к иконке "закрыть"
     QString maximizeIconUrl;          // Путь к иконке "развернуть"
     QString minimizeIconUrl;          // Путь к иконке "свернуть"
+    QString normalizeIconUrl;         // Путь к иконке "нормализовать"
     QString connectionIconUrl;        // Путь к иконке "подключение"
     QString consoleIconUrl;           // Путь к иконке "консоль"
     QString tableIconUrl;             // Путь к иконке "таблица"
@@ -129,8 +130,8 @@ private:
     QString settingsIconUrl;          // Путь к иконке "настройки"
     QString comboBoxArrowUrl;         // Путь к иконке стрелки комбобокса
     QString checkBoxCheckUrl;         // Путь к иконки отметки чекбокса
-    QString spinboxDownArrow;         // Путь к иконке стрелки вниз
-    QString spinboxUpArrow;           // Путь к иконке стрелки вверх
+    QString spinboxDownArrowUrl;      // Путь к иконке стрелки вниз
+    QString spinboxUpArrowUrl;        // Путь к иконке стрелки вверх
     QString playIconUrl;              // Путь к иконке play
     QString stopIconUrl;              // Путь к иконке stop
 

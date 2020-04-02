@@ -104,6 +104,7 @@ void GuiController::setPropertiesMainWidget(void){
     gui->centralWidget->layout()->setMargin(0);
     gui->closeButton->setText("");
     gui->maximazeButton->setText("");
+    gui->maximazeButton->setCheckable(true);
     gui->minimizeButton->setText("");
     gui->appName->setText("");
     gui->appName->setAttribute(Qt::WA_TransparentForMouseEvents, true);

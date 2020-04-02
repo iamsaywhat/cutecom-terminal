@@ -78,9 +78,9 @@ void Decorator::applyToMainWidget(void){
     setBasicColorsToWidget(gui->centralWidget, baseColor());
     setBasicColorsToWidget(gui->workspaceWidget, baseColor());
     gui->appName->setStyleSheet(getAppLabelStyleSheet(appIconlUrl));
-    gui->closeButton->setStyleSheet(getWindowButtonStyleSheet(closeIconUrl, baseColor(), closeHoverColor(), closePressedColor()));
-    gui->maximazeButton->setStyleSheet(getWindowButtonStyleSheet(maximizeIconUrl, baseColor(), maximizeHoverColor(), maximizePressedColor()));
-    gui->minimizeButton->setStyleSheet(getWindowButtonStyleSheet(minimizeIconUrl, baseColor(), minimizeHoverColor(), minimizePressedColor()));
+    gui->closeButton->setStyleSheet(getWindowButtonStyleSheet(closeIconUrl, closeIconUrl, baseColor(), closeHoverColor(), closePressedColor()));
+    gui->maximazeButton->setStyleSheet(getWindowButtonStyleSheet(maximizeIconUrl, normalizeIconUrl, baseColor(), maximizeHoverColor(), maximizePressedColor()));
+    gui->minimizeButton->setStyleSheet(getWindowButtonStyleSheet(minimizeIconUrl, minimizeIconUrl, baseColor(), minimizeHoverColor(), minimizePressedColor()));
     gui->showConnectionButton->setStyleSheet(getQuickPanelButtonStyleSheet(connectionIconUrl, baseColor(), thirdColor(), secondColor()));
     gui->switchToConsoleButton->setStyleSheet(getQuickPanelButtonStyleSheet(consoleIconUrl, baseColor(), thirdColor(), secondColor()));
     gui->switchToTableButton->setStyleSheet(getQuickPanelButtonStyleSheet(tableIconUrl, baseColor(), thirdColor(), secondColor()));
@@ -156,8 +156,8 @@ void Decorator::applyToSettings(void){
     setBasicColorsToWidget(gui->labelSectionGeneral, secondColor());
     setBasicColorsToWidget(gui->labelCaptureTime, secondColor());
     setBasicColorsToWidget(gui->labelCaptureBytes, secondColor());
-    gui->spinBoxCaptureTime->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrow, spinboxUpArrow, baseColor()));
-    gui->spinBoxCaptureBytes->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrow, spinboxUpArrow, baseColor()));
+    gui->spinBoxCaptureTime->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrowUrl, spinboxUpArrowUrl, baseColor()));
+    gui->spinBoxCaptureBytes->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrowUrl, spinboxUpArrowUrl, baseColor()));
     gui->buttonGeneralApply->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 2, 2, 20, 40));
     // Вкладка Table
     setBasicColorsToWidget(gui->labelSectionTable, secondColor());
@@ -170,7 +170,7 @@ void Decorator::applyToSettings(void){
     setBasicColorsToWidget(gui->labelTableHotKey4, secondColor());
     setCheckBoxColors(gui->checkboxTableEcho, baseColor(), thirdColor(), baseColor());
     setCheckBoxColors(gui->checkboxTableCyclic, baseColor(), thirdColor(), baseColor());
-    gui->spinboxTableCyclicInterval->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrow, spinboxUpArrow, baseColor()));
+    gui->spinboxTableCyclicInterval->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrowUrl, spinboxUpArrowUrl, baseColor()));
     gui->lineEditTableHotKey1->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
     gui->lineEditTableHotKey2->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
     gui->lineEditTableHotKey3->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
@@ -190,7 +190,7 @@ void Decorator::applyToSettings(void){
     setBasicColorsToWidget(gui->labelConsoleHotKey4, secondColor());
     setCheckBoxColors(gui->checkboxConsoleEcho, baseColor(), thirdColor(), baseColor());
     setCheckBoxColors(gui->checkboxConsoleCyclic, baseColor(), thirdColor(), baseColor());
-    gui->spinboxConsoleCyclicInterval->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrow, spinboxUpArrow, baseColor()));
+    gui->spinboxConsoleCyclicInterval->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrowUrl, spinboxUpArrowUrl, baseColor()));
     gui->lineEditConsoleHotKey1->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
     gui->lineEditConsoleHotKey2->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
     gui->lineEditConsoleHotKey3->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
@@ -208,8 +208,8 @@ void Decorator::applyToSettings(void){
     setCheckBoxColors(gui->checkBoxLogEnable, baseColor(), thirdColor(), baseColor());
     gui->lineEditLogPath->setStyleSheet(getLineEditStyleSheet(baseColor(), 2, 0, 5, 10));
     gui->buttonLogApply->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 2, 2, 20, 40));
-    gui->spinBoxLogSpace->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrow, spinboxUpArrow, baseColor()));
-    gui->spinBoxLogColumnSize->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrow, spinboxUpArrow, baseColor()));
+    gui->spinBoxLogSpace->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrowUrl, spinboxUpArrowUrl, baseColor()));
+    gui->spinBoxLogColumnSize->setStyleSheet(getSpinBoxStyleSheet(spinboxDownArrowUrl, spinboxUpArrowUrl, baseColor()));
     gui->buttonLogPath->setStyleSheet(getButtonStyleSheet(baseColor(), thirdColor(), secondColor(), 2, 0, 5, 5));
 }
 void Decorator::validateColor(Color &color){
@@ -263,38 +263,40 @@ void Decorator::setName(QString text){
 void Decorator::setIconMode(IconMode mode){
     _iconMode = mode;
     if(mode == Dark){
-        appIconlUrl       = ":/dark/resources/icons/dark/label.png";
-        closeIconUrl      = ":/dark/resources/icons/dark/close.png";
-        maximizeIconUrl   = ":/dark/resources/icons/dark/maximize.png";
-        minimizeIconUrl   = ":/dark/resources/icons/dark/minimize.png";
-        connectionIconUrl = ":/dark/resources/icons/dark/connect.png";
-        consoleIconUrl    = ":/dark/resources/icons/dark/consolemode.png";
-        tableIconUrl      = ":/dark/resources/icons/dark/tablemode.png";
-        converterIconUrl  = ":/dark/resources/icons/dark/converter.png";
-        settingsIconUrl   = ":/dark/resources/icons/dark/settings.png";
-        checkBoxCheckUrl  = ":/dark/resources/icons/dark/checkbox.png";
-        comboBoxArrowUrl  = ":/dark/resources/icons/dark/combobox.png";
-        spinboxDownArrow  = ":/dark/resources/icons/dark/down-arrow.png";
-        spinboxUpArrow    = ":/dark/resources/icons/dark/up-arrow.png";
-        playIconUrl       = ":/dark/resources/icons/dark/play.png";
-        stopIconUrl       = ":/dark/resources/icons/dark/stop.png";
+        appIconlUrl         = ":/dark/resources/icons/dark/label.png";
+        closeIconUrl        = ":/dark/resources/icons/dark/close.png";
+        maximizeIconUrl     = ":/dark/resources/icons/dark/maximize.png";
+        minimizeIconUrl     = ":/dark/resources/icons/dark/minimize.png";
+        normalizeIconUrl    = ":/dark/resources/icons/dark/normalize.png";
+        connectionIconUrl   = ":/dark/resources/icons/dark/connect.png";
+        consoleIconUrl      = ":/dark/resources/icons/dark/consolemode.png";
+        tableIconUrl        = ":/dark/resources/icons/dark/tablemode.png";
+        converterIconUrl    = ":/dark/resources/icons/dark/converter.png";
+        settingsIconUrl     = ":/dark/resources/icons/dark/settings.png";
+        checkBoxCheckUrl    = ":/dark/resources/icons/dark/checkbox.png";
+        comboBoxArrowUrl    = ":/dark/resources/icons/dark/combobox.png";
+        spinboxDownArrowUrl = ":/dark/resources/icons/dark/down-arrow.png";
+        spinboxUpArrowUrl   = ":/dark/resources/icons/dark/up-arrow.png";
+        playIconUrl         = ":/dark/resources/icons/dark/play.png";
+        stopIconUrl         = ":/dark/resources/icons/dark/stop.png";
     }
     else{
-        appIconlUrl       = ":/light/resources/icons/light/label.png";
-        closeIconUrl      = ":/light/resources/icons/light/close.png";
-        maximizeIconUrl   = ":/light/resources/icons/light/maximize.png";
-        minimizeIconUrl   = ":/light/resources/icons/light/minimize.png";
-        connectionIconUrl = ":/light/resources/icons/light/connect.png";
-        consoleIconUrl    = ":/light/resources/icons/light/consolemode.png";
-        tableIconUrl      = ":/light/resources/icons/light/tablemode.png";
-        converterIconUrl  = ":/light/resources/icons/light/converter.png";
-        settingsIconUrl   = ":/light/resources/icons/light/settings.png";
-        checkBoxCheckUrl  = ":/light/resources/icons/light/checkbox.png";
-        comboBoxArrowUrl  = ":/light/resources/icons/light/combobox.png";
-        spinboxDownArrow  = ":/light/resources/icons/light/down-arrow.png";
-        spinboxUpArrow    = ":/light/resources/icons/light/up-arrow.png";
-        playIconUrl       = ":/light/resources/icons/light/play.png";
-        stopIconUrl       = ":/light/resources/icons/light/stop.png";
+        appIconlUrl         = ":/light/resources/icons/light/label.png";
+        closeIconUrl        = ":/light/resources/icons/light/close.png";
+        maximizeIconUrl     = ":/light/resources/icons/light/maximize.png";
+        minimizeIconUrl     = ":/light/resources/icons/light/minimize.png";
+        normalizeIconUrl    = ":/light/resources/icons/light/normalize.png";
+        connectionIconUrl   = ":/light/resources/icons/light/connect.png";
+        consoleIconUrl      = ":/light/resources/icons/light/consolemode.png";
+        tableIconUrl        = ":/light/resources/icons/light/tablemode.png";
+        converterIconUrl    = ":/light/resources/icons/light/converter.png";
+        settingsIconUrl     = ":/light/resources/icons/light/settings.png";
+        checkBoxCheckUrl    = ":/light/resources/icons/light/checkbox.png";
+        comboBoxArrowUrl    = ":/light/resources/icons/light/combobox.png";
+        spinboxDownArrowUrl = ":/light/resources/icons/light/down-arrow.png";
+        spinboxUpArrowUrl   = ":/light/resources/icons/light/up-arrow.png";
+        playIconUrl         = ":/light/resources/icons/light/play.png";
+        stopIconUrl         = ":/light/resources/icons/light/stop.png";
     }
 }
 void Decorator::setBasicColorsToWidget(QWidget *widget, Color colors){
@@ -309,6 +311,7 @@ void Decorator::setCheckBoxColors(QCheckBox *checkBox, Color color, Color hoverC
 }
 /* Специальные таблицы стилей для главного окна ******************************************************************/
 QString Decorator::getWindowButtonStyleSheet(QString iconUrl,
+                                             QString iconUrlChecked,
                                              Color baseColor,
                                              Color hoverColor,
                                              Color pressedColor){
@@ -328,11 +331,15 @@ QString Decorator::getWindowButtonStyleSheet(QString iconUrl,
            "}"
            "QToolButton:pressed { "
                 "%4"
+           "}"
+           "QToolButton:checked { "
+                "image:             url(%5);"
            "}");
     return styleSheet.arg(iconUrl)
                      .arg(colorToString(baseColor))
                      .arg(colorToString(hoverColor))
-                     .arg(colorToString(pressedColor));
+                     .arg(colorToString(pressedColor))
+                     .arg(iconUrlChecked);
 }
 QString Decorator::getAppLabelStyleSheet(QString iconUrl){
     QString styleSheet (
@@ -347,7 +354,7 @@ QString Decorator::getQuickPanelButtonStyleSheet(QString iconUrl,
                                                  Color pressedColor)
 {
     QString styleSheet (
-                "QPushButton { "
+        "QPushButton { "
                 "image:              url(%1);"
                 "icon-size:          12px;"
                 "qproperty-iconSize: 12px;"
