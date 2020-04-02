@@ -83,6 +83,7 @@ MainWidget::MainWidget(FramelessWindow *parent)
     connect(settings, &GuiController::consoleCyclicDataChanged, console, &ConsoleWidget::setBindData);
     connect(settings, &GuiController::consoleStartCycle, console, &ConsoleWidget::startCyclicSending);
     connect(settings, &GuiController::consoleStopCycle, console, &ConsoleWidget::stopCyclicSending);
+    connect(console, &ConsoleWidget::cyclicStopped, settings, &GuiController::consoleCyclicStoped);
 
     connect(settings, &GuiController::tableEchoChanged, tableConsole, &TableConsole::setEchoMode);
     connect(settings, &GuiController::tableCyclicChanged, tableConsole, &TableConsole::setCyclicMode);
@@ -90,6 +91,7 @@ MainWidget::MainWidget(FramelessWindow *parent)
     connect(settings, &GuiController::tableCyclicDataChanged, tableConsole, &TableConsole::setBindData);
     connect(settings, &GuiController::tableStartCycle, tableConsole, &TableConsole::startCyclicSending);
     connect(settings, &GuiController::tableStopCycle, tableConsole, &TableConsole::stopCyclicSending);
+    connect(tableConsole, &TableConsole::cyclicStopped, settings, &GuiController::tableCyclicStoped);
 
     connect(settings, &GuiController::captureTimeChanges, serial, &SerialGui::setCaptureTime);
     connect(settings, &GuiController::captureBytesChanges, serial, &SerialGui::setCaptureSize);
@@ -213,7 +215,7 @@ void MainWidget::saveSettings(){
 
     savedSettings.beginGroup("console");
     savedSettings.setValue("echo", ui->checkboxConsoleEcho->checkState());
-    savedSettings.setValue("ciclic", ui->checkboxConsoleCyclic->checkState());
+    savedSettings.setValue("cyclic", ui->checkboxConsoleCyclic->checkState());
     savedSettings.setValue("interval", ui->spinboxConsoleCyclicInterval->value());
     savedSettings.setValue("bind1", ui->lineEditConsoleHotKey1->text());
     savedSettings.setValue("bind2", ui->lineEditConsoleHotKey2->text());
@@ -223,7 +225,7 @@ void MainWidget::saveSettings(){
 
     savedSettings.beginGroup("table");
     savedSettings.setValue("echo", ui->checkboxTableEcho->checkState());
-    savedSettings.setValue("ciclic", ui->checkboxTableCyclic->checkState());
+    savedSettings.setValue("cyclic", ui->checkboxTableCyclic->checkState());
     savedSettings.setValue("interval", ui->spinboxTableCyclicInterval->value());
     savedSettings.setValue("bind1", ui->lineEditTableHotKey1->text());
     savedSettings.setValue("bind2", ui->lineEditTableHotKey2->text());

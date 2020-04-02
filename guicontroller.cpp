@@ -176,6 +176,10 @@ void GuiController::setPropertiesSectionConsole (void){
     gui->buttonConsoleHotKey2->setText(" ");
     gui->buttonConsoleHotKey3->setText(" ");
     gui->buttonConsoleHotKey4->setText(" ");
+    gui->buttonConsoleHotKey1->setCheckable(true);
+    gui->buttonConsoleHotKey2->setCheckable(true);
+    gui->buttonConsoleHotKey3->setCheckable(true);
+    gui->buttonConsoleHotKey4->setCheckable(true);
     gui->spinboxConsoleCyclicInterval->setRange(5, 10000);
 }
 void GuiController::setPropertiesSectionTable (void){
@@ -191,6 +195,14 @@ void GuiController::setPropertiesSectionTable (void){
     gui->labelTableHotKey2->setText(tr("2:"));
     gui->labelTableHotKey3->setText(tr("3:"));
     gui->labelTableHotKey4->setText(tr("4:"));
+    gui->buttonTableHotKey1->setText(" ");
+    gui->buttonTableHotKey2->setText(" ");
+    gui->buttonTableHotKey3->setText(" ");
+    gui->buttonTableHotKey4->setText(" ");
+    gui->buttonTableHotKey1->setCheckable(true);
+    gui->buttonTableHotKey2->setCheckable(true);
+    gui->buttonTableHotKey3->setCheckable(true);
+    gui->buttonTableHotKey4->setCheckable(true);
 
     gui->spinboxTableCyclicInterval->setRange(5, 10000);
 
@@ -277,9 +289,11 @@ bool GuiController::eventFilter(QObject *target, QEvent *event){
         qDebug() << "Key_1";
         switch (gui->workspaceWidget->currentIndex()){
         case quickIndexConsole:
+            gui->buttonConsoleHotKey1->setChecked(gui->buttonConsoleHotKey1->isChecked() ? false:true);
             emit gui->buttonConsoleHotKey1->clicked();
             return true;
         case quickIndexTable:
+            gui->buttonTableHotKey1->setChecked(gui->buttonTableHotKey1->isChecked() ? false:true);
             emit gui->buttonTableHotKey1->clicked();
             return true;
         }
@@ -288,9 +302,11 @@ bool GuiController::eventFilter(QObject *target, QEvent *event){
         qDebug() << "Key_2";
         switch (gui->workspaceWidget->currentIndex()){
         case quickIndexConsole:
+            gui->buttonConsoleHotKey2->setChecked(gui->buttonConsoleHotKey2->isChecked() ? false:true);
             emit gui->buttonConsoleHotKey2->clicked();
             return true;
         case quickIndexTable:
+            gui->buttonTableHotKey2->setChecked(gui->buttonTableHotKey2->isChecked() ? false:true);
             emit gui->buttonTableHotKey2->clicked();
             return true;
         }
@@ -299,9 +315,11 @@ bool GuiController::eventFilter(QObject *target, QEvent *event){
         qDebug() << "Key_3";
         switch (gui->workspaceWidget->currentIndex()){
         case quickIndexConsole:
+            gui->buttonConsoleHotKey3->setChecked(gui->buttonConsoleHotKey3->isChecked() ? false:true);
             emit gui->buttonConsoleHotKey3->clicked();
             return true;
         case quickIndexTable:
+            gui->buttonTableHotKey3->setChecked(gui->buttonTableHotKey3->isChecked() ? false:true);
             emit gui->buttonTableHotKey3->clicked();
             return true;
         }
@@ -310,9 +328,11 @@ bool GuiController::eventFilter(QObject *target, QEvent *event){
         qDebug() << "Key_4";
         switch (gui->workspaceWidget->currentIndex()){
         case quickIndexConsole:
+            gui->buttonConsoleHotKey4->setChecked(gui->buttonConsoleHotKey4->isChecked() ? false:true);
             emit gui->buttonConsoleHotKey4->clicked();
             return true;
         case quickIndexTable:
+            gui->buttonTableHotKey4->setChecked(gui->buttonTableHotKey4->isChecked() ? false:true);
             emit gui->buttonTableHotKey4->clicked();
             return true;
         }
@@ -324,6 +344,8 @@ void GuiController::consoleHotkeys(void){
     QString data;
     static QToolButton *button = nullptr;
     if(button != static_cast<QToolButton*>(QObject::sender())){
+        if(button != nullptr)
+            button->setChecked(false);
         button = static_cast<QToolButton*>(QObject::sender());
         if(button == gui->buttonConsoleHotKey1)
             data = gui->lineEditConsoleHotKey1->text();
@@ -345,10 +367,18 @@ void GuiController::consoleHotkeys(void){
         emit consoleStopCycle();
     }
 }
+void GuiController::consoleCyclicStoped(void){
+    gui->buttonConsoleHotKey1->setChecked(false);
+    gui->buttonConsoleHotKey2->setChecked(false);
+    gui->buttonConsoleHotKey3->setChecked(false);
+    gui->buttonConsoleHotKey4->setChecked(false);
+}
 void GuiController::tableHotkeys(void){
     QString data;
     static QToolButton *button = nullptr;
     if(button != static_cast<QToolButton*>(QObject::sender())){
+        if(button != nullptr)
+            button->setChecked(false);
         button = static_cast<QToolButton*>(QObject::sender());
         if(button == gui->buttonTableHotKey1)
             data = gui->lineEditTableHotKey1->text();
@@ -369,6 +399,12 @@ void GuiController::tableHotkeys(void){
         button = nullptr;
         emit tableStopCycle();
     }
+}
+void GuiController::tableCyclicStoped(void){
+    gui->buttonTableHotKey1->setChecked(false);
+    gui->buttonTableHotKey2->setChecked(false);
+    gui->buttonTableHotKey3->setChecked(false);
+    gui->buttonTableHotKey4->setChecked(false);
 }
 void GuiController::hexDelimiters(const QString& text){
     QLineEdit* lineEdit = static_cast<QLineEdit*>(QObject::sender());

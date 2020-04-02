@@ -81,6 +81,8 @@ private slots:
     void selectLogPath(void);
 
 public slots:
+    void consoleCyclicStoped(void);
+    void tableCyclicStoped(void);
 };
 
 #endif // GUICONTROLLER_H

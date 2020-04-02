@@ -95,6 +95,8 @@ signals:
     void cyclicModeChanged(bool);
     void cyclicIntervalChanged(int);
     void bindDataChanged(QString&);
+    void cyclicIsRunning(void);
+    void cyclicStopped(void);
 
 private slots:
     void slotAutoresize(void);

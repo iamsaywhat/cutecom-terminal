@@ -174,6 +174,10 @@ void Decorator::applyToSettings(void){
     gui->lineEditTableHotKey2->setStyleSheet(getInputFieldStyleSheet(baseColor()));
     gui->lineEditTableHotKey3->setStyleSheet(getInputFieldStyleSheet(baseColor()));
     gui->lineEditTableHotKey4->setStyleSheet(getInputFieldStyleSheet(baseColor()));
+    gui->buttonTableHotKey1->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
+    gui->buttonTableHotKey2->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
+    gui->buttonTableHotKey3->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
+    gui->buttonTableHotKey4->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
     // Вкладка Console
     setBasicColorsToWidget(gui->labelSectionConsole, secondColor());
     setBasicColorsToWidget(gui->labelConsoleEcho, secondColor());
@@ -190,6 +194,10 @@ void Decorator::applyToSettings(void){
     gui->lineEditConsoleHotKey2->setStyleSheet(getInputFieldStyleSheet(baseColor()));
     gui->lineEditConsoleHotKey3->setStyleSheet(getInputFieldStyleSheet(baseColor()));
     gui->lineEditConsoleHotKey4->setStyleSheet(getInputFieldStyleSheet(baseColor()));
+    gui->buttonConsoleHotKey1->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
+    gui->buttonConsoleHotKey2->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
+    gui->buttonConsoleHotKey3->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
+    gui->buttonConsoleHotKey4->setStyleSheet(getRunButton(playIconUrl, stopIconUrl, baseColor()));
     // Вкладка Logs
     setBasicColorsToWidget(gui->labelSectionLog, secondColor());
     setBasicColorsToWidget(gui->labelLogEnable, secondColor());
@@ -266,6 +274,8 @@ void Decorator::setIconMode(IconMode mode){
         comboBoxArrowUrl  = ":/dark/resources/icons/dark/combobox.png";
         spinboxDownArrow  = ":/dark/resources/icons/dark/down-arrow.png";
         spinboxUpArrow    = ":/dark/resources/icons/dark/up-arrow.png";
+        playIconUrl       = ":/dark/resources/icons/dark/play.png";
+        stopIconUrl       = ":/dark/resources/icons/dark/stop.png";
     }
     else{
         appIconlUrl       = ":/light/resources/icons/light/label.png";
@@ -281,6 +291,8 @@ void Decorator::setIconMode(IconMode mode){
         comboBoxArrowUrl  = ":/light/resources/icons/light/combobox.png";
         spinboxDownArrow  = ":/light/resources/icons/light/down-arrow.png";
         spinboxUpArrow    = ":/light/resources/icons/light/up-arrow.png";
+        playIconUrl       = ":/light/resources/icons/light/play.png";
+        stopIconUrl       = ":/light/resources/icons/light/stop.png";
     }
 }
 void Decorator::setBasicColorsToWidget(QWidget *widget, Color colors){
@@ -616,6 +628,23 @@ QString Decorator::getSpinBoxStyleSheet(QString& downArrowUrl,
     return styleSheet.arg(colorToString(color))
                      .arg(upArrowUrl)
                      .arg(downArrowUrl);
+}
+QString Decorator::getRunButton(QString& playUrl, QString& stopUrl, Color color){
+    QString styleSheet(
+                "QToolButton {"
+                    "padding:           5px;"
+                    "border:            none;"
+                    "border-radius:     5px;"
+                    "image:             url(%1);"
+                    "%3"
+                "}"
+                "QToolButton:checked {"
+                    "image:             url(%2);"
+                "}"
+                );
+    return styleSheet.arg(playUrl)
+                     .arg(stopUrl)
+                     .arg(colorToString(color));
 }
 QString Decorator::colorToString(Color color){
     validateColor(color);

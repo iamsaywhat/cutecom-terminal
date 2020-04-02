@@ -49,6 +49,8 @@ signals:
     void cyclicModeChanged(bool);
     void cyclicIntervalChanged(int);
     void bindDataChanged(QString&);
+    void cyclicIsRunning(void);
+    void cyclicStopped(void);
 
 public slots:
     void setEchoMode(bool);

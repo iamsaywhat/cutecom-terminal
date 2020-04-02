@@ -104,6 +104,7 @@ public:
     static QString getSpinBoxStyleSheet(QString& downArrowUrl,
                                         QString& upArrowUrl,
                                         Color color);
+    static QString getRunButton(QString& playUrl, QString& stopUrl, Color color);
 
 private:
     QString _name;                    // Имя цветовой схемы
@@ -130,6 +131,8 @@ private:
     QString checkBoxCheckUrl;         // Путь к иконки отметки чекбокса
     QString spinboxDownArrow;         // Путь к иконке стрелки вниз
     QString spinboxUpArrow;           // Путь к иконке стрелки вверх
+    QString playIconUrl;              // Путь к иконке play
+    QString stopIconUrl;              // Путь к иконке stop
 
     static Ui::MainWidget *gui;       // Указатель на целевой виджет gui
 

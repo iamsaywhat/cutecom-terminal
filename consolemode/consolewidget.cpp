@@ -119,9 +119,14 @@ void ConsoleWidget::cyclicTimeout(void){
 }
 void ConsoleWidget::startCyclicSending(void){
     send(_bindData);
-    if(cyclicMode())
+    if(cyclicMode()){
         timer->start(cyclicInterval());
+        emit cyclicIsRunning();
+    }
+    else
+        emit cyclicStopped();
 }
 void ConsoleWidget::stopCyclicSending(void){
     timer->stop();
+    emit cyclicStopped();
 }
