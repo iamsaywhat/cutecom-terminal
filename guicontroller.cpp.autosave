@@ -363,10 +363,8 @@ void GuiController::consoleHotkeys(void){
     }
 }
 void GuiController::consoleCyclicStoped(void){
-    gui->buttonConsoleHotKey1->setChecked(false);
-    gui->buttonConsoleHotKey2->setChecked(false);
-    gui->buttonConsoleHotKey3->setChecked(false);
-    gui->buttonConsoleHotKey4->setChecked(false);
+    QToolButton* button = static_cast<QToolButton*>(QObject::sender());
+    button->setChecked(false);
 }
 void GuiController::tableHotkeys(void){
     QString data;
@@ -398,9 +396,6 @@ void GuiController::tableHotkeys(void){
 void GuiController::tableCyclicStoped(void){
     QToolButton* button = static_cast<QToolButton*>(QObject::sender());
     button->setChecked(false);
-//    gui->buttonTableHotKey2->setChecked(false);
-//    gui->buttonTableHotKey3->setChecked(false);
- //   gui->buttonTableHotKey4->setChecked(false);
 }
 void GuiController::hexDelimiters(const QString& text){
     QLineEdit* lineEdit = static_cast<QLineEdit*>(QObject::sender());
