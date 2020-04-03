@@ -109,7 +109,7 @@ void Logger::write(DirectionType direction, QByteArray& data){
     /* Здесь байтовый массив нужно сконверировать в нужные форматы
        и нарезать их в строки по bytesInRow байт */
     toHexStrings(hex, data, bytesInRow());            // Байтовый массив в список нарезанных строк hex кодов
-    replaceSymbols(data, '.');                        // Перед конвертацией в ascii, нужно все непечаные символы
+    Converter::removeNonPrintedSymbols(data, '.');    // Перед конвертацией в ascii, нужно все непечаные символы
     toAsciiStrings(ascii, data,  bytesInRow());       // заменить чем-то, а только после байтовый массив сконверитровать
     textStream.setCodec(Converter::currentCodec());   // Печатать будет через TextStream, чтобы можно было настроить кодировку
     /* Здесь начинаем писать строки в файл,
@@ -184,11 +184,5 @@ void Logger::toAsciiStrings(QStringList& list, QByteArray& data, int length){
             list.append(ascii.left(length));
             ascii.remove(0, length);
         }
-    }
-}
-void Logger::replaceSymbols(QByteArray &data, const char symbol){
-    for(int i = 0; i < data.count(); i++){
-        if(((data[i] >= char(0x00) && data[i] < char(0x20)) || data[i] == char(0x7F)))
-            data[i] = symbol;
     }
 }

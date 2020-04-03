@@ -53,6 +53,12 @@ public:
     static QString convertInt64ToHex  (QString &source);
     static QString convertFloatToHex  (QString &source);
     static QString convertDoubleToHex (QString &source);
+    //
+    static QByteArray hexStringToByteArray(QString& string, const char delimiter);
+    static QByteArray asciiStringToByteArray(QString&);
+    static QString    byteArrayToHexString(QByteArray& data, const char delimiter);
+    static QString    byteArrayToAsciiString(QByteArray&);
+    static void       removeNonPrintedSymbols(QByteArray &data, const char symbol);
     // Изменения порядка следования байт на обратный
     static void swapEndian(uint8_t &value);
     static void swapEndian(int8_t &value);

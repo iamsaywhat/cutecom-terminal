@@ -41,17 +41,12 @@ public:
         OUTGOING    // Входящее
     };
     /* Отобразить новую информациию */
-    void appendData(DirectionType direction, QString* data);
+    void appendData(DirectionType direction, QString& hex, QString& ascii);
 
     /* Узнать номер верхней отображаемой строки */
     int firstVisibleRow (void);
     /* Узнать номер нижней отображаемой строки */
     int lastVisibleRow (void);
-    /* Преобразование строки с HEX кодами разделенными пробелами
-     *  в байтовый массив */
-    QByteArray convertAsciiToHex(QString source);
-    /* Преобразование байтового массива в строку с HEXкодами разделенными пробелами */
-    QString convertHexToAscii(QByteArray source);
 
 private:
     QRegularExpressionValidator  *hexMatcher;
@@ -78,7 +73,8 @@ private:
     const uint8_t indexNumberColumn    = 0;
     const uint8_t indexTimestampColumn = 1;
     const uint8_t indexDirectionColumn = 2;
-    const uint8_t indexMessageColumn   = 3;
+    const uint8_t indexHexColumn       = 3;
+    const uint8_t indexAsciiColumn     = 4;
 
     /* Обновить индексы видимой части таблицы */
     void updateVisibleRows ();

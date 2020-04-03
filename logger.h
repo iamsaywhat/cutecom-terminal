@@ -43,7 +43,6 @@ private:
 
     void toHexStrings(QStringList& list, QByteArray& data, int length);
     void toAsciiStrings(QStringList& list, QByteArray& data, int length);
-    void replaceSymbols(QByteArray &data, const char symbol);
     void write(DirectionType direction, QByteArray& data);
 
 signals:

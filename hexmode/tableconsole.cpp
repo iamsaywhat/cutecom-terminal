@@ -35,11 +35,12 @@ TableConsole::TableConsole(QObject*           parent,
     horizontalHeaders << "#"
                       << tr("Timestamp")
                       << tr("Direction")
-                      << tr("Data");
+                      << tr("Hex")
+                      << tr("Ascii");
     model->setHorizontalHeaderLabels(horizontalHeaders);
     delegate = new TextEditDelegate(this);                 // Создаём делегата отвечающего отрисовку содержимого таблицы
     _table->setModel(model);                               // Помещаем модель в таблицу
-    for(int i = 0; i < 4; i++){                            // Назначаем делегат
+    for(int i = 0; i < 5; i++){                            // Назначаем делегат
         _table->setItemDelegateForColumn(i, delegate);
     }
     _table->setEditTriggers(QAbstractItemView::NoEditTriggers);      // Действия инициирующие редактирование элемента запрещены
@@ -75,7 +76,7 @@ TableConsole::~TableConsole(){
     delete model;
     delete hexMatcher;
 }
-void TableConsole::appendData(DirectionType direction, QString* data){
+void TableConsole::appendData(DirectionType direction, QString& hex, QString& ascii){
     QTime systemTime = QTime::currentTime();                                // Получаем системное время
     blockAutoresizeSlot();
     _table->verticalScrollBar()->blockSignals(true);
@@ -94,12 +95,14 @@ void TableConsole::appendData(DirectionType direction, QString* data){
         model->setData(model->index(model->rowCount()-1, indexDirectionColumn), tr("Outgoing"));
         break;
     }
-    model->setData(model->index(model->rowCount()-1, indexMessageColumn), *data); // Данные
+    model->setData(model->index(model->rowCount()-1, indexHexColumn), hex);     // Данные
+    model->setData(model->index(model->rowCount()-1, indexAsciiColumn), ascii); // Данные
     /* Настройки выравниваия для новой строки */
     model->setData(model->index(model->rowCount()-1,indexNumberColumn),    Qt::AlignTop, Qt::TextAlignmentRole);
     model->setData(model->index(model->rowCount()-1,indexTimestampColumn), Qt::AlignTop, Qt::TextAlignmentRole);
     model->setData(model->index(model->rowCount()-1,indexDirectionColumn), Qt::AlignTop, Qt::TextAlignmentRole);
-    model->setData(model->index(model->rowCount()-1,indexMessageColumn),   Qt::AlignTop, Qt::TextAlignmentRole);
+    model->setData(model->index(model->rowCount()-1,indexHexColumn),       Qt::AlignTop, Qt::TextAlignmentRole);
+    model->setData(model->index(model->rowCount()-1,indexAsciiColumn),     Qt::AlignTop, Qt::TextAlignmentRole);
     _table->scrollToBottom();
     _table->resizeRowToContents(model->rowCount()-1);    
     /* Испускаем сигнал и сообщаем, что только что были добавлены новые данные */
@@ -184,38 +187,42 @@ void TableConsole::clear(void){
     _lastVisibleRow = -1;    
     // Запоминаем пользовательный размер колонок
     QList<int> columnsWidth;
-    for(int i = 0; i < 4; i++)
+    for(int i = 0; i < 5; i++)
         columnsWidth << _table->columnWidth(i);
     // Удаляем данные с модели
     model->clear();
     // Восстанавливаем заголовки
     model->setHorizontalHeaderLabels(horizontalHeaders);
     // Восстанавливаем пользователькую ширину колонок
-    for(int i = 0; i < 4; i++)
+    for(int i = 0; i < 5; i++)
         _table->setColumnWidth(i, columnsWidth.at(i));
 }
 
 void TableConsole::send(void){
     QString text(_input->text());                                             // Берём текст с поля ввода
     if(text != "" && _serial->getConnectionStatus() != SerialGui::CLOSED) {   // Если в поле ввода не пусто,
-        QByteArray data = convertAsciiToHex(text);                            // и порт открыт, то конвертируем
+        QByteArray data = Converter::hexStringToByteArray(text, ' ');         // и порт открыт, то конвертируем
         _serial->send(data);                                                  // в байтовый массив и отправляем
         _input->clear();                                                      // в порт, после очищаем поле ввода
     }
 }
 void TableConsole::send(QString text){
     if(text != "" && _serial->getConnectionStatus() != SerialGui::CLOSED) {   // Если в поле ввода не пусто,
-        QByteArray data = convertAsciiToHex(text);                            // и порт открыт, то конвертируем
+        QByteArray data = Converter::hexStringToByteArray(text, ' ');         // и порт открыт, то конвертируем
         _serial->send(data);                                                  // в байтовый массив и отправляем в порт
     }
 }
 void TableConsole::sended(QByteArray data){
-    QString text = convertHexToAscii(data);       // Посланные данные нужно сконверировать в текст
-    appendData(TableConsole::INCOMING, &text);    // А после добавить в таблицу
+    QString hexString = Converter::byteArrayToHexString(data, ' ');       // Посланные данные нужно сконверировать в текст
+    Converter::removeNonPrintedSymbols(data, '.');
+    QString asciiString = Converter::byteArrayToAsciiString(data);
+    appendData(TableConsole::INCOMING, hexString, asciiString);          // А после добавить в таблицу
 }
 void TableConsole::received(QByteArray data){
-    QString text = convertHexToAscii(data);       // Посланные данные нужно сконверировать в текст
-    appendData(TableConsole::OUTGOING, &text);    // А после добавить в таблицу
+    QString hexString = Converter::byteArrayToHexString(data, ' ');       // Посланные данные нужно сконверировать в текст
+    Converter::removeNonPrintedSymbols(data, '.');
+    QString asciiString = Converter::byteArrayToAsciiString(data);
+    appendData(TableConsole::OUTGOING, hexString, asciiString);           // А после добавить в таблицу
 }
 
 void TableConsole::slotTextDelimiter(void){
@@ -224,23 +231,6 @@ void TableConsole::slotTextDelimiter(void){
     Converter::setDelimitersInHexString(source, 2, ' ');             // Группируем символы
     input->setText(source);                                          // Возвращаем в поле ввода
 }
-
-QByteArray TableConsole::convertAsciiToHex(QString source){
-    bool status;
-    return Converter::parseStringForHex(&status, source, ' ');
-}
-
-QString TableConsole::convertHexToAscii(QByteArray source){
-    QString result = "";
-    for(int i = 0; i < source.count(); i++){
-        result+=QString::number(static_cast<unsigned char>(source[i]),16).rightJustified(2, '0');
-        if(i < source.count()-1)
-            result.append(" ");
-    }
-    result = result.toUpper();
-    return result;
-}
-
 bool TableConsole::echoMode(void){
     return _echo;
 }
@@ -293,8 +283,7 @@ void TableConsole::retranslate(void){
     _sendButton->setText(tr("Send"));
     _clearButton->setText(tr("Clear"));
     horizontalHeaders.clear();
-    horizontalHeaders << "#" << tr("Timestamp")
-                      << tr("Direction") << tr("Data");
+    horizontalHeaders << "#" << tr("Timestamp") << tr("Direction") << tr("Hex") << tr("Ascii");
     model->setHorizontalHeaderLabels(horizontalHeaders);
 }
 void TableConsole::cyclicTimeout(void){

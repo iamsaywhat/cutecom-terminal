@@ -638,8 +638,6 @@ QString Converter::expandToFullType(QString &source, TypeName type)
 
     return fullType;
 }
-
-
 QByteArray Converter::parseStringForHex(bool *status, QString &string, char delimiter){
     QByteArray result;
     QStringList clearSource = string.split(delimiter);
@@ -969,4 +967,29 @@ void Converter::retranslate(void){
     _convertButton->setText(tr("Convert"));
     _swapButton->setText(tr("Swap"));
     _clearButton->setText(tr("Clear"));
+}
+QByteArray Converter::hexStringToByteArray(QString& string, const char delimiter){
+    return parseStringForHex(nullptr, string, delimiter);
+}
+QByteArray Converter::asciiStringToByteArray(QString& string){
+    return convertFromUnicode(string).toLatin1();
+}
+QString Converter::byteArrayToHexString(QByteArray& data, const char delimiter){
+    QString result = "";
+    for(int i = 0; i < data.count(); i++){
+        result+=QString::number(static_cast<unsigned char>(data[i]),16).rightJustified(2, '0');
+        if(i < data.count()-1)
+            result.append(delimiter);
+    }
+    result = result.toUpper();
+    return result;
+}
+QString Converter::byteArrayToAsciiString(QByteArray& data){
+    return convertToUnicode(data);
+}
+void Converter::removeNonPrintedSymbols(QByteArray &data, const char symbol){
+    for(int i = 0; i < data.count(); i++){
+        if(((data[i] >= char(0x00) && data[i] < char(0x20)) || data[i] == char(0x7F)))
+            data[i] = symbol;
+    }
 }
