@@ -64,7 +64,6 @@ MainWidget::MainWidget(FramelessWindow *parent)
     fillLanguageList();
     fillCodecList();
     fillThemeList();
-    restoreSettings();
 
 
     // Подключение кнопок закрыть, свернуть, развернуть окно, так как стандартные скрыты
@@ -100,6 +99,8 @@ MainWidget::MainWidget(FramelessWindow *parent)
     connect(settings, &GuiController::logPathChanged, logger, &Logger::setPath);
     connect(settings, &GuiController::logColumnSizeChanged, logger, &Logger::setBytesInRow);
     connect(settings, &GuiController::logColumnSpacing, logger, &Logger::setColumnSpace);
+
+    restoreSettings();
 }
 
 MainWidget::~MainWidget(){
@@ -259,11 +260,9 @@ void MainWidget::restoreSettings(){
     ui->comboBoxCodec->setCurrentIndex(savedSettings.value("text codec", 0).toInt());
     ui->spinBoxCaptureTime->setValue(savedSettings.value("capture_time", serial->captureTime()).toInt());
     ui->spinBoxCaptureBytes->setValue(savedSettings.value("capture_bytes", serial->captureSize()).toInt());
-    applyColorScheme(ui->comboBoxTheme->currentIndex());
-    setAppLanguage(ui->comboBoxLanguage->currentIndex());
-    setAppTextCodec(ui->comboBoxCodec->currentIndex());
     serial->setCaptureTime(ui->spinBoxCaptureTime->value());
     serial->setCaptureSize(ui->spinBoxCaptureBytes->value());
+    emit ui->buttonGeneralApply->pressed();
     savedSettings.endGroup();
 
     savedSettings.beginGroup("console");
