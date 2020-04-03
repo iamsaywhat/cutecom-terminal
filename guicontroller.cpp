@@ -21,6 +21,7 @@ GuiController::GuiController(QObject *parent, Ui::MainWidget* gui) : QObject(par
     connectSectionConsole();
     connectSectionTable();
     connectSectionLog();
+    retranstate();
 }
 GuiController::~GuiController(){
     delete hexValidator;
@@ -56,33 +57,12 @@ void GuiController::connectSectionConnection(void){
 
 }
 void GuiController::connectSectionGeneral(void){
-    connect(gui->buttonGeneralApply, &QPushButton::pressed, [=](){
-        static int themeIndex = 99;
-        static int codecIndex = 99;
-        static int languageIndex = 99;
-        static int captureTime = 50000;
-        static int captureBytes = 50000;
-        if(themeIndex != gui->comboBoxTheme->currentIndex()){
-            emit currentThemeChanged(gui->comboBoxTheme->currentIndex());
-            themeIndex = gui->comboBoxTheme->currentIndex();
-        }
-        if(codecIndex != gui->comboBoxCodec->currentIndex()){
-            emit currentTextCodecChanged(gui->comboBoxCodec->currentIndex());
-            codecIndex = gui->comboBoxCodec->currentIndex();
-        }
-        if(languageIndex != gui->comboBoxLanguage->currentIndex()){
-            emit currentLanguageChanged(gui->comboBoxLanguage->currentIndex());
-            languageIndex = gui->comboBoxLanguage->currentIndex();
-        }
-        if(captureTime != gui->spinBoxCaptureTime->value()){
-            emit captureTimeChanges(gui->spinBoxCaptureTime->value());
-            captureTime = gui->spinBoxCaptureTime->value();
-        }
-        if(captureBytes != gui->spinBoxCaptureBytes->value()){
-            emit captureBytesChanges(gui->spinBoxCaptureBytes->value());
-            captureBytes = gui->spinBoxCaptureBytes->value();
-        }
-    });
+    connect(gui->comboBoxTheme, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &GuiController::generalSettingsChanged);
+    connect(gui->comboBoxCodec, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &GuiController::generalSettingsChanged);
+    connect(gui->comboBoxLanguage, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &GuiController::generalSettingsChanged);
+    connect(gui->spinBoxCaptureTime, QOverload<int>::of(&QSpinBox::valueChanged), this, &GuiController::generalSettingsChanged);
+    connect(gui->spinBoxCaptureBytes, QOverload<int>::of(&QSpinBox::valueChanged), this, &GuiController::generalSettingsChanged);
+    connect(gui->buttonGeneralApply, &QPushButton::pressed, this, &GuiController::generalSettingsChanged);
 }
 void GuiController::connectSectionConsole(void){
     connect(gui->checkboxConsoleEcho, &QCheckBox::stateChanged,
@@ -165,40 +145,17 @@ void GuiController::setPropertiesMenu(void){
     gui->pageDelimiterLayout->setSpacing(0);
 }
 void GuiController::setPropertiesSectionConnection (void){
-    gui->labelSectionConnection->setText(tr("Connection"));
     gui->labelSectionConnection->setFont(QFont("Arial", 14, QFont::Bold));
-    gui->labelPorts->setText(tr("Port:"));
-    gui->labelData->setText(tr("Data:"));
-    gui->labelStopBits->setText(tr("Stop bits:"));
-    gui->labelParity->setText(tr("Parity:"));
-    gui->labelBaudrate->setText(tr("Baudrate:"));
-    gui->labelFlowControl->setText(tr("Flow control:"));
 }
 void GuiController::setPropertiesSectionGeneral (void){
-    gui->labelSectionGeneral->setText(tr("General"));
     gui->labelSectionGeneral->setFont(QFont("Terminus", 14, QFont::Bold));
-    gui->labelTheme->setText(tr("Theme:"));
-    gui->labelLanguage->setText(tr("Language:"));
-    gui->labelCodec->setText(tr("Text codec:"));
-    gui->labelCaptureTime->setText(tr("Capture time, ms:"));
-    gui->labelCaptureBytes->setText(tr("Capture bytes:"));
-    gui->buttonGeneralApply->setText(tr("Apply"));
     gui->spinBoxCaptureTime->setRange(0, 2147483647);
     gui->spinBoxCaptureBytes->setRange(0, 2147483647);
 }
 void GuiController::setPropertiesSectionConsole (void){
-    gui->labelSectionConsole->setText(tr("Console"));
     gui->labelSectionConsole->setFont(QFont("Terminus", 14, QFont::Bold));
-    gui->labelConsoleEcho->setText(tr("Echo:"));
     gui->checkboxConsoleEcho->setText("");
-
-    gui->labelConsoleCyclic->setText(tr("Cyclic mode:"));
-    gui->labelConsoleCyclicInterval->setText(tr("Interval, ms:"));
     gui->checkboxConsoleCyclic->setText("");
-    gui->labelConsoleHotKey1->setText(tr("Hot key 1:"));
-    gui->labelConsoleHotKey2->setText(tr("Hot key 2:"));
-    gui->labelConsoleHotKey3->setText(tr("Hot key 3:"));
-    gui->labelConsoleHotKey4->setText(tr("Hot key 4:"));
     gui->buttonConsoleHotKey1->setText(" ");
     gui->buttonConsoleHotKey2->setText(" ");
     gui->buttonConsoleHotKey3->setText(" ");
@@ -210,18 +167,9 @@ void GuiController::setPropertiesSectionConsole (void){
     gui->spinboxConsoleCyclicInterval->setRange(5, 10000);
 }
 void GuiController::setPropertiesSectionTable (void){
-    gui->labelSectionTable->setText(tr("Table"));
     gui->labelSectionTable->setFont(QFont("Terminus", 14, QFont::Bold));
-    gui->labelTableEcho->setText(tr("Echo:"));
     gui->checkboxTableEcho->setText("");
-
-    gui->labelTableCyclicMode->setText(tr("Cyclic mode:"));
     gui->checkboxTableCyclic->setText("");
-    gui->labelTableCyclicInterval->setText(tr("Interval, ms:"));
-    gui->labelTableHotKey1->setText(tr("Hot key 1:"));
-    gui->labelTableHotKey2->setText(tr("Hot key 2:"));
-    gui->labelTableHotKey3->setText(tr("Hot key 3:"));
-    gui->labelTableHotKey4->setText(tr("Hot key 4:"));
     gui->buttonTableHotKey1->setText(" ");
     gui->buttonTableHotKey2->setText(" ");
     gui->buttonTableHotKey3->setText(" ");
@@ -230,24 +178,16 @@ void GuiController::setPropertiesSectionTable (void){
     gui->buttonTableHotKey2->setCheckable(true);
     gui->buttonTableHotKey3->setCheckable(true);
     gui->buttonTableHotKey4->setCheckable(true);
-
     gui->spinboxTableCyclicInterval->setRange(5, 10000);
-
     gui->lineEditTableHotKey1->setValidator(hexValidator);
     gui->lineEditTableHotKey2->setValidator(hexValidator);
     gui->lineEditTableHotKey3->setValidator(hexValidator);
     gui->lineEditTableHotKey4->setValidator(hexValidator);
 }
 void GuiController::setPropertiesSectionLogs (void){
-    gui->labelSectionLog->setText(tr("Logs"));
     gui->labelSectionLog->setFont(QFont("Terminus", 14, QFont::Bold));
-    gui->labelLogEnable->setText(tr("Enable:"));
-    gui->labelLogPath->setText(tr("Path:"));
     gui->lineEditLogPath->setReadOnly(true);
     gui->checkBoxLogEnable->setText("");
-    gui->labelLogSpace->setText(tr("Сolumn spacing:"));
-    gui->labelLogColomnSize->setText(tr("Сolumn size, byte:"));
-    gui->buttonLogApply->setText(tr("Apply"));
     gui->spinBoxLogSpace->setRange(1, 60);
     gui->spinBoxLogColumnSize->setRange(1, 60);
 }
@@ -266,7 +206,7 @@ void GuiController::setThemeList(QStringList* list){
     gui->comboBoxTheme->clear();
     gui->comboBoxTheme->addItems(*list);
 }
-void GuiController::retranstate(void){
+void GuiController::setTextSettingsMenu(void){
     gui->connectionContentsButton->setText(tr("Connection"));
     gui->generalContentButton->setText(tr("General"));
     gui->consoleContentButton->setText(tr("Console"));
@@ -274,7 +214,8 @@ void GuiController::retranstate(void){
     gui->logsContentButton->setText(tr("Logs"));
     gui->bindsContentButton->setText(tr("Binds"));
     gui->infoLabel->setText(tr("Version: 0.0.0"));
-
+}
+void GuiController::setTextSectionConnection(void){
     gui->labelSectionConnection->setText(tr("Connection"));
     gui->labelPorts->setText(tr("Port:"));
     gui->labelData->setText(tr("Data:"));
@@ -282,7 +223,8 @@ void GuiController::retranstate(void){
     gui->labelParity->setText(tr("Parity:"));
     gui->labelBaudrate->setText(tr("Baudrate:"));
     gui->labelFlowControl->setText(tr("Flow control:"));
-
+}
+void GuiController::setTextSectionGeneral(void){
     gui->labelSectionGeneral->setText(tr("General"));
     gui->labelTheme->setText(tr("Theme:"));
     gui->labelLanguage->setText(tr("Language:"));
@@ -290,7 +232,8 @@ void GuiController::retranstate(void){
     gui->labelCaptureTime->setText(tr("Capture time, ms:"));
     gui->labelCaptureBytes->setText(tr("Capture bytes:"));
     gui->buttonGeneralApply->setText(tr("Apply"));
-
+}
+void GuiController::setTextSectionConsole(void){
     gui->labelSectionConsole->setText(tr("Console"));
     gui->labelConsoleEcho->setText(tr("Echo:"));
     gui->labelConsoleCyclic->setText(tr("Cyclic mode:"));
@@ -299,7 +242,8 @@ void GuiController::retranstate(void){
     gui->labelConsoleHotKey2->setText(tr("Hot key 2:"));
     gui->labelConsoleHotKey3->setText(tr("Hot key 3:"));
     gui->labelConsoleHotKey4->setText(tr("Hot key 4:"));
-
+}
+void GuiController::setTextSectionTable(void){
     gui->labelSectionTable->setText(tr("Table"));
     gui->labelTableEcho->setText(tr("Echo:"));
     gui->labelTableCyclicMode->setText(tr("Cyclic mode:"));
@@ -308,13 +252,26 @@ void GuiController::retranstate(void){
     gui->labelTableHotKey2->setText(tr("Hot key 2:"));
     gui->labelTableHotKey3->setText(tr("Hot key 3:"));
     gui->labelTableHotKey4->setText(tr("Hot key 4:"));
-
+}
+void GuiController::setTextSectionLogs(void){
     gui->labelSectionLog->setText(tr("Logs"));
     gui->labelLogEnable->setText(tr("Enable:"));
     gui->labelLogPath->setText(tr("Path:"));
     gui->labelLogSpace->setText(tr("Сolumn spacing:"));
     gui->labelLogColomnSize->setText(tr("Сolumn size, byte:"));
     gui->buttonLogApply->setText(tr("Apply"));
+}
+void GuiController::setTextSectionBinds(void){
+
+}
+void GuiController::retranstate(void){
+    setTextSettingsMenu();
+    setTextSectionConnection();
+    setTextSectionGeneral();
+    setTextSectionConsole();
+    setTextSectionTable();
+    setTextSectionLogs();
+    setTextSectionBinds();
 }
 bool GuiController::eventFilter(QObject *target, QEvent *event){
     if(event->type() != QKeyEvent::KeyPress || static_cast<QKeyEvent*>(event)->isAutoRepeat())
@@ -472,4 +429,82 @@ void GuiController::selectLogPath(void){
     else
         gui->lineEditLogPath->setText(path);
     emit logPathChanged(gui->lineEditLogPath->text());
+}
+void GuiController::generalSettingsChanged(void){
+    QComboBox* comboBoxes = static_cast<QComboBox*>(QObject::sender());
+    QSpinBox*  spinBoxes = static_cast<QSpinBox*>(QObject::sender());
+    QPushButton*  button = static_cast<QPushButton*>(QObject::sender());
+    static bool themeChanged = false;
+    static bool codecChanged = false;
+    static bool languageChanged = false;
+    static bool captureTimeChanged = false;
+    static bool captureBytesChanged = false;
+
+    static int themeIndex = gui->comboBoxTheme->currentIndex();
+    static int codecIndex = gui->comboBoxCodec->currentIndex();
+    static int languageIndex = gui->comboBoxLanguage->currentIndex();
+    static int captureTime = gui->spinBoxCaptureTime->value();
+    static int captureBytes = gui->spinBoxCaptureBytes->value();
+
+    if(comboBoxes == gui->comboBoxTheme){
+        if(themeIndex != gui->comboBoxTheme->currentIndex())
+            themeChanged = true;
+        else
+            themeChanged = false;
+    }
+    else if(comboBoxes == gui->comboBoxCodec){
+        if(codecIndex != gui->comboBoxCodec->currentIndex())
+            codecChanged = true;
+        else
+            codecChanged = false;
+    }
+    else if(comboBoxes == gui->comboBoxLanguage){
+        if(languageIndex != gui->comboBoxLanguage->currentIndex())
+            languageChanged = true;
+        else
+            languageChanged = false;
+    }
+    else if(spinBoxes == gui->spinBoxCaptureTime){
+        if(captureTime !=  gui->spinBoxCaptureTime->value())
+            captureTimeChanged = true;
+        else
+            captureTimeChanged = false;
+    }
+    else if(spinBoxes == gui->spinBoxCaptureBytes){
+        if(captureBytes !=  gui->spinBoxCaptureBytes->value())
+            captureBytes = true;
+        else
+            captureBytes = false;
+    }
+    else if(button == gui->buttonGeneralApply){
+        if(themeChanged){
+            themeIndex = gui->comboBoxTheme->currentIndex();
+            emit currentThemeChanged(themeIndex);
+            themeChanged = false;
+        }
+        if(codecChanged){
+            codecIndex = gui->comboBoxCodec->currentIndex();
+            emit currentTextCodecChanged(codecIndex);
+            codecChanged = false;
+        }
+        if(languageChanged){
+            languageIndex = gui->comboBoxLanguage->currentIndex();
+            emit currentLanguageChanged(languageIndex);
+            languageChanged = false;
+        }
+        if(captureTimeChanged){
+            captureTime = gui->spinBoxCaptureTime->value();
+            emit captureTimeChanges(captureTime);
+            captureTimeChanged = false;
+        }
+        if(captureBytesChanged){
+            captureBytes = gui->spinBoxCaptureBytes->value();
+            emit captureBytesChanges(captureBytes);
+            captureBytes = false;
+        }
+    }
+    if(themeChanged||codecChanged||languageChanged||captureTimeChanged||captureBytesChanged)
+        gui->buttonGeneralApply->show();
+    else
+         gui->buttonGeneralApply->hide();
 }

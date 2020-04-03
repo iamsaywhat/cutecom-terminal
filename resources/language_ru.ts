@@ -20,19 +20,19 @@
     <name>Converter</name>
     <message>
         <location filename="../converter.cpp" line="40"/>
-        <location filename="../converter.cpp" line="969"/>
+        <location filename="../converter.cpp" line="968"/>
         <source>Convert</source>
         <translation>Конвертировать</translation>
     </message>
     <message>
         <location filename="../converter.cpp" line="41"/>
-        <location filename="../converter.cpp" line="970"/>
+        <location filename="../converter.cpp" line="969"/>
         <source>Swap</source>
         <translation>Перевернуть</translation>
     </message>
     <message>
         <location filename="../converter.cpp" line="42"/>
-        <location filename="../converter.cpp" line="971"/>
+        <location filename="../converter.cpp" line="970"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
@@ -450,41 +450,51 @@
     <name>TableConsole</name>
     <message>
         <location filename="../hexmode/tableconsole.cpp" line="25"/>
-        <location filename="../hexmode/tableconsole.cpp" line="293"/>
+        <location filename="../hexmode/tableconsole.cpp" line="283"/>
         <source>Send</source>
         <translation>Отправить</translation>
     </message>
     <message>
         <location filename="../hexmode/tableconsole.cpp" line="26"/>
-        <location filename="../hexmode/tableconsole.cpp" line="294"/>
+        <location filename="../hexmode/tableconsole.cpp" line="284"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
     <message>
         <location filename="../hexmode/tableconsole.cpp" line="36"/>
-        <location filename="../hexmode/tableconsole.cpp" line="296"/>
+        <location filename="../hexmode/tableconsole.cpp" line="286"/>
         <source>Timestamp</source>
         <translation>Время</translation>
     </message>
     <message>
         <location filename="../hexmode/tableconsole.cpp" line="37"/>
-        <location filename="../hexmode/tableconsole.cpp" line="297"/>
+        <location filename="../hexmode/tableconsole.cpp" line="286"/>
         <source>Direction</source>
         <translation>Направление</translation>
     </message>
     <message>
         <location filename="../hexmode/tableconsole.cpp" line="38"/>
-        <location filename="../hexmode/tableconsole.cpp" line="297"/>
-        <source>Data</source>
-        <translation>Данные</translation>
+        <location filename="../hexmode/tableconsole.cpp" line="286"/>
+        <source>Hex</source>
+        <translation>Hex</translation>
     </message>
     <message>
-        <location filename="../hexmode/tableconsole.cpp" line="91"/>
+        <location filename="../hexmode/tableconsole.cpp" line="39"/>
+        <location filename="../hexmode/tableconsole.cpp" line="286"/>
+        <source>Ascii</source>
+        <translation>Ascii</translation>
+    </message>
+    <message>
+        <source>Data</source>
+        <translation type="vanished">Данные</translation>
+    </message>
+    <message>
+        <location filename="../hexmode/tableconsole.cpp" line="92"/>
         <source>Incoming</source>
         <translation>Входящие</translation>
     </message>
     <message>
-        <location filename="../hexmode/tableconsole.cpp" line="94"/>
+        <location filename="../hexmode/tableconsole.cpp" line="95"/>
         <source>Outgoing</source>
         <translation>Исходящие</translation>
     </message>

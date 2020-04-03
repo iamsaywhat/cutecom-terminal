@@ -27,15 +27,7 @@ public:
         quickIndexConverter = 2,
         quickIndexSettings  = 3,
     };
-    void setProperties(void);
-    void setPropertiesMainWidget(void);
-    void setPropertiesMenu(void);
-    void setPropertiesSectionConnection(void);
-    void setPropertiesSectionGeneral(void);
-    void setPropertiesSectionConsole(void);
-    void setPropertiesSectionTable(void);
-    void setPropertiesSectionLogs(void);
-    void setPropertiesSectionBinds(void);
+    void setProperties(void);   
     void retranstate(void);
 
     void setLanguageList(QStringList* list);
@@ -54,6 +46,23 @@ private:
     void connectSectionConsole(void);
     void connectSectionTable(void);
     void connectSectionLog(void);
+
+    void setPropertiesMainWidget(void);
+    void setPropertiesMenu(void);
+    void setPropertiesSectionConnection(void);
+    void setPropertiesSectionGeneral(void);
+    void setPropertiesSectionConsole(void);
+    void setPropertiesSectionTable(void);
+    void setPropertiesSectionLogs(void);
+    void setPropertiesSectionBinds(void);
+
+    void setTextSettingsMenu(void);
+    void setTextSectionConnection(void);
+    void setTextSectionGeneral(void);
+    void setTextSectionConsole(void);
+    void setTextSectionTable(void);
+    void setTextSectionLogs(void);
+    void setTextSectionBinds(void);
 
 signals:
     void currentThemeChanged(int index);
@@ -86,6 +95,7 @@ private slots:
     void tableHotkeys(void);                  // Обработка нажатий горячих клавиш "таблицы"
     void hexDelimiters(const QString&);       // Авторасстановка разделителей hex-кодов
     void selectLogPath(void);                 // Обработка кнопки выбора папки для логов
+    void generalSettingsChanged(void);
 
 public slots:
     void consoleCyclicStoped(void);
