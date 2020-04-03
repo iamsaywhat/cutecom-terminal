@@ -30,7 +30,7 @@ TableConsole::TableConsole(QObject*           parent,
     hexMatcher = new QRegularExpressionValidator(QRegularExpression("[0-9A-Fa-f ]+"), this);
     _input->setValidator(hexMatcher);
     /* Настройки QTableView */
-    model = new QStandardItemModel(0,4);  // Создаём модель и пока только декларируем 4 столбца
+    model = new QStandardItemModel(0,5);  // Создаём модель и пока только декларируем 4 столбца
     // Задаём заголовки столбцов
     horizontalHeaders << "#"
                       << tr("Timestamp")
@@ -40,10 +40,10 @@ TableConsole::TableConsole(QObject*           parent,
     model->setHorizontalHeaderLabels(horizontalHeaders);
     delegate = new TextEditDelegate(this);                 // Создаём делегата отвечающего отрисовку содержимого таблицы
     _table->setModel(model);                               // Помещаем модель в таблицу
-    for(int i = 0; i < 5; i++){                            // Назначаем делегат
+    for(int i = 4; i < 5; i++){                            // Назначаем делегат
         _table->setItemDelegateForColumn(i, delegate);
     }
-    _table->setEditTriggers(QAbstractItemView::NoEditTriggers);      // Действия инициирующие редактирование элемента запрещены
+//    _table->setEditTriggers(QAbstractItemView::NoEditTriggers);      // Действия инициирующие редактирование элемента запрещены
     _table->setSelectionMode(QAbstractItemView::SingleSelection);    // Выбирать можно только один элемент
     _table->setSelectionBehavior(QAbstractItemView::SelectRows);     // За один элемент выделения считается строка целиком
     _table->resizeColumnToContents(0);                               // Нулевой столбец будет изменён размером под своё содержимое

@@ -64,7 +64,7 @@ void TextEditDelegate::drawDisplay(QPainter *painter,
     //
     QTextOption opt(option.displayAlignment);
     // Включаем перенос слов
-    opt.setWrapMode(QTextOption::WordWrap);
+    opt.setWrapMode(QTextOption::WrapAnywhere);
 
     // Текущее состояние Qpainter сохраняем в стек
     painter->save();
