@@ -648,6 +648,7 @@ QByteArray Converter::parseStringForHex(bool *status, QString &string, char deli
 
 QString Converter::convertHexToAscii(QString &source){
     QByteArray temp = parseStringForHex(nullptr, source, ' ');
+    removeNonPrintedSymbols(temp, '.');
     return convertToUnicode(temp);
 }
 
