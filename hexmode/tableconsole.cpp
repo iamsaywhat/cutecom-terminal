@@ -39,7 +39,7 @@ TableConsole::TableConsole(QObject*           parent,
     model->setHorizontalHeaderLabels(horizontalHeaders);
     delegate = new TextEditDelegate(this);                 // Создаём делегата отвечающего отрисовку содержимого таблицы
     _table->setModel(model);                               // Помещаем модель в таблицу
-    for(int i = 0; i < 4; i++){                             // Назначаем делегат
+    for(int i = 0; i < 4; i++){                            // Назначаем делегат
         _table->setItemDelegateForColumn(i, delegate);
     }
     _table->setEditTriggers(QAbstractItemView::NoEditTriggers);      // Действия инициирующие редактирование элемента запрещены
@@ -170,7 +170,7 @@ void TableConsole::resizeVisibleRows (int firstRow, int lastRow){
 }
 void TableConsole::slotAutoresize(void){
     if(autoresizeIsBlocked())
-        return
+        return;
     resizeVisibleRows(firstVisibleRow(), lastVisibleRow());
     updateVisibleRows();
     //resizeVisibleRows(firstVisibleRow(), lastVisibleRow());
