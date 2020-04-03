@@ -33,6 +33,8 @@ public:
     void setLanguageList(QStringList* list);
     void setCodecList(QStringList* list);
     void setThemeList(QStringList* list);
+    void restore(void);
+    void save(void);
 
 private:
     static Ui::MainWidget *gui;
@@ -65,6 +67,8 @@ private:
     void setTextSectionBinds(void);
 
 signals:
+    void restoredSize(QRect);
+
     void currentThemeChanged(int index);
     void currentLanguageChanged(int index);
     void currentTextCodecChanged(int index);

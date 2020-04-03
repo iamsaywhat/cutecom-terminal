@@ -1,15 +1,14 @@
 #include "framelesswindow.h"
 #include <QGraphicsDropShadowEffect>
 #include <QtDebug>
-
+#include <QSettings>
 
 FramelessWindow::FramelessWindow(QWidget *parent) : QWidget(parent) {
     QGridLayout *layout = new QGridLayout(this);
     this->setLayout(layout);
     sizeControl = new SizeController(this);
+    normalWindowSize = geometry();
 }
-
-
 void FramelessWindow::setCentralWidget(QWidget *widget){
     this->layout()->addWidget(widget);
     QGraphicsDropShadowEffect *shadowEffect = new QGraphicsDropShadowEffect(this);
@@ -20,9 +19,34 @@ void FramelessWindow::setCentralWidget(QWidget *widget){
     widget->layout()->setSpacing(0);
     widget->setAutoFillBackground(true);
 }
-
+void FramelessWindow::setRememberFrameProperties(bool state){
+    _rememberFrameProperties = state;
+    if(state){
+        QSettings settings("frameless.conf", QSettings::IniFormat );
+        settings.beginGroup("frameless");
+        normalWindowSize = settings.value("window-size", this->size()).toRect();
+        this->setGeometry(normalWindowSize);
+//        if(settings.value("maximize", false).toBool())
+//            maximizeFramelessWindow();
+        settings.endGroup();
+    }
+}
+bool FramelessWindow::rememberFrameProperties(void) const{
+    return _rememberFrameProperties;
+}
 
 FramelessWindow::~FramelessWindow() {
+    if(rememberFrameProperties()){
+        QSettings settings("frameless.conf", QSettings::IniFormat );
+        settings.beginGroup("frameless");
+        settings.setValue("maximize", isMaximized());
+        if(isMaximized()){
+            settings.setValue("window-size", normalWindowSize);
+        }
+        else
+            settings.setValue("window-size", geometry());
+        settings.endGroup();
+    }
     delete sizeControl;
 }
 
@@ -38,6 +62,7 @@ void FramelessWindow::maximizeFramelessWindow (void) {
          * (на уровень выше interfaceWidget) убрать, чтобы окно полноценно развернулось
          * в полный экран, однако, при этом исчезает тень, которую в полноэкранном режиме
          * и не должно быть видно, но при минимизации окна нужно вернуть */
+        normalWindowSize = this->geometry();
         this->layout()->setMargin(0);
         this->showMaximized();
     }
@@ -48,6 +73,7 @@ void FramelessWindow::maximizeFramelessWindow (void) {
          * чтобы тень отобразилась */
         this->layout()->setMargin(recomendedMargin);
         this->showNormal();
+        this->setGeometry(normalWindowSize);
     }
 }
 

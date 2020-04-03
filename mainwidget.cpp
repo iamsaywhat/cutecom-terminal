@@ -22,7 +22,6 @@ MainWidget::MainWidget(FramelessWindow *parent)
     parent->setWindowTitle("Advanced Terminal");
     parent->setWindowIcon(QIcon(":/light/resources/icons/light/consolemode.png"));
 
-
     // Выполняем связку класса работы с портом окном настроек
     serial = new SerialGui(ui->boxPorts,                   // ComboBox c доступными Com портами
                            ui->boxBaudrate,                // ComboBox с настройками скорости
@@ -100,11 +99,11 @@ MainWidget::MainWidget(FramelessWindow *parent)
     connect(settings, &GuiController::logColumnSizeChanged, logger, &Logger::setBytesInRow);
     connect(settings, &GuiController::logColumnSpacing, logger, &Logger::setColumnSpace);
 
-    restoreSettings();
+    settings->restore();
 }
 
 MainWidget::~MainWidget(){
-    saveSettings();
+    settings->save();
     delete logger;
     delete themeList;
     delete languageList;
@@ -194,120 +193,4 @@ void MainWidget::setAppLanguage(int index){
     converter->retranslate();
     settings->retranstate();
 }
-void MainWidget::saveSettings(){
-    QSettings savedSettings("settings.conf", QSettings::IniFormat );
 
-    savedSettings.beginGroup("app");
-    savedSettings.setValue("is_maximazed", parentWidget()->isMaximized());
-    savedSettings.setValue("window-size", parentWidget()->geometry());
-    savedSettings.endGroup();
-
-    savedSettings.beginGroup("general");
-    savedSettings.setValue("theme", ui->comboBoxTheme->currentIndex());
-    savedSettings.setValue("language", ui->comboBoxLanguage->currentIndex());
-    savedSettings.setValue("text codec", ui->comboBoxCodec->currentIndex());
-    savedSettings.setValue("capture_time", ui->spinBoxCaptureTime->value());
-    savedSettings.setValue("capture_bytes", ui->spinBoxCaptureBytes->value());
-    savedSettings.endGroup();
-
-    savedSettings.beginGroup("connection");
-    savedSettings.setValue("port", ui->boxPorts->currentText());
-    savedSettings.setValue("baudrate", ui->boxBaudrate->currentText());
-    savedSettings.setValue("data", ui->boxData->currentIndex());
-    savedSettings.setValue("parity", ui->boxParity->currentIndex());
-    savedSettings.setValue("stop bits", ui->boxStopBits->currentIndex());
-    savedSettings.setValue("flow control", ui->boxFlowControl->currentIndex());
-    savedSettings.endGroup();
-
-    savedSettings.beginGroup("console");
-    savedSettings.setValue("echo", ui->checkboxConsoleEcho->checkState());
-    savedSettings.setValue("cyclic", ui->checkboxConsoleCyclic->checkState());
-    savedSettings.setValue("interval", ui->spinboxConsoleCyclicInterval->value());
-    savedSettings.setValue("bind1", ui->lineEditConsoleHotKey1->text());
-    savedSettings.setValue("bind2", ui->lineEditConsoleHotKey2->text());
-    savedSettings.setValue("bind3", ui->lineEditConsoleHotKey3->text());
-    savedSettings.setValue("bind4", ui->lineEditConsoleHotKey4->text());
-    savedSettings.endGroup();
-
-    savedSettings.beginGroup("table");
-    savedSettings.setValue("echo", ui->checkboxTableEcho->checkState());
-    savedSettings.setValue("cyclic", ui->checkboxTableCyclic->checkState());
-    savedSettings.setValue("interval", ui->spinboxTableCyclicInterval->value());
-    savedSettings.setValue("bind1", ui->lineEditTableHotKey1->text());
-    savedSettings.setValue("bind2", ui->lineEditTableHotKey2->text());
-    savedSettings.setValue("bind3", ui->lineEditTableHotKey3->text());
-    savedSettings.setValue("bind4", ui->lineEditTableHotKey4->text());
-    savedSettings.endGroup();
-
-    savedSettings.beginGroup("log");
-    savedSettings.setValue("enable", ui->checkBoxLogEnable->checkState());
-    savedSettings.setValue("path", ui->lineEditLogPath->text());
-    savedSettings.setValue("column_size", ui->spinBoxLogColumnSize->value());
-    savedSettings.setValue("column_spacing", ui->spinBoxLogSpace->value());
-    savedSettings.endGroup();
-}
-void MainWidget::restoreSettings(){
-    QSettings savedSettings("settings.conf", QSettings::IniFormat );
-
-    savedSettings.beginGroup("app");
-    if(!savedSettings.value("is_maximazed", false).toBool())
-        parentWidget()->setGeometry(savedSettings.value("window-size", this->size()).toRect());
-    savedSettings.endGroup();
-
-    savedSettings.beginGroup("general");
-    ui->comboBoxTheme->setCurrentIndex(savedSettings.value("theme", 0).toInt());
-    ui->comboBoxLanguage->setCurrentIndex(savedSettings.value("language", 0).toInt());
-    ui->comboBoxCodec->setCurrentIndex(savedSettings.value("text codec", 0).toInt());
-    ui->spinBoxCaptureTime->setValue(savedSettings.value("capture_time", serial->captureTime()).toInt());
-    ui->spinBoxCaptureBytes->setValue(savedSettings.value("capture_bytes", serial->captureSize()).toInt());
-    serial->setCaptureTime(ui->spinBoxCaptureTime->value());
-    serial->setCaptureSize(ui->spinBoxCaptureBytes->value());
-    emit ui->buttonGeneralApply->pressed();
-    savedSettings.endGroup();
-
-    savedSettings.beginGroup("console");
-    ui->checkboxConsoleEcho->setCheckState(savedSettings.value("echo", console->echoMode()).value<Qt::CheckState>());
-    ui->checkboxConsoleCyclic->setCheckState(savedSettings.value("cyclic", console->cyclicMode()).value<Qt::CheckState>());
-    ui->spinboxConsoleCyclicInterval->setValue(savedSettings.value("interval", console->cyclicInterval()).toInt());
-    ui->lineEditConsoleHotKey1->setText(savedSettings.value("bind1", "").toString());
-    ui->lineEditConsoleHotKey2->setText(savedSettings.value("bind2", "").toString());
-    ui->lineEditConsoleHotKey3->setText(savedSettings.value("bind3", "").toString());
-    ui->lineEditConsoleHotKey4->setText(savedSettings.value("bind4", "").toString());
-    console->setEchoMode(ui->checkboxConsoleEcho->checkState()==Qt::Checked ? true : false);
-    console->setCyclicMode(ui->checkboxConsoleCyclic->checkState()==Qt::Checked ? true : false);
-    console->setCyclicInterval(ui->spinboxConsoleCyclicInterval->value());
-    savedSettings.endGroup();
-
-    savedSettings.beginGroup("table");
-    ui->checkboxTableEcho->setCheckState(savedSettings.value("echo", tableConsole->echoMode()).value<Qt::CheckState>());
-    ui->checkboxTableCyclic->setCheckState(savedSettings.value("cyclic", tableConsole->cyclicMode()).value<Qt::CheckState>());
-    ui->spinboxTableCyclicInterval->setValue(savedSettings.value("interval", console->cyclicInterval()).toInt());
-    ui->lineEditTableHotKey1->setText(savedSettings.value("bind1", "").toString());
-    ui->lineEditTableHotKey2->setText(savedSettings.value("bind2", "").toString());
-    ui->lineEditTableHotKey3->setText(savedSettings.value("bind3", "").toString());
-    ui->lineEditTableHotKey4->setText(savedSettings.value("bind4", "").toString());
-    tableConsole->setEchoMode(ui->checkboxTableEcho->checkState()==Qt::Checked ? true : false);
-    tableConsole->setCyclicMode(ui->checkboxTableCyclic->checkState()==Qt::Checked ? true : false);
-    tableConsole->setCyclicInterval(ui->spinboxTableCyclicInterval->value());
-    savedSettings.endGroup();
-
-    savedSettings.beginGroup("connection");
-    ui->boxPorts->setCurrentText(savedSettings.value("port", "").toString());
-    ui->boxBaudrate->setCurrentText(savedSettings.value("baudrate", "").toString());
-    ui->boxData->setCurrentIndex(savedSettings.value("data", 0).toInt());
-    ui->boxParity->setCurrentIndex(savedSettings.value("parity", 0).toInt());
-    ui->boxStopBits->setCurrentIndex(savedSettings.value("stop bits", 0).toInt());
-    ui->boxFlowControl->setCurrentIndex(savedSettings.value("flow control", 0).toInt());
-    savedSettings.endGroup();
-
-    savedSettings.beginGroup("log");
-    ui->checkBoxLogEnable->setCheckState(savedSettings.value("enable", logger->enabled()).value<Qt::CheckState>());
-    ui->lineEditLogPath->setText(savedSettings.value("path", logger->path()).toString());
-    ui->spinBoxLogColumnSize->setValue(savedSettings.value("column_size", logger->bytesInRow()).toInt());
-    ui->spinBoxLogSpace->setValue(savedSettings.value("column_spacing", logger->columnSpace()).toInt());
-    logger->setPath(ui->lineEditLogPath->text());
-    logger->setEnabled(ui->checkBoxLogEnable->checkState()==Qt::Checked ? true : false);
-    logger->setBytesInRow(ui->spinBoxLogColumnSize->value());
-    logger->setColumnSpace(ui->spinBoxLogSpace->value());
-    savedSettings.endGroup();
-}

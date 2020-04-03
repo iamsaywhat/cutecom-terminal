@@ -6,6 +6,7 @@
 #include <QCheckBox>
 #include <QFileDialog>
 #include <QDebug>
+#include <QSettings>
 
 Ui::MainWidget* GuiController::gui = nullptr;
 
@@ -262,6 +263,115 @@ void GuiController::retranstate(void){
     setTextSectionLogs();
     setTextSectionBinds();
 }
+void GuiController::save(void){
+    QSettings savedSettings("settings.conf", QSettings::IniFormat );
+
+    savedSettings.beginGroup("general");
+    savedSettings.setValue("theme", gui->comboBoxTheme->currentIndex());
+    savedSettings.setValue("language", gui->comboBoxLanguage->currentIndex());
+    savedSettings.setValue("text codec", gui->comboBoxCodec->currentIndex());
+    savedSettings.setValue("capture_time", gui->spinBoxCaptureTime->value());
+    savedSettings.setValue("capture_bytes", gui->spinBoxCaptureBytes->value());
+    savedSettings.endGroup();
+
+    savedSettings.beginGroup("connection");
+    savedSettings.setValue("port", gui->boxPorts->currentText());
+    savedSettings.setValue("baudrate", gui->boxBaudrate->currentText());
+    savedSettings.setValue("data", gui->boxData->currentIndex());
+    savedSettings.setValue("parity", gui->boxParity->currentIndex());
+    savedSettings.setValue("stop bits", gui->boxStopBits->currentIndex());
+    savedSettings.setValue("flow control", gui->boxFlowControl->currentIndex());
+    savedSettings.endGroup();
+
+    savedSettings.beginGroup("console");
+    savedSettings.setValue("echo", gui->checkboxConsoleEcho->checkState());
+    savedSettings.setValue("cyclic", gui->checkboxConsoleCyclic->checkState());
+    savedSettings.setValue("interval", gui->spinboxConsoleCyclicInterval->value());
+    savedSettings.setValue("bind1", gui->lineEditConsoleHotKey1->text());
+    savedSettings.setValue("bind2", gui->lineEditConsoleHotKey2->text());
+    savedSettings.setValue("bind3", gui->lineEditConsoleHotKey3->text());
+    savedSettings.setValue("bind4", gui->lineEditConsoleHotKey4->text());
+    savedSettings.endGroup();
+
+    savedSettings.beginGroup("table");
+    savedSettings.setValue("echo", gui->checkboxTableEcho->checkState());
+    savedSettings.setValue("cyclic", gui->checkboxTableCyclic->checkState());
+    savedSettings.setValue("interval", gui->spinboxTableCyclicInterval->value());
+    savedSettings.setValue("bind1", gui->lineEditTableHotKey1->text());
+    savedSettings.setValue("bind2", gui->lineEditTableHotKey2->text());
+    savedSettings.setValue("bind3", gui->lineEditTableHotKey3->text());
+    savedSettings.setValue("bind4", gui->lineEditTableHotKey4->text());
+    savedSettings.endGroup();
+
+    savedSettings.beginGroup("log");
+    savedSettings.setValue("enable", gui->checkBoxLogEnable->checkState());
+    savedSettings.setValue("path", gui->lineEditLogPath->text());
+    savedSettings.setValue("column_size", gui->spinBoxLogColumnSize->value());
+    savedSettings.setValue("column_spacing", gui->spinBoxLogSpace->value());
+    savedSettings.endGroup();
+}
+void GuiController::restore(void){
+    QSettings savedSettings("settings.conf", QSettings::IniFormat );
+
+    savedSettings.beginGroup("general");
+    gui->comboBoxTheme->setCurrentIndex(savedSettings.value("theme", 0).toInt());
+    gui->comboBoxLanguage->setCurrentIndex(savedSettings.value("language", 0).toInt());
+    gui->comboBoxCodec->setCurrentIndex(savedSettings.value("text codec", 0).toInt());
+    gui->spinBoxCaptureTime->setValue(savedSettings.value("capture_time", 50).toInt());
+    gui->spinBoxCaptureBytes->setValue(savedSettings.value("capture_bytes", 100).toInt());
+    emit captureTimeChanges(gui->spinBoxCaptureTime->value());
+    emit captureBytesChanges(gui->spinBoxCaptureBytes->value());
+    emit gui->buttonGeneralApply->pressed();
+    savedSettings.endGroup();
+
+    savedSettings.beginGroup("console");
+    gui->checkboxConsoleEcho->setCheckState(savedSettings.value("echo", Qt::Checked).value<Qt::CheckState>());
+    gui->checkboxConsoleCyclic->setCheckState(savedSettings.value("cyclic", Qt::Checked).value<Qt::CheckState>());
+    gui->spinboxConsoleCyclicInterval->setValue(savedSettings.value("interval", 1000).toInt());
+    gui->lineEditConsoleHotKey1->setText(savedSettings.value("bind1", "").toString());
+    gui->lineEditConsoleHotKey2->setText(savedSettings.value("bind2", "").toString());
+    gui->lineEditConsoleHotKey3->setText(savedSettings.value("bind3", "").toString());
+    gui->lineEditConsoleHotKey4->setText(savedSettings.value("bind4", "").toString());
+    emit consoleEchoChanged(gui->checkboxConsoleEcho->checkState() == Qt::Checked ? true : false);
+    emit consoleCyclicChanged(gui->checkboxConsoleCyclic->checkState() == Qt::Checked ? true : false);
+    emit consoleCyclicIntervalChanged(gui->spinboxConsoleCyclicInterval->value());
+    savedSettings.endGroup();
+
+    savedSettings.beginGroup("table");
+    gui->checkboxTableEcho->setCheckState(savedSettings.value("echo", Qt::Checked).value<Qt::CheckState>());
+    gui->checkboxTableCyclic->setCheckState(savedSettings.value("cyclic", Qt::Checked).value<Qt::CheckState>());
+    gui->spinboxTableCyclicInterval->setValue(savedSettings.value("interval", 1000).toInt());
+    gui->lineEditTableHotKey1->setText(savedSettings.value("bind1", "").toString());
+    gui->lineEditTableHotKey2->setText(savedSettings.value("bind2", "").toString());
+    gui->lineEditTableHotKey3->setText(savedSettings.value("bind3", "").toString());
+    gui->lineEditTableHotKey4->setText(savedSettings.value("bind4", "").toString());
+    emit tableEchoChanged(gui->checkboxTableEcho->checkState() == Qt::Checked ? true : false);
+    emit tableCyclicChanged(gui->checkboxTableCyclic->checkState() == Qt::Checked ? true : false);
+    emit tableCyclicIntervalChanged(gui->spinboxTableCyclicInterval->value());
+    savedSettings.endGroup();
+
+    savedSettings.beginGroup("connection");
+    gui->boxPorts->setCurrentText(savedSettings.value("port", "").toString());
+    gui->boxBaudrate->setCurrentText(savedSettings.value("baudrate", "").toString());
+    gui->boxData->setCurrentIndex(savedSettings.value("data", 0).toInt());
+    gui->boxParity->setCurrentIndex(savedSettings.value("parity", 0).toInt());
+    gui->boxStopBits->setCurrentIndex(savedSettings.value("stop bits", 0).toInt());
+    gui->boxFlowControl->setCurrentIndex(savedSettings.value("flow control", 0).toInt());
+    savedSettings.endGroup();
+
+    savedSettings.beginGroup("log");
+    gui->checkBoxLogEnable->setCheckState(savedSettings.value("enable", Qt::Unchecked).value<Qt::CheckState>());
+    gui->lineEditLogPath->setText(savedSettings.value("path", QApplication::applicationDirPath()+"/logs").toString());
+    gui->spinBoxLogColumnSize->setValue(savedSettings.value("column_size", 20 ).toInt());
+    gui->spinBoxLogSpace->setValue(savedSettings.value("column_spacing", 5).toInt());
+
+    emit logEnableChanged(gui->checkBoxLogEnable->checkState() == Qt::Checked ? true : false);
+    emit logPathChanged(gui->lineEditLogPath->text());
+    emit logColumnSizeChanged(gui->spinBoxLogColumnSize->value());
+    emit logColumnSpacing(gui->spinBoxLogSpace->value());
+    savedSettings.endGroup();
+}
+
 bool GuiController::eventFilter(QObject *target, QEvent *event){
     if(event->type() != QKeyEvent::KeyPress || static_cast<QKeyEvent*>(event)->isAutoRepeat())
         return QObject::eventFilter(target, event);

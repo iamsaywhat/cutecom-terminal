@@ -24,8 +24,13 @@ public:
     const int recomendedMargin = 10;
     const int recomendedBorder = 10;
 
+    void setRememberFrameProperties(bool);
+    bool rememberFrameProperties(void) const;
+
 private:
     SizeController *sizeControl = nullptr;
+    bool _rememberFrameProperties = false;
+    QRect normalWindowSize;
 
 signals:
 
