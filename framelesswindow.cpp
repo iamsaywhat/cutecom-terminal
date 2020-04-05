@@ -26,8 +26,8 @@ void FramelessWindow::setRememberFrameProperties(bool state){
         settings.beginGroup("frameless");
         normalWindowSize = settings.value("window-size", this->size()).toRect();
         this->setGeometry(normalWindowSize);
-//        if(settings.value("maximize", false).toBool())
-//            maximizeFramelessWindow();
+        if(settings.value("maximize", false).toBool())
+            maximizeFramelessWindow();
         settings.endGroup();
     }
 }

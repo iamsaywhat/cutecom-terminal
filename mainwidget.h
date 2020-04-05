@@ -4,16 +4,7 @@
 #include <QWidget>
 #include <QTranslator>
 #include "framelesswindow.h"
-#include <QSerialPort>
-#include "consolemode/consolewidget.h"
-#include "hexmode/tableconsole.h"
-#include "serialgui.h"
-#include "decorator.h"
-#include "converter.h"
-#include "guicontroller.h"
-#include "logger.h"
-
-
+#include "uiproxy.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWidget; }
@@ -27,35 +18,67 @@ public:
     MainWidget(FramelessWindow *parent = nullptr);
     ~MainWidget();
 
-    void applyColorScheme(int indexOfTheme);
-    void setAppFont();
-    void setAppTextCodec(int index);
-    void setAppLanguage(int index);
-    void fillLanguageList();
-    void fillCodecList();
-    void fillThemeList();
+    enum settingsMenu {
+        settingsIndexConnection = 0,
+        settingsIndexGeneral    = 1,
+        settingsIndexConsole    = 2,
+        settingsIndexTable      = 3,
+        settingsIndexLogs       = 4,
+        settingsIndexBinds      = 5,
+    };
+    enum quickMenu {
+        quickIndexConsole   = 0,
+        quickIndexTable     = 1,
+        quickIndexConverter = 2,
+        quickIndexSettings  = 3,
+    };
+
+    void saveSettings(void);
+    void restoreSettings(void);
+
+    bool eventFilter(QObject *target, QEvent *event);
+    void connectQuickMenu(void);
+    void connectSettingsMenu(void);
+    void connectSectionConnection(void);
+    void connectSectionGeneral(void);
+    void connectSectionConsole(void);
+    void connectSectionTable(void);
+    void connectSectionLog(void);
+
+    void setPropertiesMainWidget(void);
+    void setPropertiesMenu(void);
+    void setPropertiesSectionConnection(void);
+    void setPropertiesSectionGeneral(void);
+    void setPropertiesSectionConsole(void);
+    void setPropertiesSectionTable(void);
+    void setPropertiesSectionLogs(void);
+    void setPropertiesSectionBinds(void);
+
+    void setTextSettingsMenu(void);
+    void setTextSectionConnection(void);
+    void setTextSectionGeneral(void);
+    void setTextSectionConsole(void);
+    void setTextSectionTable(void);
+    void setTextSectionLogs(void);
+    void setTextSectionBinds(void);
+
+    void setProperties (void);
+    void retranstate(void);
 
 private:
-    Ui::MainWidget     *ui           = nullptr;
-    SerialGui          *serial       = nullptr;
-    ConsoleWidget      *console      = nullptr;
-    TableConsole       *tableConsole = nullptr;
-    Converter          *converter    = nullptr;
-    GuiController      *settings     = nullptr;
-    QStringList        *codecList    = nullptr;
-    QStringList        *languageList = nullptr;
-    QList<Decorator*>  *themeList    = nullptr;
-    Logger             *logger       = nullptr;
+    Ui::MainWidget *gui = nullptr;
+    UiProxy *uiProxy;
+    QRegularExpressionValidator *hexValidator = new QRegularExpressionValidator(
+                                                   QRegularExpression("[0-9A-Fa-f ]+"));
 
-    Decorator          *darkTheme      = nullptr;
-    Decorator          *greenTheme     = nullptr;
-    Decorator          *bitbucketTheme = nullptr;
-    Decorator          *githubTheme    = nullptr;
-    Decorator          *purpleTheme    = nullptr;
-
-    QTranslator        language;
-
-    QFont *appFont = new QFont("Terminus", 10, QFont::ExtraBold);
+private slots:
+    void consoleCyclicStoped(void);
+    void tableCyclicStoped(void);
+    void consoleHotkeys(void);                // Обработка нажатий горячих клавиш "консоли"
+    void tableHotkeys(void);                  // Обработка нажатий горячих клавиш "таблицы"
+    void hexDelimiters(const QString&);       // Авторасстановка разделителей hex-кодов
+    void generalSettingsChanged(void);        //
+    void selectLogPath(void);                 // Обработка кнопки выбора папки для логов
 };
 #endif // MAINWIDGET_H
 

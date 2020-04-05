@@ -40,215 +40,128 @@
 <context>
     <name>GuiController</name>
     <message>
-        <location filename="../guicontroller.cpp" line="151"/>
-        <location filename="../guicontroller.cpp" line="168"/>
-        <location filename="../guicontroller.cpp" line="270"/>
-        <location filename="../guicontroller.cpp" line="278"/>
         <source>Connection</source>
-        <translation>Connection</translation>
+        <translation type="vanished">Connection</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="152"/>
-        <location filename="../guicontroller.cpp" line="178"/>
-        <location filename="../guicontroller.cpp" line="271"/>
-        <location filename="../guicontroller.cpp" line="286"/>
         <source>General</source>
-        <translation>General</translation>
+        <translation type="vanished">General</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="153"/>
-        <location filename="../guicontroller.cpp" line="190"/>
-        <location filename="../guicontroller.cpp" line="272"/>
-        <location filename="../guicontroller.cpp" line="294"/>
         <source>Console</source>
-        <translation>Console</translation>
+        <translation type="vanished">Console</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="154"/>
-        <location filename="../guicontroller.cpp" line="213"/>
-        <location filename="../guicontroller.cpp" line="273"/>
-        <location filename="../guicontroller.cpp" line="303"/>
         <source>Table</source>
-        <translation>Table</translation>
+        <translation type="vanished">Table</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="155"/>
-        <location filename="../guicontroller.cpp" line="242"/>
-        <location filename="../guicontroller.cpp" line="274"/>
-        <location filename="../guicontroller.cpp" line="312"/>
         <source>Logs</source>
-        <translation>Logs</translation>
+        <translation type="vanished">Logs</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="156"/>
-        <location filename="../guicontroller.cpp" line="275"/>
         <source>Binds</source>
-        <translation>Binds</translation>
+        <translation type="vanished">Binds</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="157"/>
-        <location filename="../guicontroller.cpp" line="276"/>
         <source>Version: 0.0.0</source>
-        <translation>Version: 0.0.0</translation>
+        <translation type="vanished">Version: 0.0.0</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="170"/>
-        <location filename="../guicontroller.cpp" line="279"/>
         <source>Port:</source>
-        <translation>Port:</translation>
+        <translation type="vanished">Port:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="171"/>
-        <location filename="../guicontroller.cpp" line="280"/>
         <source>Data:</source>
-        <translation>Data:</translation>
+        <translation type="vanished">Data:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="172"/>
-        <location filename="../guicontroller.cpp" line="281"/>
         <source>Stop bits:</source>
-        <translation>Stop bits:</translation>
+        <translation type="vanished">Stop bits:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="173"/>
-        <location filename="../guicontroller.cpp" line="282"/>
         <source>Parity:</source>
-        <translation>Parity:</translation>
+        <translation type="vanished">Parity:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="174"/>
-        <location filename="../guicontroller.cpp" line="283"/>
         <source>Baudrate:</source>
-        <translation>Baudrate:</translation>
+        <translation type="vanished">Baudrate:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="175"/>
-        <location filename="../guicontroller.cpp" line="284"/>
         <source>Flow control:</source>
-        <translation>Flow control:</translation>
+        <translation type="vanished">Flow control:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="180"/>
-        <location filename="../guicontroller.cpp" line="287"/>
         <source>Theme:</source>
-        <translation>Theme:</translation>
+        <translation type="vanished">Theme:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="181"/>
-        <location filename="../guicontroller.cpp" line="288"/>
         <source>Language:</source>
-        <translation>Language:</translation>
+        <translation type="vanished">Language:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="182"/>
-        <location filename="../guicontroller.cpp" line="289"/>
         <source>Text codec:</source>
-        <translation>Text codec:</translation>
+        <translation type="vanished">Text codec:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="183"/>
-        <location filename="../guicontroller.cpp" line="290"/>
         <source>Capture time, ms:</source>
-        <translation>Capture time, ms:</translation>
+        <translation type="vanished">Capture time, ms:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="184"/>
-        <location filename="../guicontroller.cpp" line="291"/>
         <source>Capture bytes:</source>
-        <translation>Capture bytes:</translation>
+        <translation type="vanished">Capture bytes:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="185"/>
-        <location filename="../guicontroller.cpp" line="250"/>
-        <location filename="../guicontroller.cpp" line="292"/>
-        <location filename="../guicontroller.cpp" line="317"/>
         <source>Apply</source>
-        <translation>Apply</translation>
+        <translation type="vanished">Apply</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="192"/>
-        <location filename="../guicontroller.cpp" line="215"/>
-        <location filename="../guicontroller.cpp" line="295"/>
-        <location filename="../guicontroller.cpp" line="304"/>
         <source>Echo:</source>
-        <translation>Echo:</translation>
+        <translation type="vanished">Echo:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="195"/>
-        <location filename="../guicontroller.cpp" line="218"/>
-        <location filename="../guicontroller.cpp" line="296"/>
-        <location filename="../guicontroller.cpp" line="305"/>
         <source>Cyclic mode:</source>
-        <translation>Cyclic mode:</translation>
+        <translation type="vanished">Cyclic mode:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="196"/>
-        <location filename="../guicontroller.cpp" line="220"/>
-        <location filename="../guicontroller.cpp" line="297"/>
-        <location filename="../guicontroller.cpp" line="306"/>
         <source>Interval, ms:</source>
-        <translation>Interval, ms:</translation>
+        <translation type="vanished">Interval, ms:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="198"/>
-        <location filename="../guicontroller.cpp" line="221"/>
-        <location filename="../guicontroller.cpp" line="298"/>
-        <location filename="../guicontroller.cpp" line="307"/>
         <source>Hot key 1:</source>
-        <translation>Hot key 1:</translation>
+        <translation type="vanished">Hot key 1:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="199"/>
-        <location filename="../guicontroller.cpp" line="222"/>
-        <location filename="../guicontroller.cpp" line="299"/>
-        <location filename="../guicontroller.cpp" line="308"/>
         <source>Hot key 2:</source>
-        <translation>Hot key 2:</translation>
+        <translation type="vanished">Hot key 2:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="200"/>
-        <location filename="../guicontroller.cpp" line="223"/>
-        <location filename="../guicontroller.cpp" line="300"/>
-        <location filename="../guicontroller.cpp" line="309"/>
         <source>Hot key 3:</source>
-        <translation>Hot key 3:</translation>
+        <translation type="vanished">Hot key 3:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="201"/>
-        <location filename="../guicontroller.cpp" line="224"/>
-        <location filename="../guicontroller.cpp" line="301"/>
-        <location filename="../guicontroller.cpp" line="310"/>
         <source>Hot key 4:</source>
-        <translation>Hot key 4:</translation>
+        <translation type="vanished">Hot key 4:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="244"/>
-        <location filename="../guicontroller.cpp" line="313"/>
         <source>Enable:</source>
-        <translation>Enable:</translation>
+        <translation type="vanished">Enable:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="245"/>
-        <location filename="../guicontroller.cpp" line="314"/>
         <source>Path:</source>
-        <translation>Path:</translation>
+        <translation type="vanished">Path:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="248"/>
-        <location filename="../guicontroller.cpp" line="315"/>
         <source>Сolumn spacing:</source>
-        <translation>Сolumn spacing:</translation>
+        <translation type="vanished">Сolumn spacing:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="249"/>
-        <location filename="../guicontroller.cpp" line="316"/>
         <source>Сolumn size, byte:</source>
-        <translation>Сolumn size, byte:</translation>
+        <translation type="vanished">Сolumn size, byte:</translation>
     </message>
     <message>
-        <location filename="../guicontroller.cpp" line="466"/>
         <source>Select path</source>
-        <translation>Select path</translation>
+        <translation type="vanished">Select path</translation>
     </message>
 </context>
 <context>
@@ -347,31 +260,37 @@
     </message>
     <message>
         <location filename="../mainwidget.ui" line="532"/>
+        <location filename="../mainwidget.cpp" line="237"/>
         <source>Port:</source>
         <translation>Port:</translation>
     </message>
     <message>
         <location filename="../mainwidget.ui" line="553"/>
+        <location filename="../mainwidget.cpp" line="241"/>
         <source>Baudrate:</source>
         <translation>Baudrate:</translation>
     </message>
     <message>
         <location filename="../mainwidget.ui" line="571"/>
+        <location filename="../mainwidget.cpp" line="238"/>
         <source>Data:</source>
         <translation>Data:</translation>
     </message>
     <message>
         <location filename="../mainwidget.ui" line="585"/>
+        <location filename="../mainwidget.cpp" line="240"/>
         <source>Parity:</source>
         <translation>Parity:</translation>
     </message>
     <message>
         <location filename="../mainwidget.ui" line="599"/>
+        <location filename="../mainwidget.cpp" line="239"/>
         <source>Stop bits:</source>
         <translation>Stop bits:</translation>
     </message>
     <message>
         <location filename="../mainwidget.ui" line="613"/>
+        <location filename="../mainwidget.cpp" line="242"/>
         <source>Flow control:</source>
         <translation>Flow control:</translation>
     </message>
@@ -428,6 +347,151 @@
         <location filename="../mainwidget.ui" line="964"/>
         <source>11</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="160"/>
+        <location filename="../mainwidget.cpp" line="227"/>
+        <location filename="../mainwidget.cpp" line="236"/>
+        <source>Connection</source>
+        <translation>Connection</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="161"/>
+        <location filename="../mainwidget.cpp" line="228"/>
+        <location filename="../mainwidget.cpp" line="245"/>
+        <source>General</source>
+        <translation>General</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="162"/>
+        <location filename="../mainwidget.cpp" line="229"/>
+        <location filename="../mainwidget.cpp" line="254"/>
+        <source>Console</source>
+        <translation>Console</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="163"/>
+        <location filename="../mainwidget.cpp" line="230"/>
+        <location filename="../mainwidget.cpp" line="264"/>
+        <source>Table</source>
+        <translation>Table</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="164"/>
+        <location filename="../mainwidget.cpp" line="231"/>
+        <location filename="../mainwidget.cpp" line="274"/>
+        <source>Logs</source>
+        <translation>Logs</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="165"/>
+        <location filename="../mainwidget.cpp" line="232"/>
+        <source>Binds</source>
+        <translation>Binds</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="166"/>
+        <location filename="../mainwidget.cpp" line="233"/>
+        <source>Version: 0.0.0</source>
+        <translation>Version: 0.0.0</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="246"/>
+        <source>Theme:</source>
+        <translation>Theme:</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="247"/>
+        <source>Language:</source>
+        <translation>Language:</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="248"/>
+        <source>Text codec:</source>
+        <translation>Text codec:</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="249"/>
+        <source>Capture time, ms:</source>
+        <translation>Capture time, ms:</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="250"/>
+        <source>Capture bytes:</source>
+        <translation>Capture bytes:</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="251"/>
+        <location filename="../mainwidget.cpp" line="279"/>
+        <source>Apply</source>
+        <translation>Apply</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="255"/>
+        <location filename="../mainwidget.cpp" line="265"/>
+        <source>Echo:</source>
+        <translation>Echo:</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="256"/>
+        <location filename="../mainwidget.cpp" line="266"/>
+        <source>Cyclic mode:</source>
+        <translation>Cyclic mode:</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="257"/>
+        <location filename="../mainwidget.cpp" line="267"/>
+        <source>Interval, ms:</source>
+        <translation>Interval, ms:</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="258"/>
+        <location filename="../mainwidget.cpp" line="268"/>
+        <source>Hot key 1:</source>
+        <translation>Hot key 1:</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="259"/>
+        <location filename="../mainwidget.cpp" line="269"/>
+        <source>Hot key 2:</source>
+        <translation>Hot key 2:</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="260"/>
+        <location filename="../mainwidget.cpp" line="270"/>
+        <source>Hot key 3:</source>
+        <translation>Hot key 3:</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="261"/>
+        <location filename="../mainwidget.cpp" line="271"/>
+        <source>Hot key 4:</source>
+        <translation>Hot key 4:</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="275"/>
+        <source>Enable:</source>
+        <translation>Enable:</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="276"/>
+        <source>Path:</source>
+        <translation>Path:</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="277"/>
+        <source>Сolumn spacing:</source>
+        <translation>Сolumn spacing:</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="278"/>
+        <source>Сolumn size, byte:</source>
+        <translation>Сolumn size, byte:</translation>
+    </message>
+    <message>
+        <location filename="../mainwidget.cpp" line="510"/>
+        <source>Select path</source>
+        <translation>Select path</translation>
     </message>
 </context>
 <context>

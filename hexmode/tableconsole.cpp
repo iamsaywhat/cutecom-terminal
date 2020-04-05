@@ -43,7 +43,7 @@ TableConsole::TableConsole(QObject*           parent,
     for(int i = 4; i < 5; i++){                            // Назначаем делегат
         _table->setItemDelegateForColumn(i, delegate);
     }
-//    _table->setEditTriggers(QAbstractItemView::NoEditTriggers);      // Действия инициирующие редактирование элемента запрещены
+    _table->setEditTriggers(QAbstractItemView::NoEditTriggers);      // Действия инициирующие редактирование элемента запрещены
     _table->setSelectionMode(QAbstractItemView::SingleSelection);    // Выбирать можно только один элемент
     _table->setSelectionBehavior(QAbstractItemView::SelectRows);     // За один элемент выделения считается строка целиком
     _table->resizeColumnToContents(0);                               // Нулевой столбец будет изменён размером под своё содержимое
