@@ -15,15 +15,17 @@
 
 
 MainWidget::MainWidget(FramelessWindow *parent)
-    : QWidget(parent)
+    : FramelessWindow(parent)
     , gui(new Ui::MainWidget)
 {
-    gui->setupUi(this);
+    gui->setupUi(centralWidget());
     uiProxy = new UiProxy(this, gui);
 
-    this->setMinimumSize(600, 300);
-    parent->setWindowTitle("Advanced Terminal");
-    parent->setWindowIcon(QIcon(":/light/resources/icons/light/consolemode.png"));
+    setMinimumSize(600, 300);
+    setWindowTitle("Advanced Terminal");
+    setWindowIcon(QIcon(":/light/resources/icons/light/consolemode.png"));
+    centralWidget()->layout()->layout()->setMargin(0);
+    centralWidget()->layout()->layout()->setSpacing(0);
 
     installEventFilter(this);
     setProperties();
@@ -36,9 +38,9 @@ MainWidget::MainWidget(FramelessWindow *parent)
     connectSectionLog();
 
     // Подключение кнопок закрыть, свернуть, развернуть окно, так как стандартные скрыты
-    connect(gui->closeButton,    &QToolButton::clicked, parent, &QWidget::close);
-    connect(gui->minimizeButton, &QToolButton::clicked, parent, &QWidget::showMinimized);
-    connect(gui->maximazeButton, &QToolButton::clicked, [parent](){parent->maximizeFramelessWindow();});
+    connect(gui->closeButton,    &QToolButton::clicked, this, &FramelessWindow::close);
+    connect(gui->minimizeButton, &QToolButton::clicked, this, &FramelessWindow::showMinimized);
+    connect(gui->maximazeButton, &QToolButton::clicked, this, &FramelessWindow::changeFullScreenMode);
     restoreSettings();
 }
 MainWidget::~MainWidget(){
@@ -512,13 +514,9 @@ void MainWidget::selectLogPath(void){
 void MainWidget::saveSettings(void){
     QSettings settings("settings.conf", QSettings::IniFormat );
 
-//    settings.beginGroup("app");
-//    settings.setValue("maximized", this->isMaximized());
-//    if(this->isMaximized())
-//        settings.setValue("size", normalSize);
-//    else
-//        settings.setValue("size", this->geometry());
-//    settings.endGroup();
+    settings.beginGroup("app");
+    settings.setValue("size", this->normalGeometry());
+    settings.endGroup();
 
     settings.beginGroup("general");
     settings.setValue("theme", gui->comboBoxTheme->currentIndex());
@@ -567,11 +565,9 @@ void MainWidget::saveSettings(void){
 void MainWidget::restoreSettings(void){
     QSettings settings("settings.conf", QSettings::IniFormat );
 
-//    settings.beginGroup("app");
-//    this->setGeometry(settings.value("size", this->geometry()).toRect());
-//    if(settings.value("maximized", false).toBool())
-//         emit gui->maximazeButton->clicked();
-//    settings.endGroup();
+    settings.beginGroup("app");
+    this->setGeometry(settings.value("size", this->normalGeometry()).toRect());
+    settings.endGroup();
 
     settings.beginGroup("general");
     gui->comboBoxTheme->setCurrentIndex(settings.value("theme", 0).toInt());

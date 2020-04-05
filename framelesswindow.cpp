@@ -1,59 +1,23 @@
 #include "framelesswindow.h"
 #include <QGraphicsDropShadowEffect>
-#include <QtDebug>
+#include <QDebug>
 #include <QSettings>
 
 FramelessWindow::FramelessWindow(QWidget *parent) : QWidget(parent) {
     QGridLayout *layout = new QGridLayout(this);
+    layout->addWidget(centralWidget());
     this->setLayout(layout);
-    sizeControl = new SizeController(this);
-    normalWindowSize = geometry();
-}
-void FramelessWindow::setCentralWidget(QWidget *widget){
-    this->layout()->addWidget(widget);
     QGraphicsDropShadowEffect *shadowEffect = new QGraphicsDropShadowEffect(this);
-    shadowEffect->setBlurRadius(10); // Устанавливаем радиус размытия
-    shadowEffect->setOffset(0);     // Устанавливаем смещение тени
-    widget->setGraphicsEffect(shadowEffect);   // Устанавливаем эффект тени на окно
-    widget->layout()->setMargin(0);            // Устанавливаем размер полей
-    widget->layout()->setSpacing(0);
-    widget->setAutoFillBackground(true);
+    shadowEffect->setBlurRadius(10);                    // Устанавливаем радиус размытия
+    shadowEffect->setOffset(0);                         // Устанавливаем смещение тени
+    centralWidget()->setGraphicsEffect(shadowEffect);   // Устанавливаем эффект тени на окно
+    centralWidget()->setAutoFillBackground(true);
+    sizeControl = new SizeController(this);
 }
-void FramelessWindow::setRememberFrameProperties(bool state){
-    _rememberFrameProperties = state;
-    if(state){
-        QSettings settings("frameless.conf", QSettings::IniFormat );
-        settings.beginGroup("frameless");
-        normalWindowSize = settings.value("window-size", this->size()).toRect();
-        this->setGeometry(normalWindowSize);
-        if(settings.value("maximize", false).toBool())
-            maximizeFramelessWindow();
-        settings.endGroup();
-    }
-}
-bool FramelessWindow::rememberFrameProperties(void) const{
-    return _rememberFrameProperties;
-}
-
 FramelessWindow::~FramelessWindow() {
-    if(rememberFrameProperties()){
-        QSettings settings("frameless.conf", QSettings::IniFormat );
-        settings.beginGroup("frameless");
-        settings.setValue("maximize", isMaximized());
-        if(isMaximized()){
-            settings.setValue("window-size", normalWindowSize);
-        }
-        else
-            settings.setValue("window-size", geometry());
-        settings.endGroup();
-    }
     delete sizeControl;
 }
-
-void FramelessWindow::closeFramelessWindow(void) {
-    this->close();
-}
-void FramelessWindow::maximizeFramelessWindow (void) {
+void FramelessWindow::showMaximized(void) {
     // При нажатии на кнопку максимизации/нормализации окна
     // Делаем проверку на то, в каком состоянии находится окно и переключаем его режим
     if (!this->isMaximized())
@@ -62,27 +26,24 @@ void FramelessWindow::maximizeFramelessWindow (void) {
          * (на уровень выше interfaceWidget) убрать, чтобы окно полноценно развернулось
          * в полный экран, однако, при этом исчезает тень, которую в полноэкранном режиме
          * и не должно быть видно, но при минимизации окна нужно вернуть */
-        normalWindowSize = this->geometry();
         this->layout()->setMargin(0);
-        this->showMaximized();
+        this->QWidget::showMaximized();
     }
-    else
+}
+void FramelessWindow::showNormal(void){
+    if(this->isMaximized())
     {
         // Заметьте, каждый раз устанавливаем новый стиль в эту кнопку
         /* Здесь при минимизации возвращаем поля в исходный вид,
          * чтобы тень отобразилась */
         this->layout()->setMargin(recomendedMargin);
-        this->showNormal();
-        this->setGeometry(normalWindowSize);
+        this->QWidget::showNormal();
     }
 }
-
-
-void FramelessWindow::minimizeFramelessWindow (void) {
-    this->showMinimized();
+void FramelessWindow::changeFullScreenMode(void){
+    showNormal();
+    showMaximized();
 }
-
-
 
 
 
@@ -178,10 +139,10 @@ void SizeController::mouseMove(QMouseEvent *event) {
         if (_dragStart) {                            /* И был выставлен флаг режима перемещения окна */
             if (_target->isFullScreen() || _target->isMaximized()) {
                  auto part = event->screenPos().x() / _target->width();    /* Это вариант, когда положение курсора */
-                 _target->maximizeFramelessWindow();                       /* на нормализованном виджете определяется */
+                 _target->showMaximized();                                 /* на нормализованном виджете определяется */
                  int offsetX = static_cast<int>(_target->width() * part);  /* по пропорции */
-//                 _target->maximizeFramelessWindow();                      /* Это вариант, когда курсор всегда */
-//                 int offsetX = _target->width()/2;                        /* будет по центру x оси виджета */
+//                 _target->showMaximized();                               /* Это вариант, когда курсор всегда */
+//                 int offsetX = _target->width()/2;                       /* будет по центру x оси виджета */
                  _target->move(static_cast<int>(event->screenPos().x()) - offsetX, 0);
                  _dragPos = QPoint(offsetX, event->y());
             }

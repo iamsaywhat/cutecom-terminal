@@ -12,10 +12,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);   
-    FramelessWindow frameless;
-    frameless.setRememberFrameProperties(true);
-    MainWidget widget(&frameless);
-    frameless.setCentralWidget(&widget);
-    frameless.show();
+    MainWidget window;
+    window.show();
     return a.exec();
 }

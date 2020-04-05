@@ -17,27 +17,25 @@ class SizeController;
 class FramelessWindow : public QWidget
 {
     Q_OBJECT
+
 public:
     explicit FramelessWindow(QWidget *parent = nullptr);
     ~FramelessWindow();
-    void setCentralWidget(QWidget *widget);
+    QWidget* centralWidget() {return &_centralWidget;}
+    QRect normalSize(void);
+    void setNormalSize(QRect);
+
     const int recomendedMargin = 10;
     const int recomendedBorder = 10;
 
-    void setRememberFrameProperties(bool);
-    bool rememberFrameProperties(void) const;
-
 private:
+    QWidget _centralWidget;
     SizeController *sizeControl = nullptr;
-    bool _rememberFrameProperties = false;
-    QRect normalWindowSize;
-
-signals:
 
 public slots:
-    void closeFramelessWindow(void);
-    void maximizeFramelessWindow (void);
-    void minimizeFramelessWindow (void);
+    void showMaximized(void);
+    void showNormal(void);
+    void changeFullScreenMode(void);
 };
 
 

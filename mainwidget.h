@@ -10,7 +10,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWidget; }
 QT_END_NAMESPACE
 
-class MainWidget : public QWidget
+class MainWidget : public FramelessWindow
 {
     Q_OBJECT
 
