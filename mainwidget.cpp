@@ -363,10 +363,11 @@ void MainWidget::consoleCyclicStoped(void){
 void MainWidget::consoleHotkeys(void){
     QString data;
     static QToolButton *button = nullptr;
-    if(button != static_cast<QToolButton*>(QObject::sender())){
+    QToolButton* senderButton = static_cast<QToolButton*>(QObject::sender());
+    if(button != senderButton || (button == senderButton && button->isChecked())){
         if(button != nullptr)
             button->setChecked(false);
-        button = static_cast<QToolButton*>(QObject::sender());
+        button = senderButton;
         if(button == gui->buttonConsoleHotKey1)
             data = gui->lineEditConsoleHotKey1->text();
         else if(button == gui->buttonConsoleHotKey2)
@@ -390,7 +391,8 @@ void MainWidget::consoleHotkeys(void){
 void MainWidget::tableHotkeys(void){
     QString data;
     static QToolButton *button = nullptr;
-    if(button != static_cast<QToolButton*>(QObject::sender())){
+    QToolButton* senderButton = static_cast<QToolButton*>(QObject::sender());
+    if(button != senderButton || (button == senderButton && button->isChecked())){
         if(button != nullptr)
             button->setChecked(false);
         button = static_cast<QToolButton*>(QObject::sender());
