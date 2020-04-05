@@ -41,8 +41,10 @@ void FramelessWindow::showNormal(void){
     }
 }
 void FramelessWindow::changeFullScreenMode(void){
-    showNormal();
-    showMaximized();
+    if(isMaximized())
+        showNormal();
+    else
+        showMaximized();
 }
 
 
