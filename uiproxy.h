@@ -12,7 +12,6 @@
 #include "serialgui.h"
 #include "decorator.h"
 #include "converter.h"
-#include "guicontroller.h"
 #include "logger.h"
 
 class UiProxy : public QObject

@@ -30,6 +30,7 @@ ConsoleWidget::ConsoleWidget(QObject*        parent,
 
     timer = new QTimer;
     connect(timer, &QTimer::timeout, this, &ConsoleWidget::cyclicTimeout);
+    setEchoMode(true);
 }
 
 ConsoleWidget::~ConsoleWidget(){
@@ -77,9 +78,9 @@ QString& ConsoleWidget::bindData(void){
     return _bindData;
 }
 void ConsoleWidget::setEchoMode(bool state){
-    if(state)                                                                  // Режим эхо, не просто маскирует посылаемые
+    if(state && !_echo)                                                        // Режим эхо, не просто маскирует посылаемые
         connect(_serial, &SerialGui::send, this, &ConsoleWidget::sended);      // данные, а фактически подписывает/отписывает
-    else                                                                       // нас на исходящие данные порта
+    else if (!state && _echo)                                                  // нас на исходящие данные порта
         disconnect(_serial, &SerialGui::send, this, &ConsoleWidget::sended);   //
     _echo = state;                                                             // Фиксируем состояние
     emit echoModeChanged(state);                                               // Уведомляем о изменении

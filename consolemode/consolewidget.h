@@ -38,7 +38,7 @@ private:
     QLineEdit *         _input;
     QPushButton*        _sendButton;
     QPushButton*        _clearButton;
-    bool                _echo   = true;
+    bool                _echo   = false;
     bool                _cyclic = false;
     int                 _cyclicInterval = 1000;
     QString             _bindData;

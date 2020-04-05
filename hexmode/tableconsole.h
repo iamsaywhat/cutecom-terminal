@@ -59,7 +59,7 @@ private:
     QPushButton*        _clearButton; // Кнопка очистки содержимого
     bool                skipAutoresize = false;
     QStringList         horizontalHeaders;
-    bool                _echo = true;
+    bool                _echo = false;
     bool                _cyclic = false;
     int                 _cyclicInterval = 1000;
     QString             _bindData;

@@ -67,8 +67,9 @@ TableConsole::TableConsole(QObject*           parent,
             this, &TableConsole::received);                              // и вызывать slot обработки входящих данных
 
     timer = new QTimer;
-    connect(timer, &QTimer::timeout,
-            this, &TableConsole::cyclicTimeout);
+    connect(timer, &QTimer::timeout, this, &TableConsole::cyclicTimeout);
+
+    setEchoMode(true);
 }
 TableConsole::~TableConsole(){
     delete timer;
@@ -244,9 +245,9 @@ QString& TableConsole::bindData(void){
     return _bindData;
 }
 void TableConsole::setEchoMode(bool state){   
-    if(state)                                                                 // Режим эхо, не просто маскирует посылаемые
+    if(state && !_echo)                                                       // Режим эхо, не просто маскирует посылаемые
         connect(_serial, &SerialGui::send, this, &TableConsole::sended);      // данные, а фактически подписывает/отписывает
-    else                                                                      // нас на исходящие данные порта
+    else if (!state && _echo)                                                 // нас на исходящие данные порта
         disconnect(_serial, &SerialGui::send, this, &TableConsole::sended);   //
     _echo = state;                                                            // Фиксируем состояние
     emit echoModeChanged(state);                                              // Уведомляем о изменении
