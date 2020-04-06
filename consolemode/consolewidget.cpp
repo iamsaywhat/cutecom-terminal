@@ -5,6 +5,7 @@
 #include <QTime>
 #include <QDebug>
 #include "converter.h"
+#include <QScrollBar>
 
 ConsoleWidget::ConsoleWidget(QObject*        parent,
                              SerialGui*      serial,
@@ -55,12 +56,14 @@ void ConsoleWidget::sended(QByteArray data){
     _console->textCursor().insertText(">> ");          // Признак исходящих данных
     _console->textCursor().insertText(text);           // Печатаем то, что пришло
     _console->textCursor().insertText("\n");           // Переходим на следующую строку
+    _console->verticalScrollBar()->setSliderPosition(_console->verticalScrollBar()->maximum());
 }
 void ConsoleWidget::received(QByteArray data){
     replaceSymbols(data, '.');                        // Необходимо непечатные символы заменить
     QString text = Converter::convertToUnicode(data); // Необходимо, массив байт представить в текущей кодировке
     _console->moveCursor(QTextCursor::End);           // Смещаем курсор текста гарантированно в конец
     _console->textCursor().insertText(text);          // Печатаем то, что пришло
+    _console->verticalScrollBar()->setSliderPosition(_console->verticalScrollBar()->maximum());
 }
 void ConsoleWidget::clear (void){
     _console->clear();

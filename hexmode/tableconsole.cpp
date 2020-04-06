@@ -217,13 +217,13 @@ void TableConsole::sended(QByteArray data){
     QString hexString = Converter::byteArrayToHexString(data, ' ');       // Посланные данные нужно сконверировать в текст
     Converter::removeNonPrintedSymbols(data, '.');
     QString asciiString = Converter::byteArrayToAsciiString(data);
-    appendData(TableConsole::INCOMING, hexString, asciiString);          // А после добавить в таблицу
+    appendData(TableConsole::OUTGOING, hexString, asciiString);          // А после добавить в таблицу
 }
 void TableConsole::received(QByteArray data){
     QString hexString = Converter::byteArrayToHexString(data, ' ');       // Посланные данные нужно сконверировать в текст
     Converter::removeNonPrintedSymbols(data, '.');
     QString asciiString = Converter::byteArrayToAsciiString(data);
-    appendData(TableConsole::OUTGOING, hexString, asciiString);           // А после добавить в таблицу
+    appendData(TableConsole::INCOMING, hexString, asciiString);           // А после добавить в таблицу
 }
 
 void TableConsole::slotTextDelimiter(void){
