@@ -28,6 +28,7 @@ void FramelessWindow::showMaximized(void) {
          * и не должно быть видно, но при минимизации окна нужно вернуть */
         this->layout()->setMargin(0);
         this->QWidget::showMaximized();
+        emit windowMaximized();
     }
 }
 void FramelessWindow::showNormal(void){
@@ -38,7 +39,12 @@ void FramelessWindow::showNormal(void){
          * чтобы тень отобразилась */
         this->layout()->setMargin(recomendedMargin);
         this->QWidget::showNormal();
+        emit windowNormalized();
     }
+}
+void FramelessWindow::showMinimized(void){
+    this->QWidget::showMinimized();
+    emit windowMinimized();
 }
 void FramelessWindow::changeFullScreenMode(void){
     if(isMaximized())
@@ -141,9 +147,9 @@ void SizeController::mouseMove(QMouseEvent *event) {
         if (_dragStart) {                            /* И был выставлен флаг режима перемещения окна */
             if (_target->isFullScreen() || _target->isMaximized()) {
                  auto part = event->screenPos().x() / _target->width();    /* Это вариант, когда положение курсора */
-                 _target->showMaximized();                                 /* на нормализованном виджете определяется */
+                 _target->showNormal();                                    /* на нормализованном виджете определяется */
                  int offsetX = static_cast<int>(_target->width() * part);  /* по пропорции */
-//                 _target->showMaximized();                               /* Это вариант, когда курсор всегда */
+//                 _target->showNormal();                                  /* Это вариант, когда курсор всегда */
 //                 int offsetX = _target->width()/2;                       /* будет по центру x оси виджета */
                  _target->move(static_cast<int>(event->screenPos().x()) - offsetX, 0);
                  _dragPos = QPoint(offsetX, event->y());

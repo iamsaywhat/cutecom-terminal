@@ -41,6 +41,8 @@ MainWidget::MainWidget(FramelessWindow *parent)
     connect(gui->closeButton,    &QToolButton::clicked, this, &FramelessWindow::close);
     connect(gui->minimizeButton, &QToolButton::clicked, this, &FramelessWindow::showMinimized);
     connect(gui->maximazeButton, &QToolButton::clicked, this, &FramelessWindow::changeFullScreenMode);
+    connect(this, &FramelessWindow::windowMaximized, [this](){gui->maximazeButton->setChecked(true);});
+    connect(this, &FramelessWindow::windowNormalized, [this](){gui->maximazeButton->setChecked(false);});
     restoreSettings();
 }
 MainWidget::~MainWidget(){

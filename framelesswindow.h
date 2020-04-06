@@ -32,9 +32,15 @@ private:
     QWidget _centralWidget;
     SizeController *sizeControl = nullptr;
 
+signals:
+    void windowMaximized(void);
+    void windowNormalized(void);
+    void windowMinimized(void);
+
 public slots:
     void showMaximized(void);
     void showNormal(void);
+    void showMinimized(void);
     void changeFullScreenMode(void);
 };
 
