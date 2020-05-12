@@ -23,7 +23,7 @@ MainWidget::MainWidget(FramelessWindow *parent)
 
     setMinimumSize(600, 300);
     setWindowTitle("Advanced Terminal");
-    setWindowIcon(QIcon(":/light/resources/icons/light/consolemode.png"));
+    setWindowIcon(QIcon(":/icons/light/consolemode.png"));
     centralWidget()->layout()->layout()->setMargin(0);
     centralWidget()->layout()->layout()->setSpacing(0);
 

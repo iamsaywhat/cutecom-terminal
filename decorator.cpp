@@ -117,40 +117,40 @@ void Decorator::setName(QString text){
 void Decorator::setIconMode(IconMode mode){
     _iconMode = mode;
     if(mode == Dark){
-        appIconlUrl         = ":/dark/resources/icons/dark/label.png";
-        closeIconUrl        = ":/dark/resources/icons/dark/close.png";
-        maximizeIconUrl     = ":/dark/resources/icons/dark/maximize.png";
-        minimizeIconUrl     = ":/dark/resources/icons/dark/minimize.png";
-        normalizeIconUrl    = ":/dark/resources/icons/dark/normalize.png";
-        connectionIconUrl   = ":/dark/resources/icons/dark/connect.png";
-        consoleIconUrl      = ":/dark/resources/icons/dark/consolemode.png";
-        tableIconUrl        = ":/dark/resources/icons/dark/tablemode.png";
-        converterIconUrl    = ":/dark/resources/icons/dark/converter.png";
-        settingsIconUrl     = ":/dark/resources/icons/dark/settings.png";
-        checkBoxCheckUrl    = ":/dark/resources/icons/dark/checkbox.png";
-        comboBoxArrowUrl    = ":/dark/resources/icons/dark/combobox.png";
-        spinboxDownArrowUrl = ":/dark/resources/icons/dark/down-arrow.png";
-        spinboxUpArrowUrl   = ":/dark/resources/icons/dark/up-arrow.png";
-        playIconUrl         = ":/dark/resources/icons/dark/play.png";
-        stopIconUrl         = ":/dark/resources/icons/dark/stop.png";
+        appIconlUrl         = ":/icons/dark/label.png";
+        closeIconUrl        = ":/icons/dark/close.png";
+        maximizeIconUrl     = ":/icons/dark/maximize.png";
+        minimizeIconUrl     = ":/icons/dark/minimize.png";
+        normalizeIconUrl    = ":/icons/dark/normalize.png";
+        connectionIconUrl   = ":/icons/dark/connect.png";
+        consoleIconUrl      = ":/icons/dark/consolemode.png";
+        tableIconUrl        = ":/icons/dark/tablemode.png";
+        converterIconUrl    = ":/icons/dark/converter.png";
+        settingsIconUrl     = ":/icons/dark/settings.png";
+        checkBoxCheckUrl    = ":/icons/dark/checkbox.png";
+        comboBoxArrowUrl    = ":/icons/dark/combobox.png";
+        spinboxDownArrowUrl = ":/icons/dark/down-arrow.png";
+        spinboxUpArrowUrl   = ":/icons/dark/up-arrow.png";
+        playIconUrl         = ":/icons/dark/play.png";
+        stopIconUrl         = ":/icons/dark/stop.png";
     }
     else{
-        appIconlUrl         = ":/light/resources/icons/light/label.png";
-        closeIconUrl        = ":/light/resources/icons/light/close.png";
-        maximizeIconUrl     = ":/light/resources/icons/light/maximize.png";
-        minimizeIconUrl     = ":/light/resources/icons/light/minimize.png";
-        normalizeIconUrl    = ":/light/resources/icons/light/normalize.png";
-        connectionIconUrl   = ":/light/resources/icons/light/connect.png";
-        consoleIconUrl      = ":/light/resources/icons/light/consolemode.png";
-        tableIconUrl        = ":/light/resources/icons/light/tablemode.png";
-        converterIconUrl    = ":/light/resources/icons/light/converter.png";
-        settingsIconUrl     = ":/light/resources/icons/light/settings.png";
-        checkBoxCheckUrl    = ":/light/resources/icons/light/checkbox.png";
-        comboBoxArrowUrl    = ":/light/resources/icons/light/combobox.png";
-        spinboxDownArrowUrl = ":/light/resources/icons/light/down-arrow.png";
-        spinboxUpArrowUrl   = ":/light/resources/icons/light/up-arrow.png";
-        playIconUrl         = ":/light/resources/icons/light/play.png";
-        stopIconUrl         = ":/light/resources/icons/light/stop.png";
+        appIconlUrl         = ":/icons/light/label.png";
+        closeIconUrl        = ":/icons/light/close.png";
+        maximizeIconUrl     = ":/icons/light/maximize.png";
+        minimizeIconUrl     = ":/icons/light/minimize.png";
+        normalizeIconUrl    = ":/icons/light/normalize.png";
+        connectionIconUrl   = ":/icons/light/connect.png";
+        consoleIconUrl      = ":/icons/light/consolemode.png";
+        tableIconUrl        = ":/icons/light/tablemode.png";
+        converterIconUrl    = ":/icons/light/converter.png";
+        settingsIconUrl     = ":/icons/light/settings.png";
+        checkBoxCheckUrl    = ":/icons/light/checkbox.png";
+        comboBoxArrowUrl    = ":/icons/light/combobox.png";
+        spinboxDownArrowUrl = ":/icons/light/down-arrow.png";
+        spinboxUpArrowUrl   = ":/icons/light/up-arrow.png";
+        playIconUrl         = ":/icons/light/play.png";
+        stopIconUrl         = ":/icons/light/stop.png";
     }
 }
 void Decorator::applyToMainWidget(void){

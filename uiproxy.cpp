@@ -142,8 +142,8 @@ void UiProxy::setTextCodec(int index){
 }
 void UiProxy::setLanguage(int index){
     QStringList langList;
-    langList << ":/resources/language_en.qm";
-    langList << ":/resources/language_ru.qm";
+    langList << ":/language/language_en.qm";
+    langList << ":/language/language_ru.qm";
     language.load(langList.at(index));
     qApp->installTranslator(&language);
     port->retranslate();
