@@ -138,6 +138,8 @@ CONFIG(release, release|debug) { # Собираем инсталяторы то�
     createOnlineInstaller($$PACKAGES_PATH, $$CONFIG_FILE_PATH, $$ONLINE_INSTALLER_PATH)
     createOfflineInstaller($$PACKAGES_PATH, $$CONFIG_FILE_PATH, $$OFFLINE_INSTALLER_PATH)
 
+    createRepo($$PACKAGES_PATH, advancedterminal, $$OUT_PWD/../repository)
+
     # Удаляем временную папку установочного пакета
     removeDirRecursive($$PACKAGES_PATH)
 
@@ -146,4 +148,12 @@ CONFIG(release, release|debug) { # Собираем инсталяторы то�
     QMAKE_CLEAN += $$shell_quote($$shell_path($$OFFLINE_INSTALLER_PATH/../*.exe))
 }
 
+## репозиторий будем собирать только в случае режима release
+#CONFIG(release, debug|release) {
+#    # Сборку репозитория производим после того, как были собраны Инсталляторы
+#    # Для этого воспользуемся QMAKE_POST_LINK вместо QMAKE_EXTRA_COMPILERS
+#    # Поскольку он хорошо для этого подходит
+#    PACKAGES_PATH = $$OUT_PWD/../packages                                       # Путь к установочному пакету
+#    createRepo($$PACKAGES_PATH, advancedterminal, $$OUT_PWD/../repository)
+#}
 
