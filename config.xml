@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>Advanced Terminal Installer</Name>
+    <Version>0.0.0</Version>
+    <Title>0.0.0 Advanced Terminal Installer</Title>
+    <Publisher>EVILEG</Publisher>
+    <StartMenuDir>Advanced Terminal</StartMenuDir>
+    <TargetDir>@RootDir@Program Files (x86)\EVILEG\Advanced Terminal</TargetDir>
+        <AllowSpaceInPath>true</AllowSpaceInPath>
+    <RemoteRepositories>
+        <Repository>
+            <Url>http://www.evileg.ru/software/helloinstaller/</Url>
+        </Repository>
+    </RemoteRepositories>
+</Installer>
