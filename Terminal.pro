@@ -61,15 +61,16 @@ DISTFILES += \
     config.xml \
     package.xml
 
+RC_ICONS = $$PWD/resources/icons/appication.ico
+
 #####################################################
 # Выбираем директорию сборки исполняемого файла
 # в зависимости от режима сборки проекта
 #####################################################
 CONFIG(debug, debug|release) {
-    DESTDIR = $$OUT_PWD/Debug
+    DESTDIR = $$OUT_PWD/debug
 } else {
-    DESTDIR = $$OUT_PWD/Release
-
+    DESTDIR = $$OUT_PWD/release
 }
 # разделяем по директориям все выходные файлы проекта
 MOC_DIR = $$OUT_PWD/common/moc
@@ -99,9 +100,9 @@ isEmpty(TARGET_EXT) {
 # в зависимости от режима сборки проекта
 # запускаем win deploy приложения в целевой директории, то есть собираем все dll
 CONFIG(debug, debug|release) {
-    DEPLOY_TARGET = $$OUT_PWD/Debug/$$TARGET$$TARGET_CUSTOM_EXT
+    DEPLOY_TARGET = $$OUT_PWD/debug/$$TARGET$$TARGET_CUSTOM_EXT
 } else {
-    DEPLOY_TARGET = $$OUT_PWD/Release/$$TARGET$$TARGET_CUSTOM_EXT
+    DEPLOY_TARGET = $$OUT_PWD/release/$$TARGET$$TARGET_CUSTOM_EXT
 }
 collectAllDllDepends($$DEPLOY_TARGET)
 
@@ -112,7 +113,7 @@ collectAllDllDepends($$DEPLOY_TARGET)
 CONFIG(release, release|debug) { # Собираем инсталяторы только для релизной сборки
 
     PACKAGE_FILE_XML = $$OUT_PWD/../Terminal/package.xml    # Указываем путь к package.xml
-    PACKAGE_DATA = $$OUT_PWD/Release                        # Задаём путь к собранному приложению со всеми зависимостями
+    PACKAGE_DATA = $$OUT_PWD/release                        # Задаём путь к собранному приложению со всеми зависимостями
 
     ####################################################################
     # Далее создадим временную директорию для установочного пакета
@@ -123,22 +124,22 @@ CONFIG(release, release|debug) { # Собираем инсталяторы то�
 
     # Задаём пути пакета, которая должна содержать путь к папке с данными
     # Копируем все необходимо с формируем установочный пакет
-    PACKAGE_DATA_PATH = $$OUT_PWD/../packages/advancedterminal/data
-    PACKAGE_META_PATH = $$OUT_PWD/../packages/advancedterminal/meta
+    PACKAGE_DATA_PATH = $$OUT_PWD/packages/advancedterminal/data
+    PACKAGE_META_PATH = $$OUT_PWD/packages/advancedterminal/meta
     copyDirToDestDir($$PACKAGE_DATA, $$PACKAGE_DATA_PATH)
     copyFilesToDir($$PACKAGE_FILE_XML, $$PACKAGE_META_PATH)
 
     # Собираем инсталяторы
-    PACKAGES_PATH = $$OUT_PWD/../packages                                       # Путь к установочному пакету
+    PACKAGES_PATH = $$OUT_PWD/packages                                       # Путь к установочному пакету
     CONFIG_FILE_PATH = $$PWD\config.xml                                         # Путь к конфирурации
-    ONLINE_INSTALLER_PATH = $$OUT_PWD/Release/installers/online-installer       # Путь размещения онлайн инсталятора
-    OFFLINE_INSTALLER_PATH = $$OUT_PWD/Release/installers/offline-installer     # Путь размещения оффлайн инсталятора
+    ONLINE_INSTALLER_PATH = $$OUT_PWD/installers/online-installer       # Путь размещения онлайн инсталятора
+    OFFLINE_INSTALLER_PATH = $$OUT_PWD/installers/offline-installer     # Путь размещения оффлайн инсталятора
     mkpath($$ONLINE_INSTALLER_PATH/../)                                         # Если пути не существуют - создаём их
     mkpath($$OFFLINE_INSTALLER_PATH/../)                                        #
     createOnlineInstaller($$PACKAGES_PATH, $$CONFIG_FILE_PATH, $$ONLINE_INSTALLER_PATH)
     createOfflineInstaller($$PACKAGES_PATH, $$CONFIG_FILE_PATH, $$OFFLINE_INSTALLER_PATH)
 
-    createRepo($$PACKAGES_PATH, advancedterminal, $$OUT_PWD/../repository)
+    createRepo($$PACKAGES_PATH, advancedterminal, $$OUT_PWD/repository)
 
     # Удаляем временную папку установочного пакета
     removeDirRecursive($$PACKAGES_PATH)

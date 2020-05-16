@@ -32,5 +32,6 @@
         <file>icons/light/stop.png</file>
         <file>icons/light/tablemode.png</file>
         <file>icons/light/up-arrow.png</file>
+        <file>icons/appication.ico</file>
     </qresource>
 </RCC>
