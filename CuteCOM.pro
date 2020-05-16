@@ -6,7 +6,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
 
-TARGET = Terminal
+TARGET = CuteCOM
 #CONFIG += console
 #CONFIG -= app_bundle
 
@@ -63,6 +63,14 @@ DISTFILES += \
 
 RC_ICONS = $$PWD/resources/icons/appication.ico
 
+
+VERSION = 1.9.0
+QMAKE_TARGET_COMPANY = ahaha
+QMAKE_TARGET_PRODUCT = CuteCOM
+QMAKE_TARGET_DESCRIPTION = Convenient terminal for serial port
+QMAKE_TARGET_COPYRIGHT = heheh
+
+
 #####################################################
 # Выбираем директорию сборки исполняемого файла
 # в зависимости от режима сборки проекта
@@ -112,7 +120,7 @@ collectAllDllDepends($$DEPLOY_TARGET)
 #########################################################################
 CONFIG(release, release|debug) { # Собираем инсталяторы только для релизной сборки
 
-    PACKAGE_FILE_XML = $$OUT_PWD/../Terminal/package.xml    # Указываем путь к package.xml
+    PACKAGE_FILE_XML = $$OUT_PWD/../$$TARGET/package.xml    # Указываем путь к package.xml
     PACKAGE_DATA = $$OUT_PWD/release                        # Задаём путь к собранному приложению со всеми зависимостями
 
     ####################################################################
@@ -124,22 +132,23 @@ CONFIG(release, release|debug) { # Собираем инсталяторы то�
 
     # Задаём пути пакета, которая должна содержать путь к папке с данными
     # Копируем все необходимо с формируем установочный пакет
-    PACKAGE_DATA_PATH = $$OUT_PWD/packages/advancedterminal/data
-    PACKAGE_META_PATH = $$OUT_PWD/packages/advancedterminal/meta
+    PACKAGE_DATA_PATH = $$OUT_PWD/packages/cutecom/data
+    PACKAGE_META_PATH = $$OUT_PWD/packages/cutecom/meta
     copyDirToDestDir($$PACKAGE_DATA, $$PACKAGE_DATA_PATH)
     copyFilesToDir($$PACKAGE_FILE_XML, $$PACKAGE_META_PATH)
 
     # Собираем инсталяторы
-    PACKAGES_PATH = $$OUT_PWD/packages                                       # Путь к установочному пакету
-    CONFIG_FILE_PATH = $$PWD\config.xml                                         # Путь к конфирурации
+    PACKAGES_PATH = $$OUT_PWD/packages                                  # Путь к установочному пакету
+    CONFIG_FILE_PATH = $$PWD\config.xml                                 # Путь к конфирурации
     ONLINE_INSTALLER_PATH = $$OUT_PWD/installers/online-installer       # Путь размещения онлайн инсталятора
     OFFLINE_INSTALLER_PATH = $$OUT_PWD/installers/offline-installer     # Путь размещения оффлайн инсталятора
-    mkpath($$ONLINE_INSTALLER_PATH/../)                                         # Если пути не существуют - создаём их
-    mkpath($$OFFLINE_INSTALLER_PATH/../)                                        #
+    mkpath($$ONLINE_INSTALLER_PATH/../)                                 # Если пути не существуют - создаём их
+    mkpath($$OFFLINE_INSTALLER_PATH/../)                                #
     createOnlineInstaller($$PACKAGES_PATH, $$CONFIG_FILE_PATH, $$ONLINE_INSTALLER_PATH)
     createOfflineInstaller($$PACKAGES_PATH, $$CONFIG_FILE_PATH, $$OFFLINE_INSTALLER_PATH)
 
-    createRepo($$PACKAGES_PATH, advancedterminal, $$OUT_PWD/repository)
+    # Создаём установочный репозиторий для размещения где-либо
+    createRepo($$PACKAGES_PATH, cutecom, $$OUT_PWD/repository)
 
     # Удаляем временную папку установочного пакета
     removeDirRecursive($$PACKAGES_PATH)
@@ -149,12 +158,4 @@ CONFIG(release, release|debug) { # Собираем инсталяторы то�
     QMAKE_CLEAN += $$shell_quote($$shell_path($$OFFLINE_INSTALLER_PATH/../*.exe))
 }
 
-## репозиторий будем собирать только в случае режима release
-#CONFIG(release, debug|release) {
-#    # Сборку репозитория производим после того, как были собраны Инсталляторы
-#    # Для этого воспользуемся QMAKE_POST_LINK вместо QMAKE_EXTRA_COMPILERS
-#    # Поскольку он хорошо для этого подходит
-#    PACKAGES_PATH = $$OUT_PWD/../packages                                       # Путь к установочному пакету
-#    createRepo($$PACKAGES_PATH, advancedterminal, $$OUT_PWD/../repository)
-#}
 

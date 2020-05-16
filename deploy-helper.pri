@@ -120,6 +120,7 @@ defineTest(createOnlineInstaller) {
 #createOnlineInstaller($$OUT_PWD/packages, $$PWD\config.xml, $$OUT_PWD/online-installer)
 
 
+# Create application repository
 defineTest(createRepo){
     REPOGEN_PATH = $$shell_quote($$shell_path($$(QTDIR)\..\..\Tools\QtInstallerFramework\3.2\bin\repogen))
     RETURN = $$escape_expand(\n\t)
@@ -130,3 +131,6 @@ defineTest(createRepo){
     QMAKE_POST_LINK += $$RETURN $$REPOGEN_PATH -p $$PACKAGES_PATH -i $$PACKAGES_NAME --update $$REPOSITORY_PATH
     export(QMAKE_POST_LINK)
 }
+# Example
+#
+#

@@ -22,7 +22,7 @@ MainWidget::MainWidget(FramelessWindow *parent)
     uiProxy = new UiProxy(this, gui);
 
     setMinimumSize(600, 300);
-    setWindowTitle("Advanced Terminal");
+    setWindowTitle("CuteCOM");
     setWindowIcon(QIcon(":/icons/light/consolemode.png"));
     centralWidget()->layout()->layout()->setMargin(0);
     centralWidget()->layout()->layout()->setSpacing(0);
