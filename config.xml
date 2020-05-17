@@ -9,7 +9,7 @@
         <AllowSpaceInPath>true</AllowSpaceInPath>
     <RemoteRepositories>
         <Repository>
-            <Url>http://www.evileg.ru/software/helloinstaller/</Url>
+            <Url>empty</Url>
         </Repository>
     </RemoteRepositories>
 </Installer>

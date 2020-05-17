@@ -61,13 +61,12 @@ DISTFILES += \
     config.xml \
     package.xml
 
-RC_ICONS = $$PWD/resources/icons/appication.ico
+RC_ICONS = $$PWD/resources/icons/application.ico
 
 
 VERSION = 1.9.0
 QMAKE_TARGET_COMPANY = ahaha
 QMAKE_TARGET_PRODUCT = CuteCOM
-QMAKE_TARGET_DESCRIPTION = Convenient terminal for serial port
 QMAKE_TARGET_COPYRIGHT = heheh
 
 

@@ -23,7 +23,7 @@ MainWidget::MainWidget(FramelessWindow *parent)
 
     setMinimumSize(600, 300);
     setWindowTitle("CuteCOM");
-    setWindowIcon(QIcon(":/icons/light/consolemode.png"));
+    setWindowIcon(QIcon(":/icons/appication.ico"));
     centralWidget()->layout()->layout()->setMargin(0);
     centralWidget()->layout()->layout()->setSpacing(0);
 

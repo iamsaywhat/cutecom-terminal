@@ -157,6 +157,7 @@ void Decorator::applyToMainWidget(void){
     setBasicColorsToWidget(gui->centralWidget, baseColor());
     setBasicColorsToWidget(gui->workspaceWidget, baseColor());
     gui->appName->setStyleSheet(getAppLabelStyleSheet(appIconlUrl));
+    gui->appName->setMinimumSize(80, 10);
     gui->closeButton->setStyleSheet(getWindowButtonStyleSheet(closeIconUrl, closeIconUrl, baseColor(), closeHoverColor(), closePressedColor()));
     gui->maximazeButton->setStyleSheet(getWindowButtonStyleSheet(maximizeIconUrl, normalizeIconUrl, baseColor(), maximizeHoverColor(), maximizePressedColor()));
     gui->minimizeButton->setStyleSheet(getWindowButtonStyleSheet(minimizeIconUrl, minimizeIconUrl, baseColor(), minimizeHoverColor(), minimizePressedColor()));
@@ -376,6 +377,7 @@ QString Decorator::getAppLabelStyleSheet(QString iconUrl){
     QString styleSheet (
             "QLabel {"
                 "image: url(%1);"
+                "padding-left: 10px;"
             "}");
     return styleSheet.arg(iconUrl);
 }
