@@ -21,7 +21,7 @@ MainWidget::MainWidget(FramelessWindow *parent)
     gui->setupUi(centralWidget());
     uiProxy = new UiProxy(this, gui);
 
-    setMinimumSize(720, 440);
+    setMinimumSize(725, 445);
     setWindowTitle("CuteCOM");
     setWindowIcon(QIcon(":/icons/appication.ico"));
     centralWidget()->layout()->layout()->setMargin(0);
@@ -34,6 +34,7 @@ MainWidget::MainWidget(FramelessWindow *parent)
     connectSectionConnection();
     connectSectionGeneral();
     connectSectionConsole();
+
     connectSectionTable();
     connectSectionLog();
 
@@ -153,15 +154,9 @@ void MainWidget::setPropertiesMainWidget(void){
     gui->switchToConverterButton->setText("");
 }
 void MainWidget::setPropertiesMenu(void){
-    gui->connectionContentsButton->setText(tr("Connection"));
-    gui->generalContentButton->setText(tr("General"));
-    gui->consoleContentButton->setText(tr("Console"));
-    gui->tableContentButton->setText(tr("Table"));
-    gui->logsContentButton->setText(tr("Logs"));
-    gui->bindsContentButton->setText(tr("Binds"));
-    gui->infoLabel->setText(tr("Version: 0.0.0"));
-    gui->infoLabel->setFont(QFont("Arial", 8, QFont::Bold));
+    gui->infoLabel->setFont(QFont("Arial", 7, QFont::Bold));
     gui->infoLabel->setAlignment(Qt::AlignRight);
+    gui->infoLabel->setMargin(10);
     gui->settingsPage->layout()->setMargin(0);
     gui->pageDelimiterLayout->setMargin(0);
     gui->leftPanelContents->layout()->setMargin(0);
@@ -226,7 +221,7 @@ void MainWidget::setTextSettingsMenu(void){
     gui->tableContentButton->setText(tr("Table"));
     gui->logsContentButton->setText(tr("Logs"));
     gui->bindsContentButton->setText(tr("Binds"));
-    gui->infoLabel->setText(tr("Version: 0.0.0"));
+    gui->infoLabel->setText(tr("version: ") + "0.0.0");
 }
 void MainWidget::setTextSectionConnection(void){
     gui->labelSectionConnection->setText(tr("Connection"));
