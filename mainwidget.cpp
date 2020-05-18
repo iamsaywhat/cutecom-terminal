@@ -21,7 +21,7 @@ MainWidget::MainWidget(FramelessWindow *parent)
     gui->setupUi(centralWidget());
     uiProxy = new UiProxy(this, gui);
 
-    setMinimumSize(600, 300);
+    setMinimumSize(720, 440);
     setWindowTitle("CuteCOM");
     setWindowIcon(QIcon(":/icons/appication.ico"));
     centralWidget()->layout()->layout()->setMargin(0);
