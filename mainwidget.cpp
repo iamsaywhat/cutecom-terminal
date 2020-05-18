@@ -466,9 +466,9 @@ void MainWidget::generalSettingsChanged(void){
     }
     else if(spinBoxes == gui->spinBoxCaptureBytes){
         if(captureBytes !=  gui->spinBoxCaptureBytes->value())
-            captureBytes = true;
+            captureBytesChanged = true;
         else
-            captureBytes = false;
+            captureBytesChanged = false;
     }
     else if(button == gui->buttonGeneralApply){
         if(themeChanged){
@@ -495,7 +495,7 @@ void MainWidget::generalSettingsChanged(void){
         if(captureBytesChanged){
             captureBytes = gui->spinBoxCaptureBytes->value();
             emit uiProxy->captureBytesChanges(captureBytes);
-            captureBytes = false;
+            captureBytesChanged = false;
         }
     }
     if(themeChanged||codecChanged||languageChanged||captureTimeChanged||captureBytesChanged)
