@@ -31,6 +31,7 @@ void Logger::setColumnSpace(int columnSpace){
     if(columnSpace > 1){
         _columnSpace = columnSpace;
         emit columnSpaceChanged(columnSpace);
+        qDebug() << "\nLogger: column spacing changed: " << columnSpace;
     }
 }
 void Logger::setPath(QString path){
@@ -42,6 +43,7 @@ void Logger::setPath(QString path){
     }
     _path = path;
     emit pathChanged(path);
+    qDebug() << "\nLogger: path changed: " << path;
 }
 void Logger::setEnabled(bool state){
     _enabled = state;
@@ -52,6 +54,7 @@ void Logger::setEnabled(bool state){
         connect(_port, &SerialGui::close, this, &Logger::closeFile);
         if(_port->getConnectionStatus() == SerialGui::OPEN)
             openFile();
+        qDebug() << "\nLogger: was enabled!";
     }
     else {
         disconnect(_port, &SerialGui::send, this, &Logger::outgoing);
@@ -59,12 +62,14 @@ void Logger::setEnabled(bool state){
         disconnect(_port, &SerialGui::open, this, &Logger::openFile);
         disconnect(_port, &SerialGui::close, this, &Logger::closeFile);
         closeFile();
+        qDebug() << "\nLogger: was disabled!";
     }
 }
 void Logger::setBytesInRow(int size){
     if(size > 0){
         _bytesInRow = size;
         emit bytesInRowChanged(size);
+        qDebug() << "\nLogger: row size changed: " << size;
     }
 }
 void Logger::openFile(void){
@@ -87,10 +92,17 @@ void Logger::openFile(void){
     file = new QFile(name);                    // С директорией  все впорядке
     file->open(QIODevice::WriteOnly |          // Открываем на запись
                QIODevice::Text);               // Текстовый формат
+    qDebug() << "\nLogger: file is open!";
 }
 void Logger::closeFile(void){
-    if(file!=nullptr && file->isOpen())
+    qDebug() << "\nLogger: file closing..";
+    if(file!=nullptr && file->isOpen()){
         file->close();
+        qDebug() << "\nLogger: file is closed!";
+    }
+    else {
+        qDebug() << "\nLogger: file is already closed!";
+    }
     delete file;
     file = nullptr;
 }
@@ -146,12 +158,16 @@ void Logger::write(DirectionType direction, QByteArray& data){
     }
 }
 void Logger::incoming(QByteArray data){
-    if(file!=nullptr && file->isOpen() && enabled())
+    if(file!=nullptr && file->isOpen() && enabled()){
         write(INCOMING, data);
+        qDebug() << "\nLogger: incoming data: " << data;
+    }
 }
 void Logger::outgoing(QByteArray data){
-    if(file!=nullptr && file->isOpen() && enabled())
+    if(file!=nullptr && file->isOpen() && enabled()){
         write(OUTGOING, data);
+        qDebug() << "\nLogger: outgoing data: " << data;
+    }
 }
 void Logger::toHexStrings(QStringList& list, QByteArray& data, int length){
     QString hex;

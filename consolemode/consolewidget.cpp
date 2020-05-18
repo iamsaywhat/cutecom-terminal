@@ -43,11 +43,14 @@ void ConsoleWidget::send(void){
     if(data != "" && _serial->getConnectionStatus() != SerialGui::CLOSED) {  // Только если поле ввода что-то содержит
         _serial->send(Converter::convertFromUnicode(data).toLatin1());       // и порт открыт, посылаем данные в порт
         _input->clear();                                                     // и очищаем поле ввода
+        qDebug() << "\nConsoleWidget: sending data: " << data;
     }
 }
 void ConsoleWidget::send(QString data){
-    if(data != "" && _serial->getConnectionStatus() != SerialGui::CLOSED)  // Только если поле ввода что-то содержит
+    if(data != "" && _serial->getConnectionStatus() != SerialGui::CLOSED){  // Только если поле ввода что-то содержит
         _serial->send(Converter::convertFromUnicode(data).toLatin1());       // и порт открыт, посылаем данные в порт
+        qDebug() << "\nConsoleWidget: sending cyclic data: " << data;
+    }
 }
 void ConsoleWidget::sended(QByteArray data){
     replaceSymbols(data, '.');                         // Необходимо непечатные символы заменить
@@ -57,6 +60,7 @@ void ConsoleWidget::sended(QByteArray data){
     _console->textCursor().insertText(text);           // Печатаем то, что пришло
     _console->textCursor().insertText("\n");           // Переходим на следующую строку
     _console->verticalScrollBar()->setSliderPosition(_console->verticalScrollBar()->maximum());
+    qDebug() << "\nConsoleWidget: sended data: " << data;
 }
 void ConsoleWidget::received(QByteArray data){
     replaceSymbols(data, '.');                        // Необходимо непечатные символы заменить
@@ -64,9 +68,11 @@ void ConsoleWidget::received(QByteArray data){
     _console->moveCursor(QTextCursor::End);           // Смещаем курсор текста гарантированно в конец
     _console->textCursor().insertText(text);          // Печатаем то, что пришло
     _console->verticalScrollBar()->setSliderPosition(_console->verticalScrollBar()->maximum());
+    qDebug() << "\nConsoleWidget: received data: " << data;
 }
 void ConsoleWidget::clear (void){
     _console->clear();
+    qDebug() << "\nConsoleWidget: text is cleared";
 }
 bool ConsoleWidget::echoMode(void){
     return _echo;
@@ -87,22 +93,26 @@ void ConsoleWidget::setEchoMode(bool state){
         disconnect(_serial, &SerialGui::send, this, &ConsoleWidget::sended);   //
     _echo = state;                                                             // Фиксируем состояние
     emit echoModeChanged(state);                                               // Уведомляем о изменении
+    qDebug() << "\nConsoleWidget: echo mode changed: " << state;
 }
 void ConsoleWidget::setCyclicMode(bool mode){
     _cyclic = mode;
     if(_cyclic == false)
         timer->stop();
     emit cyclicModeChanged(mode);
+    qDebug() << "\nConsoleWidget: cyclic mode changed: " << mode;
 }
 void ConsoleWidget::setCyclicInterval(int interval){
     if(interval > 0){
         _cyclicInterval = interval;
         emit cyclicIntervalChanged(interval);
+        qDebug() << "\nConsoleWidget: cyclic interval changed: " << interval;
     }
 }
 void ConsoleWidget::setBindData(QString data){
     _bindData = data;
     emit bindDataChanged(data);
+    qDebug() << "\nConsoleWidget: cyclic data changed" << data;
 }
 void ConsoleWidget::retranslate(void){
     _sendButton->setText(tr("Send"));
@@ -126,6 +136,7 @@ void ConsoleWidget::startCyclicSending(void){
     if(cyclicMode()){
         timer->start(cyclicInterval());
         emit cyclicIsRunning();
+        qDebug() << "\nConsoleWidget: cyclic sending data started!";
     }
     else
         emit cyclicStopped();
@@ -133,4 +144,5 @@ void ConsoleWidget::startCyclicSending(void){
 void ConsoleWidget::stopCyclicSending(void){
     timer->stop();
     emit cyclicStopped();
+    qDebug() << "\nConsoleWidget: cyclic sending data stopped!";
 }

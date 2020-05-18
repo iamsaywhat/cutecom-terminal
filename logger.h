@@ -60,7 +60,6 @@ public slots:
     void outgoing(QByteArray);
     void openFile(void);
     void closeFile(void);
-
 };
 
 #endif // LOGGER_H

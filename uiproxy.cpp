@@ -135,10 +135,12 @@ void UiProxy::createThemeList(QComboBox *comboBox){
 }
 void UiProxy::setTheme(int indexOfTheme){
     themeList->at(indexOfTheme)->apply();
+    qDebug() << "\nUiProxy: theme changed: " << themeList->at(indexOfTheme)->name();
 }
 void UiProxy::setTextCodec(int index){
     QString codecName = this->codecList->at(index);
     converter->setCurrentCodec(codecName.toLatin1());
+    qDebug() << "\nUiProxy: text codec changed: " << codecList->at(index);
 }
 void UiProxy::setLanguage(int index){
     QStringList langList;
@@ -150,6 +152,7 @@ void UiProxy::setLanguage(int index){
     console->retranslate();
     table->retranslate();
     converter->retranslate();
+    qDebug() << "\nUiProxy: language changed: " << langList.at(index);
 }
 void UiProxy::setFont(){
     QApplication::setFont(*appFont);

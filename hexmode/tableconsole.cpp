@@ -4,7 +4,6 @@
 #include <QScrollBar>
 #include "converter.h"
 
-
 #include <QDebug>
 
 
@@ -126,6 +125,7 @@ void TableConsole::updateVisibleRows (void){
     /* Берем размеры viewport */
     viewportHeight = _table->viewport()->size().height();
     viewportWidth  = _table->viewport()->size().width();
+    Q_UNUSED(viewportWidth)
 
     /* Берем номер строки в самом верху видимой части */
     _firstVisibleRow = _table->rowAt(0);
@@ -163,8 +163,6 @@ void TableConsole::updateVisibleRows (void){
         else if (i == rowCount - 1)
             _lastVisibleRow = i;
     }
-    qDebug() << "firsrVisibleRow = " << firstVisibleRow()
-             << "lastVisibleRow = " << lastVisibleRow();
 }
 void TableConsole::resizeVisibleRows (int firstRow, int lastRow){
     if(firstRow >= 0 && lastRow >= 0){
@@ -178,7 +176,6 @@ void TableConsole::slotAutoresize(void){
     resizeVisibleRows(firstVisibleRow(), lastVisibleRow());
     updateVisibleRows();
     //resizeVisibleRows(firstVisibleRow(), lastVisibleRow());
-    qDebug() << "TableConsole::slotAutoresize";
 }
 
 void TableConsole::clear(void){
@@ -197,6 +194,7 @@ void TableConsole::clear(void){
     // Восстанавливаем пользователькую ширину колонок
     for(int i = 0; i < 5; i++)
         _table->setColumnWidth(i, columnsWidth.at(i));
+    qDebug() << "\nTableConsole: table is cleared";
 }
 
 void TableConsole::send(void){
@@ -205,12 +203,14 @@ void TableConsole::send(void){
         QByteArray data = Converter::hexStringToByteArray(text, ' ');         // и порт открыт, то конвертируем
         _serial->send(data);                                                  // в байтовый массив и отправляем
         _input->clear();                                                      // в порт, после очищаем поле ввода
+        qDebug() << "\nTableConsole: sending data: " << data;
     }
 }
 void TableConsole::send(QString text){
     if(text != "" && _serial->getConnectionStatus() != SerialGui::CLOSED) {   // Если в поле ввода не пусто,
         QByteArray data = Converter::hexStringToByteArray(text, ' ');         // и порт открыт, то конвертируем
         _serial->send(data);                                                  // в байтовый массив и отправляем в порт
+        qDebug() << "\nTableConsole: sending cyclic data: " << data;
     }
 }
 void TableConsole::sended(QByteArray data){
@@ -218,12 +218,14 @@ void TableConsole::sended(QByteArray data){
     Converter::removeNonPrintedSymbols(data, '.');
     QString asciiString = Converter::byteArrayToAsciiString(data);
     appendData(TableConsole::OUTGOING, hexString, asciiString);          // А после добавить в таблицу
+    qDebug() << "\nTableConsole: sended data: " << data;
 }
 void TableConsole::received(QByteArray data){
     QString hexString = Converter::byteArrayToHexString(data, ' ');       // Посланные данные нужно сконверировать в текст
     Converter::removeNonPrintedSymbols(data, '.');
     QString asciiString = Converter::byteArrayToAsciiString(data);
     appendData(TableConsole::INCOMING, hexString, asciiString);           // А после добавить в таблицу
+    qDebug() << "\nTableConsole: received data: " << data;
 }
 
 void TableConsole::slotTextDelimiter(void){
@@ -251,20 +253,24 @@ void TableConsole::setEchoMode(bool state){
         disconnect(_serial, &SerialGui::send, this, &TableConsole::sended);   //
     _echo = state;                                                            // Фиксируем состояние
     emit echoModeChanged(state);                                              // Уведомляем о изменении
+    qDebug() << "\nTableConsole: echo mode changed: " << state;
 }
 void TableConsole::setCyclicMode(bool mode){
     _cyclic = mode;
     emit cyclicModeChanged(mode);
+    qDebug() << "\nTableConsole: cyclic mode changed: " << mode;
 }
 void TableConsole::setCyclicInterval(int interval){
     if(interval < 0)
         return;
     _cyclicInterval = interval;
     emit cyclicIntervalChanged(interval);
+    qDebug() << "\nTableConsole: cyclic interval changed: " << interval;
 }
 void TableConsole::setBindData(QString text){
     _bindData = text;
     emit bindDataChanged(text);
+    qDebug() << "\nTableConsole: cyclic data changed" << text;
 }
 void TableConsole::blockAutoresizeSlot(void){
     skipAutoresize = true;
@@ -295,6 +301,7 @@ void TableConsole::startCyclicSending(void){
     if(cyclicMode()) {
         timer->start(cyclicInterval());
         emit cyclicIsRunning();
+        qDebug() << "\nTableConsole: cyclic sending data started!";
     }
     else
         emit cyclicStopped();
@@ -302,5 +309,6 @@ void TableConsole::startCyclicSending(void){
 void TableConsole::stopCyclicSending(void){
     timer->stop();
     emit cyclicStopped();
+    qDebug() << "\nTableConsole: cyclic sending data stopped!";
 }
 

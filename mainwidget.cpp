@@ -278,7 +278,7 @@ bool MainWidget::eventFilter(QObject *target, QEvent *event){
 
     switch (static_cast<QKeyEvent*>(event)->key()) {
     case Qt::Key_Return:
-        qDebug() << "Enter";
+        qDebug() << "\nMainWidget: Enter key pressed!";
         switch (gui->workspaceWidget->currentIndex()){
         case quickIndexConsole:
             emit gui->sendConsoleButton->clicked();
@@ -291,7 +291,7 @@ bool MainWidget::eventFilter(QObject *target, QEvent *event){
             return true;
         }
     case Qt::Key_1:
-        qDebug() << "Key_1";
+        qDebug() << "\nMainWidget: Key_1 key pressed!";
         switch (gui->workspaceWidget->currentIndex()){
         case quickIndexConsole:
             gui->buttonConsoleHotKey1->setChecked(gui->buttonConsoleHotKey1->isChecked() ? false:true);
@@ -304,7 +304,7 @@ bool MainWidget::eventFilter(QObject *target, QEvent *event){
         }
         break;
     case Qt::Key_2:
-        qDebug() << "Key_2";
+        qDebug() << "\nMainWidget: Key_2 key pressed!";
         switch (gui->workspaceWidget->currentIndex()){
         case quickIndexConsole:
             gui->buttonConsoleHotKey2->setChecked(gui->buttonConsoleHotKey2->isChecked() ? false:true);
@@ -317,7 +317,7 @@ bool MainWidget::eventFilter(QObject *target, QEvent *event){
         }
         break;
     case Qt::Key_3:
-        qDebug() << "Key_3";
+        qDebug() << "\nMainWidget: Key_3 key pressed!";
         switch (gui->workspaceWidget->currentIndex()){
         case quickIndexConsole:
             gui->buttonConsoleHotKey3->setChecked(gui->buttonConsoleHotKey3->isChecked() ? false:true);
@@ -330,7 +330,7 @@ bool MainWidget::eventFilter(QObject *target, QEvent *event){
         }
         break;
     case Qt::Key_4:
-        qDebug() << "Key_4";
+        qDebug() << "\nMainWidget: Key_4 key pressed!";
         switch (gui->workspaceWidget->currentIndex()){
         case quickIndexConsole:
             gui->buttonConsoleHotKey4->setChecked(gui->buttonConsoleHotKey4->isChecked() ? false:true);

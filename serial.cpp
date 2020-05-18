@@ -31,15 +31,25 @@ void Serial::setSettings(Settings settings){
     port->setStopBits(settings.stopBits);
     port->setFlowControl(settings.flowControl);
     portSettingsIsSet = true;
+    qDebug() << "\nSerial: settings changed!"
+             << "\nPort: " << settings.name
+             << "\nBaudrate: " << settings.baudrate
+             << "\nParity: " << settings.parity
+             << "\nData bits: " << settings.dataBits
+             << "\nStop bits: " << settings.stopBits
+             << "\nFlow control: " << settings.flowControl;
 }
 void Serial::receiveData (void){
     if(!isLocked()){
-        emit receivedData(port->readAll());
+        QByteArray data = port->readAll();
+        emit receivedData(data);
         lockTransmit();
+        qDebug() << "\nSerial: received data: " << data;
     }
 }
 void Serial::sendData(QByteArray data){
     port->write(data);
+    qDebug() << "\nSerial: sended data: " << data;
 }
 void Serial::open(void){
     if(portSettingsIsSet && port->open(QSerialPort::ReadWrite))
@@ -80,15 +90,15 @@ qint64 Serial::capturePacketSize(void){
 void Serial::setCapturePacketSize(qint64 size){
     if(size >= 0){  
         _capturePacketSize = size;
-        qDebug() << "capture size setted in " << size;
         emit capturePacketSizeChanged(size);
+        qDebug() << "\nSerial: capture size changes: " << size;
     }
 }
 void Serial::setCaptureInterval(int interval){
     if(interval >= 0){
         _captureInterval = interval;
-        qDebug() << "capture Interval setted in " << _captureInterval;
         emit captureIntervalChanged(interval);
+        qDebug() << "\nSerial: capture interval changes: " << _captureInterval;
     }
 }
 bool Serial::isLocked(void){
