@@ -106,12 +106,11 @@ isEmpty(TARGET_EXT) {
 }
 # в зависимости от режима сборки проекта
 # запускаем win deploy приложения в целевой директории, то есть собираем все dll
-CONFIG(debug, debug|release) {
-    DEPLOY_TARGET = $$OUT_PWD/debug/$$TARGET$$TARGET_CUSTOM_EXT
-} else {
+CONFIG(release, debug|release) {
     DEPLOY_TARGET = $$OUT_PWD/release/$$TARGET$$TARGET_CUSTOM_EXT
+    collectAllDllDepends($$DEPLOY_TARGET)
 }
-collectAllDllDepends($$DEPLOY_TARGET)
+
 
 
 ##########################################################################
