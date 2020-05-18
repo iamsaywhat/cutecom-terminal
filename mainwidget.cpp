@@ -587,10 +587,10 @@ void MainWidget::restoreSettings(void){
     gui->checkboxConsoleEcho->setCheckState(settings.value("echo", Qt::Checked).value<Qt::CheckState>());
     gui->checkboxConsoleCyclic->setCheckState(settings.value("cyclic", Qt::Checked).value<Qt::CheckState>());
     gui->spinboxConsoleCyclicInterval->setValue(settings.value("interval", 1000).toInt());
-    gui->lineEditConsoleHotKey1->setText(settings.value("bind1", "").toString());
-    gui->lineEditConsoleHotKey2->setText(settings.value("bind2", "").toString());
-    gui->lineEditConsoleHotKey3->setText(settings.value("bind3", "").toString());
-    gui->lineEditConsoleHotKey4->setText(settings.value("bind4", "").toString());
+    gui->lineEditConsoleHotKey1->setText(settings.value("bind1", "Hot key text 1").toString());
+    gui->lineEditConsoleHotKey2->setText(settings.value("bind2", "Hot key text 2").toString());
+    gui->lineEditConsoleHotKey3->setText(settings.value("bind3", "Hot key text 3").toString());
+    gui->lineEditConsoleHotKey4->setText(settings.value("bind4", "Hot key text 4").toString());
     emit uiProxy->consoleEchoChanged(gui->checkboxConsoleEcho->checkState() == Qt::Checked ? true : false);
     emit uiProxy->consoleCyclicChanged(gui->checkboxConsoleCyclic->checkState() == Qt::Checked ? true : false);
     emit uiProxy->consoleCyclicIntervalChanged(gui->spinboxConsoleCyclicInterval->value());
@@ -600,22 +600,22 @@ void MainWidget::restoreSettings(void){
     gui->checkboxTableEcho->setCheckState(settings.value("echo", Qt::Checked).value<Qt::CheckState>());
     gui->checkboxTableCyclic->setCheckState(settings.value("cyclic", Qt::Checked).value<Qt::CheckState>());
     gui->spinboxTableCyclicInterval->setValue(settings.value("interval", 1000).toInt());
-    gui->lineEditTableHotKey1->setText(settings.value("bind1", "").toString());
-    gui->lineEditTableHotKey2->setText(settings.value("bind2", "").toString());
-    gui->lineEditTableHotKey3->setText(settings.value("bind3", "").toString());
-    gui->lineEditTableHotKey4->setText(settings.value("bind4", "").toString());
+    gui->lineEditTableHotKey1->setText(settings.value("bind1", "48 6F 74 20 6B 65 79 20 74 65 78 74 20 31").toString());
+    gui->lineEditTableHotKey2->setText(settings.value("bind2", "48 6F 74 20 6B 65 79 20 74 65 78 74 20 32").toString());
+    gui->lineEditTableHotKey3->setText(settings.value("bind3", "48 6F 74 20 6B 65 79 20 74 65 78 74 20 33").toString());
+    gui->lineEditTableHotKey4->setText(settings.value("bind4", "48 6F 74 20 6B 65 79 20 74 65 78 74 20 34").toString());
     emit uiProxy->tableEchoChanged(gui->checkboxTableEcho->checkState() == Qt::Checked ? true : false);
     emit uiProxy->tableCyclicChanged(gui->checkboxTableCyclic->checkState() == Qt::Checked ? true : false);
     emit uiProxy->tableCyclicIntervalChanged(gui->spinboxTableCyclicInterval->value());
     settings.endGroup();
 
-    settings.beginGroup("connection");
-    gui->boxPorts->setCurrentText(settings.value("port", "").toString());
-    gui->boxBaudrate->setCurrentText(settings.value("baudrate", "").toString());
-    gui->boxData->setCurrentIndex(settings.value("data", 0).toInt());
-    gui->boxParity->setCurrentIndex(settings.value("parity", 0).toInt());
-    gui->boxStopBits->setCurrentIndex(settings.value("stop bits", 0).toInt());
-    gui->boxFlowControl->setCurrentIndex(settings.value("flow control", 0).toInt());
+    settings.beginGroup("connection");                                                    // Настройки по-умолчанию
+    gui->boxPorts->setCurrentText(settings.value("port", "").toString());                 //
+    gui->boxBaudrate->setCurrentText(settings.value("baudrate", "9600").toString());      //
+    gui->boxData->setCurrentIndex(settings.value("data", 3).toInt());                     // индекс 3 соответствует Databit = 8
+    gui->boxParity->setCurrentIndex(settings.value("parity", 0).toInt());                 // индекс 0 соответствует Parity = NONE
+    gui->boxStopBits->setCurrentIndex(settings.value("stop bits", 0).toInt());            // индекс 0 соответствует Stopbit = 1
+    gui->boxFlowControl->setCurrentIndex(settings.value("flow control", 0).toInt());      // индекс 0 соответствует Flow control = NONE
     settings.endGroup();
 
     settings.beginGroup("log");
