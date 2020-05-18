@@ -18,7 +18,7 @@ public:
     MainWidget(FramelessWindow *parent = nullptr);
     ~MainWidget();
 
-    enum settingsMenu {
+    enum settingsMenu {                // Индексы вкладок меню настроек
         settingsIndexConnection = 0,
         settingsIndexGeneral    = 1,
         settingsIndexConsole    = 2,
@@ -26,15 +26,15 @@ public:
         settingsIndexLogs       = 4,
         settingsIndexBinds      = 5,
     };
-    enum quickMenu {
+    enum quickMenu {                   // Индексы основного меню
         quickIndexConsole   = 0,
         quickIndexTable     = 1,
         quickIndexConverter = 2,
         quickIndexSettings  = 3,
     };
 
-    void saveSettings(void);
-    void restoreSettings(void);
+    void saveSettings(void);                              // Сохранение настроек в conf-файл
+    void restoreSettings(void);                           // Восстановление настроек из conf-файла
 
     bool eventFilter(QObject *target, QEvent *event);
     void connectQuickMenu(void);

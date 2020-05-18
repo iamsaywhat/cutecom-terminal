@@ -420,56 +420,56 @@ void MainWidget::hexDelimiters(const QString& text){
     lineEdit->setText(data);
 }
 void MainWidget::generalSettingsChanged(void){
-    QComboBox* comboBoxes = static_cast<QComboBox*>(QObject::sender());
-    QSpinBox*  spinBoxes = static_cast<QSpinBox*>(QObject::sender());
-    QPushButton*  button = static_cast<QPushButton*>(QObject::sender());
-    static bool themeChanged = false;
-    static bool codecChanged = false;
+    QComboBox* comboBoxes = static_cast<QComboBox*>(QObject::sender());    // Необходимо определить отправителя, так как на этот
+    QSpinBox*  spinBoxes = static_cast<QSpinBox*>(QObject::sender());      // слот подключено сразу несколько разный объектов, пытаемся
+    QPushButton*  button = static_cast<QPushButton*>(QObject::sender());   // представить отпрвителя как один базовых классов
+    static bool themeChanged = false;                                      // Перечисляем флаги, которые будут фиксировать были ли после
+    static bool codecChanged = false;                                      // нажатия на кнопку "Принять" изменены какие-либо настройки
     static bool languageChanged = false;
     static bool captureTimeChanged = false;
     static bool captureBytesChanged = false;
 
-    static int themeIndex = gui->comboBoxTheme->currentIndex();
-    static int codecIndex = gui->comboBoxCodec->currentIndex();
-    static int languageIndex = gui->comboBoxLanguage->currentIndex();
+    static int themeIndex = gui->comboBoxTheme->currentIndex();            // Это сюда записываем последние "принятые" настройки
+    static int codecIndex = gui->comboBoxCodec->currentIndex();            // чтобы позже сравнить с текущими и слелать вывод
+    static int languageIndex = gui->comboBoxLanguage->currentIndex();      // были ли они изменены после подтвержения
     static int captureTime = gui->spinBoxCaptureTime->value();
     static int captureBytes = gui->spinBoxCaptureBytes->value();
 
-    if(comboBoxes == gui->comboBoxTheme){
-        if(themeIndex != gui->comboBoxTheme->currentIndex())
-            themeChanged = true;
+    if(comboBoxes == gui->comboBoxTheme){                                  // Проверяем является ли отправитель селектором темы
+        if(themeIndex != gui->comboBoxTheme->currentIndex())               // Если да, проверяем был ли он изменён уже после
+            themeChanged = true;                                           // подтверждения и поднимаем/опускаем флаг
         else
             themeChanged = false;
     }
-    else if(comboBoxes == gui->comboBoxCodec){
-        if(codecIndex != gui->comboBoxCodec->currentIndex())
-            codecChanged = true;
+    else if(comboBoxes == gui->comboBoxCodec){                             // Проверяем является ли отправитель селектором кодека
+        if(codecIndex != gui->comboBoxCodec->currentIndex())               // Если да, проверяем был ли он изменён уже после
+            codecChanged = true;                                           // подтверждения и поднимаем/опускаем флаг
         else
             codecChanged = false;
     }
-    else if(comboBoxes == gui->comboBoxLanguage){
-        if(languageIndex != gui->comboBoxLanguage->currentIndex())
-            languageChanged = true;
+    else if(comboBoxes == gui->comboBoxLanguage){                          // Проверяем является ли отправитель селектором языка
+        if(languageIndex != gui->comboBoxLanguage->currentIndex())         // Если да, проверяем был ли он изменён уже после
+            languageChanged = true;                                        // подтверждения и поднимаем/опускаем флаг
         else
             languageChanged = false;
     }
-    else if(spinBoxes == gui->spinBoxCaptureTime){
-        if(captureTime !=  gui->spinBoxCaptureTime->value())
-            captureTimeChanged = true;
+    else if(spinBoxes == gui->spinBoxCaptureTime){                         // Проверяем является ли отправитель селектором времени захвата порта
+        if(captureTime !=  gui->spinBoxCaptureTime->value())               // Если да, проверяем был ли он изменён уже после
+            captureTimeChanged = true;                                     // подтверждения и поднимаем/опускаем флаг
         else
             captureTimeChanged = false;
     }
-    else if(spinBoxes == gui->spinBoxCaptureBytes){
-        if(captureBytes !=  gui->spinBoxCaptureBytes->value())
-            captureBytesChanged = true;
+    else if(spinBoxes == gui->spinBoxCaptureBytes){                        // Проверяем является ли отправитель селектором размера пакета захвата порта
+        if(captureBytes !=  gui->spinBoxCaptureBytes->value())             // Если да, проверяем был ли он изменён уже после
+            captureBytesChanged = true;                                    // подтверждения и поднимаем/опускаем флаг
         else
             captureBytesChanged = false;
     }
-    else if(button == gui->buttonGeneralApply){
-        if(themeChanged){
-            themeIndex = gui->comboBoxTheme->currentIndex();
-            uiProxy->setTheme(themeIndex);
-            themeChanged = false;
+    else if(button == gui->buttonGeneralApply){                            // Проверяем является ли отправитель кнопкой подтвержения
+        if(themeChanged){                                                  // Если да, то проходимся по ранее поднятым флагам
+            themeIndex = gui->comboBoxTheme->currentIndex();               // и подвержадаем настройки (передаём зависимым модулям через прокси-класс)
+            uiProxy->setTheme(themeIndex);                                 // Подтвержденные настройки запоминаем
+            themeChanged = false;                                          // Флаг опускаем
         }
         if(codecChanged){
             codecIndex = gui->comboBoxCodec->currentIndex();
@@ -493,10 +493,10 @@ void MainWidget::generalSettingsChanged(void){
             captureBytesChanged = false;
         }
     }
-    if(themeChanged||codecChanged||languageChanged||captureTimeChanged||captureBytesChanged)
-        gui->buttonGeneralApply->show();
-    else
-         gui->buttonGeneralApply->hide();
+    if(themeChanged||codecChanged||languageChanged||captureTimeChanged||captureBytesChanged)  // Тут анализируем все флаги
+        gui->buttonGeneralApply->show();                                                      // если хоть один из них поднят (имеются неподтвержденные настройки)
+    else                                                                                      // то отображаем кнопку для пользователя
+         gui->buttonGeneralApply->hide();                                                     // В остальных случаях скрываем кнопку
 }
 void MainWidget::selectLogPath(void){
     QString previousPath = gui->lineEditLogPath->text();
@@ -609,7 +609,7 @@ void MainWidget::restoreSettings(void){
     emit uiProxy->tableCyclicIntervalChanged(gui->spinboxTableCyclicInterval->value());
     settings.endGroup();
 
-    settings.beginGroup("connection");                                                    // Настройки по-умолчанию
+    settings.beginGroup("connection");                                                    // Настройки порта по-умолчанию
     gui->boxPorts->setCurrentText(settings.value("port", "").toString());                 //
     gui->boxBaudrate->setCurrentText(settings.value("baudrate", "9600").toString());      //
     gui->boxData->setCurrentIndex(settings.value("data", 3).toInt());                     // индекс 3 соответствует Databit = 8
