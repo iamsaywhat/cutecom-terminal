@@ -63,7 +63,6 @@ SizeController::SizeController(FramelessWindow *target) :
 {
     _cursorchanged = false;
     _leftButtonPressed = false;
-    _borderWidth = _target->recomendedBorder;
     _dragPos = QPoint();
     _target->setMouseTracking(true);                        /* Разрешаем отслеживания положения курсоса при отпущеных кнопках мыши */
     _target->setWindowFlags(Qt::FramelessWindowHint);       /* Отключаем стандартное обрамление */
@@ -72,9 +71,20 @@ SizeController::SizeController(FramelessWindow *target) :
     _target->setAutoFillBackground(true);
     _target->setAttribute(Qt::WA_TranslucentBackground);
     _target->layout()->setMargin(10);
-
+    setBorder(_target->recomendedBorder);
 }
-
+void SizeController::setBorder(int size) {
+    _border = size;
+}
+int SizeController::border() const {
+    return _border;
+}
+void SizeController::setWindowHeaderSize(int size){
+    _windowHeadersize = size;
+}
+int SizeController::windowHeaderSize(void){
+    return _windowHeadersize;
+}
 /* Фильтр событий */
 bool SizeController::eventFilter(QObject* object, QEvent* event)
 {
@@ -132,8 +142,9 @@ void SizeController::mousePress(QMouseEvent* event) {
         if (_target->isMaximized() || _target->isFullScreen()) {       /* Если окно в полноэкранном режиме, то масштабирование должно быть выключено */
             actionRect = _target->rect();                              /* а все окно приложения должно быть активным */
         } else {
-            actionRect = _target->rect().marginsRemoved(QMargins(borderWidth(), borderWidth(), borderWidth(), borderWidth()));
+            actionRect = _target->rect().marginsRemoved(QMargins(border(), border(), border(), border()));
         }
+        actionRect.setHeight(windowHeaderSize());
         /* Если прямоугольник взятый по размеру виджета, с удалёнными полями, содержит позицию клика курсора */
         if (actionRect .contains(event->pos())) {
             _dragStart = true;           /* Выставляем флаг начала перемещения */
@@ -248,52 +259,52 @@ void SizeController::updateCursorShape(const QPoint &position) {
 void SizeController::calculateCursorPosition(const QPoint &position, const QRect &framerect, Edges &edge) {
 
     bool onLeft =
-            position.x() >= framerect.x() - _borderWidth &&                       /* position.x на левой границе виджета +- borderWidth */
-            position.x() <= framerect.x() + _borderWidth &&
-            position.y() <= framerect.y() + framerect.height() - _borderWidth &&  /* position.y по всех высоте виджета минус borderWidth*/
-            position.y() >= framerect.y() + _borderWidth;                         /* с обоих концов */
+            position.x() >= framerect.x() - border() &&                       /* position.x на левой границе виджета +- borderWidth */
+            position.x() <= framerect.x() + border() &&
+            position.y() <= framerect.y() + framerect.height() - border() &&  /* position.y по всех высоте виджета минус borderWidth*/
+            position.y() >= framerect.y() + border();                         /* с обоих концов */
 
     bool onRight =
-            position.x() >= framerect.x() + framerect.width() - _borderWidth &&   /* position.x на правой границе виджета +- borderWidth */
-            position.x() <= framerect.x() + framerect.width() + _borderWidth &&
-            position.y() <= framerect.y() + framerect.height()- _borderWidth &&   /* position.y по всех высоте виджета минус borderWidth*/
-            position.y() >= framerect.y() + _borderWidth;                         /* с обоих концов */
+            position.x() >= framerect.x() + framerect.width() - border() &&   /* position.x на правой границе виджета +- borderWidth */
+            position.x() <= framerect.x() + framerect.width() + border() &&
+            position.y() <= framerect.y() + framerect.height()- border() &&   /* position.y по всех высоте виджета минус borderWidth*/
+            position.y() >= framerect.y() + border();                         /* с обоих концов */
 
     bool onBottom =
-            position.x() >= framerect.x() + _borderWidth &&
-            position.x() <= framerect.x() + framerect.width() - _borderWidth  &&
-            position.y() >= framerect.y() + framerect.height() - _borderWidth &&
-            position.y() <= framerect.y() + framerect.height() + _borderWidth;
+            position.x() >= framerect.x() + border() &&
+            position.x() <= framerect.x() + framerect.width() - border()  &&
+            position.y() >= framerect.y() + framerect.height() - border() &&
+            position.y() <= framerect.y() + framerect.height() + border();
 
     bool onTop =
-            position.x() >= framerect.x() + _borderWidth &&
-            position.x() <= framerect.x() + framerect.width() - _borderWidth &&
-            position.y() >= framerect.y() - _borderWidth &&
-            position.y() <= framerect.y() + _borderWidth;
+            position.x() >= framerect.x() + border() &&
+            position.x() <= framerect.x() + framerect.width() - border() &&
+            position.y() >= framerect.y() - border() &&
+            position.y() <= framerect.y() + border();
 
     bool  onBottomLeft =
-            position.x() <= framerect.x() + _borderWidth &&
-            position.x() >= framerect.x() - _borderWidth &&
-            position.y() <= framerect.y() + framerect.height() + _borderWidth &&
-            position.y() >= framerect.y() + framerect.height() - _borderWidth;
+            position.x() <= framerect.x() + border() &&
+            position.x() >= framerect.x() - border() &&
+            position.y() <= framerect.y() + framerect.height() + border() &&
+            position.y() >= framerect.y() + framerect.height() - border();
 
     bool onBottomRight =
-            position.x() >= framerect.x() + framerect.width() - _borderWidth &&
-            position.x() <= framerect.x() + framerect.width() + _borderWidth &&
-            position.y() >= framerect.y() + framerect.height() - _borderWidth &&
-            position.y() <= framerect.y() + framerect.height() + _borderWidth;
+            position.x() >= framerect.x() + framerect.width() - border() &&
+            position.x() <= framerect.x() + framerect.width() + border() &&
+            position.y() >= framerect.y() + framerect.height() - border() &&
+            position.y() <= framerect.y() + framerect.height() + border();
 
     bool onTopRight =
-            position.x() >= framerect.x() + framerect.width() - _borderWidth &&
-            position.x() <= framerect.x() + framerect.width() + _borderWidth &&
-            position.y() >= framerect.y() - _borderWidth &&
-            position.y() <= framerect.y() + _borderWidth;
+            position.x() >= framerect.x() + framerect.width() - border() &&
+            position.x() <= framerect.x() + framerect.width() + border() &&
+            position.y() >= framerect.y() - border() &&
+            position.y() <= framerect.y() + border();
 
     bool onTopLeft =
-            position.x() >= framerect.x() - _borderWidth &&
-            position.x() <= framerect.x() + _borderWidth &&
-            position.y() >= framerect.y() - _borderWidth &&
-            position.y() <= framerect.y() + _borderWidth;
+            position.x() >= framerect.x() - border() &&
+            position.x() <= framerect.x() + border() &&
+            position.y() >= framerect.y() - border() &&
+            position.y() <= framerect.y() + border();
 
     /* Выставляем флаг согласно определенной зоне */
     if (onLeft)

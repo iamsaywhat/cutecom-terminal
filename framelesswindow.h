@@ -68,14 +68,6 @@ public:
 
     SizeController(FramelessWindow *target);
 
-    void setBorderWidth(int w) {
-        _borderWidth = w;
-    }
-    int borderWidth() const {
-        return _borderWidth;
-    }
-
-
 protected:
     bool eventFilter(QObject *object, QEvent *event) override;
     void mouseHover(QHoverEvent*);
@@ -87,14 +79,23 @@ protected:
     void calculateCursorPosition(const QPoint &, const QRect &, Edges &);
 
 private:
-    FramelessWindow *_target  = nullptr;          /* Указатель на виджет */
-    bool     _cursorchanged;                 /* Был ли изменем внешний вид курсора */
-    bool     _leftButtonPressed;             /* Нажата ли левая кнопка мыши */
-    Edges    _mousePress = Edge::None;      /* Тип (зона) клика */
-    Edges    _mouseMove = Edge::None;       /* Зона расположения свободно перемещаемого курсора */
-    int      _borderWidth;                    /* Ширина обрамления для захвата курсора */
-    QPoint   _dragPos;                     /* Координата курсора, относительно которой окна будет перемещено */
-    bool     _dragStart = false;             /* Флаг режима перемещения окна */
+    FramelessWindow *_target  = nullptr;          /* Указатель на базовый виджет */
+    bool     _cursorchanged;                      /* Был ли изменем внешний вид курсора */
+    bool     _leftButtonPressed;                  /* Нажата ли левая кнопка мыши */
+    bool     _dragStart = false;                  /* Флаг режима перемещения окна */
+
+    Edges    _mousePress = Edge::None;            /* Тип (зона) клика */
+    Edges    _mouseMove = Edge::None;             /* Зона расположения свободно перемещаемого курсора */
+    int      _border;                             /* Ширина обрамления для захвата курсора */
+    int      _windowHeadersize = 30;
+    QPoint   _dragPos;                            /* Координата курсора, относительно которой окна будет перемещено */
+
+
+    void setBorder(int size);
+    int border() const;
+    void setWindowHeaderSize(int size);
+    int windowHeaderSize(void);
+
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(SizeController::Edges);
