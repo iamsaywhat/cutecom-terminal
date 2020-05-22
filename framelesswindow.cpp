@@ -72,6 +72,7 @@ SizeController::SizeController(FramelessWindow *target) :
     _target->setAttribute(Qt::WA_TranslucentBackground);
     _target->layout()->setMargin(10);
     setBorder(_target->recomendedBorder);
+    connect(this, &SizeController::doubleClickOnDragZone, _target, &FramelessWindow::changeFullScreenMode);
 }
 void SizeController::setBorder(int size) {
     _border = size;
@@ -93,7 +94,8 @@ bool SizeController::eventFilter(QObject* object, QEvent* event)
         event->type() == QEvent::HoverMove ||           /* Наведение мыши */
         event->type() == QEvent::Leave ||               /* Курсор за пределами виджета */
         event->type() == QEvent::MouseButtonPress ||    /* Нажатие кнопки мыши */
-        event->type() == QEvent::MouseButtonRelease) {  /* Отпускани кнопки мыши */
+        event->type() == QEvent::MouseButtonRelease ||  /* Отпускани кнопки мыши */
+        event->type() == QEvent::MouseButtonDblClick) {
 
         switch (event->type()) {
         case QEvent::MouseMove:
@@ -110,6 +112,9 @@ bool SizeController::eventFilter(QObject* object, QEvent* event)
             break;
         case QEvent::MouseButtonRelease:
             mouseRelease(static_cast<QMouseEvent*>(event));
+            break;
+        case QEvent::MouseButtonDblClick:
+            mouseDoubleClick(static_cast<QMouseEvent*>(event));
             break;
         default:
             break;
@@ -149,6 +154,26 @@ void SizeController::mousePress(QMouseEvent* event) {
         if (actionRect .contains(event->pos())) {
             _dragStart = true;           /* Выставляем флаг начала перемещения */
             _dragPos = event->pos();     /* Фиксируем координату перемещения */
+        }
+    }
+}
+void SizeController::mouseDoubleClick(QMouseEvent* event){
+    if (event->button() & Qt::LeftButton) {                  /* Проверяем была ли нажата именно левая кнопка мыши */
+        _leftButtonPressed = true;                           /* Устанавливаем флаг, что она была нажата */
+        calculateCursorPosition(event->globalPos(),          /* Определяем зону, в которой произошел клик мыши */
+                                _target->frameGeometry(),
+                                _mousePress);
+        QRect actionRect;                                              /* Здесь определяем зону, клик в которой активирует перетаскивание окна */
+        if (_target->isMaximized() || _target->isFullScreen()) {       /* Если окно в полноэкранном режиме, то масштабирование должно быть выключено */
+            actionRect = _target->rect();                              /* а все окно приложения должно быть активным */
+        } else {
+            actionRect = _target->rect().marginsRemoved(QMargins(border(), border(), border(), border()));
+        }
+        actionRect.setHeight(windowHeaderSize());
+        /* Если прямоугольник взятый по размеру виджета, с удалёнными полями, содержит позицию клика курсора */
+        if (actionRect .contains(event->pos())) {
+            emit doubleClickOnDragZone();
+            qDebug("degr");
         }
     }
 }
@@ -224,7 +249,6 @@ void SizeController::mouseMove(QMouseEvent *event) {
         updateCursorShape(event->globalPos());      /* То следим только за внешним видом курсора */
     }
 }
-
 /* Обновление вида курсора */
 void SizeController::updateCursorShape(const QPoint &position) {
     if (_target->isFullScreen() || _target->isMaximized()) {   /* В полноэкранном режиме вид курсора на */

@@ -75,6 +75,7 @@ protected:
     void mousePress(QMouseEvent*);
     void mouseRelease(QMouseEvent*);
     void mouseMove(QMouseEvent*);
+    void mouseDoubleClick(QMouseEvent*);
     void updateCursorShape(const QPoint &);
     void calculateCursorPosition(const QPoint &, const QRect &, Edges &);
 
@@ -95,6 +96,9 @@ private:
     int border() const;
     void setWindowHeaderSize(int size);
     int windowHeaderSize(void);
+
+signals:
+    void doubleClickOnDragZone (void);
 
 };
 
