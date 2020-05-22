@@ -12,14 +12,14 @@
 #include <QGridLayout>
 #include <QGraphicsDropShadowEffect>
 
-class SizeController;
+class FramelessController;
 
 
 class FramelessWindow : public QWidget
 {
     Q_OBJECT
 
-    friend SizeController;
+    friend FramelessController;
 
 public:
     explicit FramelessWindow(QWidget *parent = nullptr);
@@ -27,10 +27,12 @@ public:
     QWidget* centralWidget() {return &_centralWidget;}
     QRect normalSize(void);
     void setNormalSize(QRect);
+    void setRezizeBorder (int);
+    void setDragHeaderSise (int);
 
 private:
     QWidget _centralWidget;
-    SizeController *sizeControl = nullptr;
+    FramelessController *control = nullptr;
     QGraphicsDropShadowEffect *shadowEffect = nullptr;
     const int shadowSize = 10;
 
@@ -49,7 +51,7 @@ public slots:
 
 
 
-class SizeController : public QObject
+class FramelessController : public QObject
 {
     Q_OBJECT
 
@@ -68,7 +70,7 @@ public:
     Q_ENUM(Edge)                    /* Регистирируем перечисление в MOC */
     Q_DECLARE_FLAGS(Edges, Edge)    /* Объявляем соотвествующие флаги из перечисления QFlags */
 
-    SizeController(FramelessWindow *target);
+    FramelessController(FramelessWindow *target);
     void setBorder(int size);
     int border() const;
     void setWindowHeaderSize(int size);
@@ -99,6 +101,6 @@ private:
 
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(SizeController::Edges);
+Q_DECLARE_OPERATORS_FOR_FLAGS(FramelessController::Edges);
 
 #endif // FRAMELESSWINDOW_H

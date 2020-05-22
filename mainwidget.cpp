@@ -139,6 +139,7 @@ void MainWidget::retranstate(void){
     setTextSectionBinds();
 }
 void MainWidget::setPropertiesMainWidget(void){
+    this->setDragHeaderSise(25);
     gui->centralWidget->layout()->setSpacing(0);
     gui->centralWidget->layout()->setMargin(0);
     gui->closeButton->setText("");

@@ -13,12 +13,12 @@ FramelessWindow::FramelessWindow(QWidget *parent) : QWidget(parent) {
     shadowEffect->setOffset(0);                         /* Устанавливаем смещение тени */
     centralWidget()->setGraphicsEffect(shadowEffect);   /* Устанавливаем эффект тени на окно */
     centralWidget()->setAutoFillBackground(true);       /* Автозаполнение центрального виджета */
-    sizeControl = new SizeController(this);             /* Создаём контроллер окна */
-    sizeControl->setBorder(10);                         /* Размер области по краям окна, для маштабирования */
-    sizeControl->setWindowHeaderSize(20);               /* Высота заголовка окна */
+    control = new FramelessController(this);            /* Создаём контроллер окна */
+    control->setBorder(10);                             /* Размер области по краям окна, для маштабирования */
+    control->setWindowHeaderSize(10);                   /* Высота заголовка окна */
 }
 FramelessWindow::~FramelessWindow() {
-    delete sizeControl;
+    delete control;
     delete shadowEffect;
 }
 void FramelessWindow::showMaximized(void) {
@@ -45,13 +45,19 @@ void FramelessWindow::changeFullScreenMode(void) {
     else
         showMaximized();
 }
+void FramelessWindow::setRezizeBorder (int border){
+    control->setBorder(border);
+}
+void FramelessWindow::setDragHeaderSise (int size){
+    control->setWindowHeaderSize(size);
+}
 
 
 
 
 
 
-SizeController::SizeController(FramelessWindow *target) : _target(target) {
+FramelessController::FramelessController(FramelessWindow *target) : _target(target) {
     _cursorchanged = false;
     _leftButtonPressed = false;
     _dragPos = QPoint();
@@ -63,19 +69,19 @@ SizeController::SizeController(FramelessWindow *target) : _target(target) {
     _target->setAttribute(Qt::WA_TranslucentBackground);    /* Делам фон прозрачным */
     setBorder(10);
 }
-void SizeController::setBorder(int size) {                   /* Установка размера границы по краям окна, в которой курсор */
+void FramelessController::setBorder(int size) {                   /* Установка размера границы по краям окна, в которой курсор */
     _border = size;                                          /* будет захватываться для масштабирования */
 }
-int SizeController::border() const {
+int FramelessController::border() const {
     return _border;
 }
-void SizeController::setWindowHeaderSize(int size) {         /* Установка размера header окна, который используется для */
+void FramelessController::setWindowHeaderSize(int size) {         /* Установка размера header окна, который используется для */
     _windowHeadersize = size;                                /* перетаскивания окна. Фактически означает ширину зоны вниз от */
 }                                                            /* верхнего края окна, в которой будет происходить захват */
-int SizeController::windowHeaderSize(void) {                 /* курсора для операции перетаскивания и перехода в полноэкранный */
+int FramelessController::windowHeaderSize(void) {                 /* курсора для операции перетаскивания и перехода в полноэкранный */
     return _windowHeadersize;                                /* режим по двойному щелчку */
 }
-bool SizeController::eventFilter(QObject* object, QEvent* event) {
+bool FramelessController::eventFilter(QObject* object, QEvent* event) {
     /* Выбираем только интересующие нас события */
     if (event->type() == QEvent::MouseMove ||            /* Движение мыши */
         event->type() == QEvent::HoverMove ||            /* Наведение мыши */
@@ -113,18 +119,18 @@ bool SizeController::eventFilter(QObject* object, QEvent* event) {
     }
 }
 
-void SizeController::mouseHover(QHoverEvent *event) {           /* Здесь следим только за внешним видом курсора */
+void FramelessController::mouseHover(QHoverEvent *event) {           /* Здесь следим только за внешним видом курсора */
     updateCursorShape(_target->mapToGlobal(event->pos()));      /* Передаём глобальную позицию курсора на экране */
 }
 
-void SizeController::mouseLeave(QEvent *event) {
+void FramelessController::mouseLeave(QEvent *event) {
     Q_UNUSED(event)
     if (!_leftButtonPressed) {                                  /* Если кнопка не нажата, а курсор покинул виджет */
         _target->unsetCursor();                                 /* необходимо гарантированно сбросить внешний вид курсора */
     }
 }
 
-void SizeController::mousePress(QMouseEvent* event) {
+void FramelessController::mousePress(QMouseEvent* event) {
     if (event->button() & Qt::LeftButton) {                  /* Проверяем была ли нажата именно левая кнопка мыши */
         _leftButtonPressed = true;                           /* Устанавливаем флаг, что она была нажата */
         calculateCursorPosition(event->globalPos(),          /* Определяем зону, в которой произошел клик мыши */
@@ -142,7 +148,7 @@ void SizeController::mousePress(QMouseEvent* event) {
         }
     }
 }
-void SizeController::mouseDoubleClick(QMouseEvent* event){
+void FramelessController::mouseDoubleClick(QMouseEvent* event){
     if (event->button() & Qt::LeftButton) {                  /* Проверяем была ли нажата именно левая кнопка мыши */
         _leftButtonPressed = true;                           /* Устанавливаем флаг, что она была нажата */
         calculateCursorPosition(event->globalPos(),          /* Определяем зону, в которой произошел клик мыши */
@@ -160,14 +166,14 @@ void SizeController::mouseDoubleClick(QMouseEvent* event){
     }
 }
 
-void SizeController::mouseRelease(QMouseEvent *event) {
+void FramelessController::mouseRelease(QMouseEvent *event) {
     if (event->button() & Qt::LeftButton) {   /* Проверяем была ли отпущена именно левая кнопка мыши */
         _leftButtonPressed = false;           /* Сбрасываем флаг: кнопка нажата */
         _dragStart = false;                   /* Сбрасываем флаг: перемещение началось */
     }
 }
 
-void SizeController::mouseMove(QMouseEvent *event) {
+void FramelessController::mouseMove(QMouseEvent *event) {
     if (_leftButtonPressed) {                        /* Курсор двигается и левая кнопка мыши нажата */
         if (_dragStart) {                            /* И был выставлен флаг режима перемещения окна */
             if (_target->isFullScreen() || _target->isMaximized()) {
@@ -231,7 +237,7 @@ void SizeController::mouseMove(QMouseEvent *event) {
     }
 }
 /* Обновление вида курсора */
-void SizeController::updateCursorShape(const QPoint &position) {
+void FramelessController::updateCursorShape(const QPoint &position) {
     if (_target->isFullScreen() || _target->isMaximized()) {   /* В полноэкранном режиме вид курсора на */
         if (_cursorchanged) {                                  /* масштабирующие стрелочки не меняем */
             _target->unsetCursor();                            /* Гаранированно сбрасываем внешний вид */
@@ -261,7 +267,7 @@ void SizeController::updateCursorShape(const QPoint &position) {
 }
 
 /* Определение зоны нахождения курсора */
-void SizeController::calculateCursorPosition(const QPoint &position, const QRect &framerect, Edges &edge) {
+void FramelessController::calculateCursorPosition(const QPoint &position, const QRect &framerect, Edges &edge) {
 
     bool onLeft =
             position.x() >= framerect.x() - border() &&                       /* position.x на левой границе виджета +- borderWidth */
