@@ -10,6 +10,7 @@
 #include <QHoverEvent>
 #include <QMouseEvent>
 #include <QGridLayout>
+#include <QGraphicsDropShadowEffect>
 
 class SizeController;
 
@@ -18,6 +19,8 @@ class FramelessWindow : public QWidget
 {
     Q_OBJECT
 
+    friend SizeController;
+
 public:
     explicit FramelessWindow(QWidget *parent = nullptr);
     ~FramelessWindow();
@@ -25,12 +28,11 @@ public:
     QRect normalSize(void);
     void setNormalSize(QRect);
 
-    const int recomendedMargin = 10;
-    const int recomendedBorder = 10;
-
 private:
     QWidget _centralWidget;
     SizeController *sizeControl = nullptr;
+    QGraphicsDropShadowEffect *shadowEffect = nullptr;
+    const int shadowSize = 10;
 
 signals:
     void windowMaximized(void);
@@ -67,6 +69,10 @@ public:
     Q_DECLARE_FLAGS(Edges, Edge)    /* Объявляем соотвествующие флаги из перечисления QFlags */
 
     SizeController(FramelessWindow *target);
+    void setBorder(int size);
+    int border() const;
+    void setWindowHeaderSize(int size);
+    int windowHeaderSize(void);
 
 protected:
     bool eventFilter(QObject *object, QEvent *event) override;
@@ -90,12 +96,6 @@ private:
     int      _border;                             /* Ширина обрамления для захвата курсора */
     int      _windowHeadersize = 30;
     QPoint   _dragPos;                            /* Координата курсора, относительно которой окна будет перемещено */
-
-
-    void setBorder(int size);
-    int border() const;
-    void setWindowHeaderSize(int size);
-    int windowHeaderSize(void);
 
 };
 

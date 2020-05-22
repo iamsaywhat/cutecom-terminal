@@ -1,5 +1,4 @@
 #include "framelesswindow.h"
-#include <QGraphicsDropShadowEffect>
 #include <QDebug>
 #include <QSettings>
 
@@ -7,48 +6,41 @@ FramelessWindow::FramelessWindow(QWidget *parent) : QWidget(parent) {
     QGridLayout *layout = new QGridLayout(this);
     layout->addWidget(centralWidget());
     this->setLayout(layout);
-    QGraphicsDropShadowEffect *shadowEffect = new QGraphicsDropShadowEffect(this);
-    shadowEffect->setColor(QColor(0, 0, 0, 200));
-    shadowEffect->setBlurRadius(10);                    // Устанавливаем радиус размытия
-    shadowEffect->setOffset(0);                         // Устанавливаем смещение тени
-    centralWidget()->setGraphicsEffect(shadowEffect);   // Устанавливаем эффект тени на окно
-    centralWidget()->setAutoFillBackground(true);
-    sizeControl = new SizeController(this);
+    this->layout()->setMargin(shadowSize);
+    shadowEffect = new QGraphicsDropShadowEffect(this); /* Создаём эффект тени окна */
+    shadowEffect->setColor(QColor(0, 0, 0, 200));       /* Задаём цвет тени и ее прозрачность */
+    shadowEffect->setBlurRadius(shadowSize);            /* Устанавливаем радиус размытия тени */
+    shadowEffect->setOffset(0);                         /* Устанавливаем смещение тени */
+    centralWidget()->setGraphicsEffect(shadowEffect);   /* Устанавливаем эффект тени на окно */
+    centralWidget()->setAutoFillBackground(true);       /* Автозаполнение центрального виджета */
+    sizeControl = new SizeController(this);             /* Создаём контроллер окна */
+    sizeControl->setBorder(10);                         /* Размер области по краям окна, для маштабирования */
+    sizeControl->setWindowHeaderSize(20);               /* Высота заголовка окна */
 }
 FramelessWindow::~FramelessWindow() {
     delete sizeControl;
+    delete shadowEffect;
 }
 void FramelessWindow::showMaximized(void) {
-    // При нажатии на кнопку максимизации/нормализации окна
-    // Делаем проверку на то, в каком состоянии находится окно и переключаем его режим
-    if (!this->isMaximized())
-    {
-        /* Здесь важный нюанс: при разворачивании окна - необходимо поля centralwidget
-         * (на уровень выше interfaceWidget) убрать, чтобы окно полноценно развернулось
-         * в полный экран, однако, при этом исчезает тень, которую в полноэкранном режиме
-         * и не должно быть видно, но при минимизации окна нужно вернуть */
-        this->layout()->setMargin(0);
-        this->QWidget::showMaximized();
-        emit windowMaximized();
+    if (!this->isMaximized()) {
+        this->layout()->setMargin(0);      /* При переключение в полноэкранный режим, чтобы это произошло */
+        this->QWidget::showMaximized();    /* корректно, необходимо "спрятать прозрачную рамку и тенью */
+        emit windowMaximized();            /* а при выходе из полноэкранного режима надо вернуть */
     }
 }
-void FramelessWindow::showNormal(void){
-    if(this->isMaximized())
-    {
-        // Заметьте, каждый раз устанавливаем новый стиль в эту кнопку
-        /* Здесь при минимизации возвращаем поля в исходный вид,
-         * чтобы тень отобразилась */
-        this->layout()->setMargin(recomendedMargin);
-        this->QWidget::showNormal();
+void FramelessWindow::showNormal(void) {
+    if( this->isMaximized()) {
+        this->layout()->setMargin(shadowSize);        /* При выходе из полноэкранного режима, чтобы это произошло */
+        this->QWidget::showNormal();                  /* корректно, необходимо вернуть прозрачную рамку и тенью */
         emit windowNormalized();
     }
 }
-void FramelessWindow::showMinimized(void){
+void FramelessWindow::showMinimized(void) {
     this->QWidget::showMinimized();
     emit windowMinimized();
 }
-void FramelessWindow::changeFullScreenMode(void){
-    if(isMaximized())
+void FramelessWindow::changeFullScreenMode(void) {
+    if (isMaximized())
         showNormal();
     else
         showMaximized();
@@ -69,8 +61,7 @@ SizeController::SizeController(FramelessWindow *target) : _target(target) {
     _target->installEventFilter(this);                      /* Применяем фильтр событий данному виджету */
     _target->setAutoFillBackground(true);                   /* Включаем автозаполнение виджета */
     _target->setAttribute(Qt::WA_TranslucentBackground);    /* Делам фон прозрачным */
-    _target->layout()->setMargin(10);
-    setBorder(_target->recomendedBorder);
+    setBorder(10);
 }
 void SizeController::setBorder(int size) {                   /* Установка размера границы по краям окна, в которой курсор */
     _border = size;                                          /* будет захватываться для масштабирования */
@@ -143,7 +134,8 @@ void SizeController::mousePress(QMouseEvent* event) {
         if(!_target->isMaximized() && !_target->isFullScreen()){               /* то фактический размер окна включает и невидимые рамки, которые здесь */
             actionRect = actionRect.marginsRemoved(QMargins(border(), border(), border(), border()));  /* нельзя учитывать, поэтому их вычитаем из общего размера окна */
         }                                                                                              /* А далее ограничиваем эту зону размером header окна */
-        actionRect.setHeight(windowHeaderSize());                                                      /* то есть обрезаем ее по высоте до размера windowHeaderSize() */
+        if(windowHeaderSize() < actionRect.height())
+            actionRect.setHeight(windowHeaderSize());                                                  /* то есть обрезаем ее по высоте до размера windowHeaderSize() */
         if (actionRect .contains(event->pos())) {   /* Если эта зона содержит позицию клика курсора */
             _dragStart = true;                      /* Выставляем флаг начала перемещения */
             _dragPos = event->pos();                /* Фиксируем координату перемещения */
@@ -160,7 +152,8 @@ void SizeController::mouseDoubleClick(QMouseEvent* event){
         if(!_target->isMaximized() && !_target->isFullScreen()){               /* то фактический размер окна включает и невидимые рамки, которые здесь */
             actionRect = actionRect.marginsRemoved(QMargins(border(), border(), border(), border()));  /* нельзя учитывать, поэтому их вычитаем из общего размера окна */
         }                                                                                              /* А далее ограничиваем эту зону размером header окна */
-        actionRect.setHeight(windowHeaderSize());                                                      /* то есть обрезаем ее по высоте до размера windowHeaderSize() */
+        if(windowHeaderSize() < actionRect.height())
+            actionRect.setHeight(windowHeaderSize());                                                  /* то есть обрезаем ее по высоте до размера windowHeaderSize() */
         if (actionRect .contains(event->pos())) {   /* Если эта зона содержит позицию двойного клика курсора */
             _target->changeFullScreenMode();        /* То меняем режим на полноэкранный или наоборот */
         }
