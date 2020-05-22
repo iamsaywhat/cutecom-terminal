@@ -1,4 +1,4 @@
-include("deploy-helper.pri")
+include("deploy/deploy-helper.pri")
 
 QT += core gui serialport
 
@@ -58,8 +58,8 @@ RESOURCES += \
     resources/languages.qrc
 
 DISTFILES += \
-    config.xml \
-    package.xml
+    deploy/config.xml \
+    deploy/package.xml
 
 RC_ICONS = $$PWD/resources/icons/application.ico
 
@@ -118,7 +118,7 @@ CONFIG(release, debug|release) {
 #########################################################################
 CONFIG(release, release|debug) { # Собираем инсталяторы только для релизной сборки
 
-    PACKAGE_FILE_XML = $$OUT_PWD/../$$TARGET/package.xml    # Указываем путь к package.xml
+    PACKAGE_FILE_XML = $$OUT_PWD/../$$TARGET/deploy/package.xml    # Указываем путь к package.xml
     PACKAGE_DATA = $$OUT_PWD/release                        # Задаём путь к собранному приложению со всеми зависимостями
 
     ####################################################################
@@ -137,7 +137,7 @@ CONFIG(release, release|debug) { # Собираем инсталяторы то�
 
     # Собираем инсталяторы
     PACKAGES_PATH = $$OUT_PWD/packages                                  # Путь к установочному пакету
-    CONFIG_FILE_PATH = $$PWD\config.xml                                 # Путь к конфирурации
+    CONFIG_FILE_PATH = $$PWD/deploy/config.xml                                 # Путь к конфирурации
     ONLINE_INSTALLER_PATH = $$OUT_PWD/installers/online-installer       # Путь размещения онлайн инсталятора
     OFFLINE_INSTALLER_PATH = $$OUT_PWD/installers/offline-installer     # Путь размещения оффлайн инсталятора
     mkpath($$ONLINE_INSTALLER_PATH/../)                                 # Если пути не существуют - создаём их
