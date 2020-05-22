@@ -97,9 +97,6 @@ private:
     void setWindowHeaderSize(int size);
     int windowHeaderSize(void);
 
-signals:
-    void doubleClickOnDragZone (void);
-
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(SizeController::Edges);
