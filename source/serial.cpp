@@ -8,7 +8,7 @@ Serial::Serial(QObject *parent) : QObject(parent){
     connect(port, &QSerialPort::readyRead, this, &Serial::receiveData);
     connect(port, &QSerialPort::errorOccurred, this, &Serial::errorHandler);
     qRegisterMetaType<Settings>("Settings");
-    connect(timer, &QTimer::timeout, this, &Serial::unlockTransmit);
+    connect(timer, &QTimer::timeout, this, &Serial::unlock);
 }
 
 Serial::~Serial(void){
@@ -43,7 +43,7 @@ void Serial::receiveData (void){
     if(!isLocked()){
         QByteArray data = port->readAll();
         emit receivedData(data);
-        lockTransmit();
+        lock();
         qDebug() << "\nSerial: received data: " << data;
     }
 }
@@ -70,13 +70,13 @@ void Serial::errorHandler(QSerialPort::SerialPortError error){
             close();
     }
 }
-void Serial::unlockTransmit(void){
-    transmitLocked = false;
+void Serial::unlock(void){
+    lockedByTimer = false;
     timer->stop();
 }
-void Serial::lockTransmit(void){
-    transmitLocked = true;
+void Serial::lock(void){
     if(captureInterval() > 0) {
+        lockedByTimer = true;
         timer->setInterval(captureInterval());
         timer->start();
     }
@@ -101,10 +101,13 @@ void Serial::setCaptureInterval(int interval){
         qDebug() << "\nSerial: capture interval changes: " << _captureInterval;
     }
 }
-bool Serial::isLocked(void){
-    if(!transmitLocked || ((capturePacketSize() > 0) &&
-                          (port->bytesAvailable() > capturePacketSize())))
-        return false;
-    else
-        return true;
+bool Serial::isLocked(void){                                                          // Мгновенная приём принятого байта может быть
+    bool status = false;                                                              // заблокирован либо таймером (если captureInterval() > 0),
+    if (captureInterval() > 0 && capturePacketSize() > 0)                             // который делит принятые данные на пакеты, если после
+        status = (lockedByTimer && (port->bytesAvailable() < capturePacketSize()));   // последнего принятого байта прошло больше captureInterval(),
+    else if (captureInterval() > 0)                                                   // либо по количеству накопленных байт (если capturePacketSize > 0)
+        status = lockedByTimer;                                                       // либо и тем и другим, если и captureInterval() > 0 и capturePacketSize > 0.
+    else if (capturePacketSize() > 0)                                                 // В последнем случае приём будет разблокирован, тем условием, которое
+        status = (port->bytesAvailable() < capturePacketSize());                      // выполнится первым. Если оба критерия неактивны captureInterval() = 0
+    return status;                                                                    // и capturePacketSize > 0, приём не блокируется
 }

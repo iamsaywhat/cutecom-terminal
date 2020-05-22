@@ -27,10 +27,10 @@ private:
     QSerialPort *port;
     QTimer *timer;
     bool portSettingsIsSet = false;
-    bool transmitLocked = false;
+    bool lockedByTimer = false;
     int _captureInterval = 0;
     qint64 _capturePacketSize = 0;
-    void lockTransmit(void);
+    void lock(void);
     bool isLocked(void);
     int captureInterval(void);
     qint64 capturePacketSize(void);
@@ -55,7 +55,7 @@ public slots:
 private slots:
     void receiveData(void);
     void errorHandler(QSerialPort::SerialPortError);
-    void unlockTransmit(void);
+    void unlock(void);
 };
 
 Q_DECLARE_METATYPE(Serial::Settings)
