@@ -1,18 +1,18 @@
-#include "consolewidget.h"
+#include "terminal.h"
 
 #include <QString>
 #include <QByteArray>
 #include <QTime>
 #include <QDebug>
-#include "converter.h"
+#include "source/converter.h"
 #include <QScrollBar>
 
-ConsoleWidget::ConsoleWidget(QObject*        parent,
-                             SerialGui*      serial,
-                             QPlainTextEdit* console,
-                             QLineEdit *     input,
-                             QPushButton*    sendButton,
-                             QPushButton*    clearButton) : QObject(parent)
+Terminal::Terminal(QObject*        parent,
+                   SerialGui*      serial,
+                   QPlainTextEdit* console,
+                   QLineEdit *     input,
+                   QPushButton*    sendButton,
+                   QPushButton*    clearButton) : QObject(parent)
 {
     /* Сохраняем указатели на формы и прочие классы внутри */
     _serial      = serial;
@@ -25,20 +25,20 @@ ConsoleWidget::ConsoleWidget(QObject*        parent,
     _sendButton->setText(tr("Send"));          // Разместим текст на кнопках
     _clearButton->setText(tr("Clear"));
     /* Выполняем функциональные подключения */
-    connect(_sendButton,  &QPushButton::clicked, this, QOverload<>::of(&ConsoleWidget::send));
-    connect(_clearButton, &QPushButton::clicked, this, &ConsoleWidget::clear);
-    connect(_serial,      &SerialGui::received,  this, &ConsoleWidget::received);
+    connect(_sendButton,  &QPushButton::clicked, this, QOverload<>::of(&Terminal::send));
+    connect(_clearButton, &QPushButton::clicked, this, &Terminal::clear);
+    connect(_serial,      &SerialGui::received,  this, &Terminal::received);
 
     timer = new QTimer;
-    connect(timer, &QTimer::timeout, this, &ConsoleWidget::cyclicTimeout);
+    connect(timer, &QTimer::timeout, this, &Terminal::cyclicTimeout);
     setEchoMode(true);
 }
 
-ConsoleWidget::~ConsoleWidget(){
+Terminal::~Terminal(){
     delete timer;
 }
 
-void ConsoleWidget::send(void){
+void Terminal::send(void){
     QString data(_input->text());                                            // Берем текст с поля ввода
     if(data != "" && _serial->getConnectionStatus() != SerialGui::CLOSED) {  // Только если поле ввода что-то содержит
         _serial->send(Converter::convertFromUnicode(data).toLatin1());       // и порт открыт, посылаем данные в порт
@@ -46,13 +46,13 @@ void ConsoleWidget::send(void){
         qDebug() << "\nConsoleWidget: sending data: " << data;
     }
 }
-void ConsoleWidget::send(QString data){
+void Terminal::send(QString data){
     if(data != "" && _serial->getConnectionStatus() != SerialGui::CLOSED){  // Только если поле ввода что-то содержит
         _serial->send(Converter::convertFromUnicode(data).toLatin1());       // и порт открыт, посылаем данные в порт
         qDebug() << "\nConsoleWidget: sending cyclic data: " << data;
     }
 }
-void ConsoleWidget::sended(QByteArray data){
+void Terminal::sended(QByteArray data){
     replaceSymbols(data, '.');                         // Необходимо непечатные символы заменить
     QString text = Converter::convertToUnicode(data);  // Необходимо, массив байт представить в текущей кодировке
     _console->moveCursor(QTextCursor::End);            // Смещаем курсор текста гарантированно в конец
@@ -62,7 +62,7 @@ void ConsoleWidget::sended(QByteArray data){
     _console->verticalScrollBar()->setSliderPosition(_console->verticalScrollBar()->maximum());
     qDebug() << "\nConsoleWidget: sended data: " << data;
 }
-void ConsoleWidget::received(QByteArray data){
+void Terminal::received(QByteArray data){
     replaceSymbols(data, '.');                        // Необходимо непечатные символы заменить
     QString text = Converter::convertToUnicode(data); // Необходимо, массив байт представить в текущей кодировке
     _console->moveCursor(QTextCursor::End);           // Смещаем курсор текста гарантированно в конец
@@ -70,55 +70,55 @@ void ConsoleWidget::received(QByteArray data){
     _console->verticalScrollBar()->setSliderPosition(_console->verticalScrollBar()->maximum());
     qDebug() << "\nConsoleWidget: received data: " << data;
 }
-void ConsoleWidget::clear (void){
+void Terminal::clear (void){
     _console->clear();
     qDebug() << "\nConsoleWidget: text is cleared";
 }
-bool ConsoleWidget::echoMode(void){
+bool Terminal::echoMode(void){
     return _echo;
 }
-bool ConsoleWidget::cyclicMode(void){
+bool Terminal::cyclicMode(void){
     return _cyclic;
 }
-int ConsoleWidget::cyclicInterval(void){
+int Terminal::cyclicInterval(void){
     return _cyclicInterval;
 }
-QString& ConsoleWidget::bindData(void){
+QString& Terminal::bindData(void){
     return _bindData;
 }
-void ConsoleWidget::setEchoMode(bool state){
+void Terminal::setEchoMode(bool state){
     if(state && !_echo)                                                        // Режим эхо, не просто маскирует посылаемые
-        connect(_serial, &SerialGui::send, this, &ConsoleWidget::sended);      // данные, а фактически подписывает/отписывает
+        connect(_serial, &SerialGui::send, this, &Terminal::sended);      // данные, а фактически подписывает/отписывает
     else if (!state && _echo)                                                  // нас на исходящие данные порта
-        disconnect(_serial, &SerialGui::send, this, &ConsoleWidget::sended);   //
+        disconnect(_serial, &SerialGui::send, this, &Terminal::sended);   //
     _echo = state;                                                             // Фиксируем состояние
     emit echoModeChanged(state);                                               // Уведомляем о изменении
     qDebug() << "\nConsoleWidget: echo mode changed: " << state;
 }
-void ConsoleWidget::setCyclicMode(bool mode){
+void Terminal::setCyclicMode(bool mode){
     _cyclic = mode;
     if(_cyclic == false)
         timer->stop();
     emit cyclicModeChanged(mode);
     qDebug() << "\nConsoleWidget: cyclic mode changed: " << mode;
 }
-void ConsoleWidget::setCyclicInterval(int interval){
+void Terminal::setCyclicInterval(int interval){
     if(interval > 0){
         _cyclicInterval = interval;
         emit cyclicIntervalChanged(interval);
         qDebug() << "\nConsoleWidget: cyclic interval changed: " << interval;
     }
 }
-void ConsoleWidget::setBindData(QString data){
+void Terminal::setBindData(QString data){
     _bindData = data;
     emit bindDataChanged(data);
     qDebug() << "\nConsoleWidget: cyclic data changed" << data;
 }
-void ConsoleWidget::retranslate(void){
+void Terminal::retranslate(void){
     _sendButton->setText(tr("Send"));
     _clearButton->setText(tr("Clear"));
 }
-void ConsoleWidget::replaceSymbols(QByteArray &data, const char symbol){
+void Terminal::replaceSymbols(QByteArray &data, const char symbol){
     for(int i = 0; i < data.count(); i++){
         if(((data[i] >= char(0x00) && data[i] < char(0x20))
            && data[i] != char(0x09)
@@ -128,10 +128,10 @@ void ConsoleWidget::replaceSymbols(QByteArray &data, const char symbol){
             data[i] = symbol;
     }
 }
-void ConsoleWidget::cyclicTimeout(void){
+void Terminal::cyclicTimeout(void){
    send(_bindData);
 }
-void ConsoleWidget::startCyclicSending(void){
+void Terminal::startCyclicSending(void){
     send(_bindData);
     if(cyclicMode()){
         timer->start(cyclicInterval());
@@ -141,7 +141,7 @@ void ConsoleWidget::startCyclicSending(void){
     else
         emit cyclicStopped();
 }
-void ConsoleWidget::stopCyclicSending(void){
+void Terminal::stopCyclicSending(void){
     timer->stop();
     emit cyclicStopped();
     qDebug() << "\nConsoleWidget: cyclic sending data stopped!";

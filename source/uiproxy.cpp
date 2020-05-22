@@ -11,18 +11,18 @@ UiProxy::UiProxy(QObject *parent, Ui::MainWidget* gui) :QObject(parent)
                          gui->boxStopBits,                // ComboBox с настройками стоп-бит
                          gui->boxFlowControl,             // ComboBox с настройками контроля
                          gui->buttonConnectDisconnect);   // Кнопка подключения/отключения
-    console = new ConsoleWidget(this,
-                                port,                       // Указатель на SerialSettings экземпляр
-                                gui->consoleField,          // Указатель на QPlainTextEdit форму
-                                gui->inputConsoleField,     // Указатель на QLineEdit форму
-                                gui->sendConsoleButton,     // Указатель на QPushButton форму
-                                gui->clearConsoleButton);   // Указатель на QPushButton форму
-    table = new TableConsole(this,
-                             port,                   // Указатель на SerialSettings экземпляр
-                             gui->tableField,        // Указатель на QTableView форму
-                             gui->inputTableField,   // Указатель на QLineEdit форму
-                             gui->sendTableButton,   // Указатель на QPushButton форму
-                             gui->clearTableButton); // Указатель на QPushButton форму
+    terminal = new Terminal(this,
+                           port,                       // Указатель на SerialSettings экземпляр
+                           gui->consoleField,          // Указатель на QPlainTextEdit форму
+                           gui->inputConsoleField,     // Указатель на QLineEdit форму
+                           gui->sendConsoleButton,     // Указатель на QPushButton форму
+                           gui->clearConsoleButton);   // Указатель на QPushButton форму
+    table = new Table(this,
+                      port,                   // Указатель на SerialSettings экземпляр
+                      gui->tableField,        // Указатель на QTableView форму
+                      gui->inputTableField,   // Указатель на QLineEdit форму
+                      gui->sendTableButton,   // Указатель на QPushButton форму
+                      gui->clearTableButton); // Указатель на QPushButton форму
     converter = new Converter(this,
                               gui->converterSource,         // QPlainText для ввода
                               gui->converterResult,         // QplainText для вывода результата
@@ -38,21 +38,21 @@ UiProxy::UiProxy(QObject *parent, Ui::MainWidget* gui) :QObject(parent)
     createLanguageList(gui->comboBoxLanguage);
     setFont();
 
-    connect(this, &UiProxy::consoleEchoChanged, console, &ConsoleWidget::setEchoMode);
-    connect(this, &UiProxy::consoleCyclicChanged, console, &ConsoleWidget::setCyclicMode);
-    connect(this, &UiProxy::consoleCyclicIntervalChanged, console, &ConsoleWidget::setCyclicInterval);
-    connect(this, &UiProxy::consoleCyclicDataChanged, console, &ConsoleWidget::setBindData);
-    connect(this, &UiProxy::consoleStartCycle, console, &ConsoleWidget::startCyclicSending);
-    connect(this, &UiProxy::consoleStopCycle, console, &ConsoleWidget::stopCyclicSending);
-    connect(console, &ConsoleWidget::cyclicStopped, this, &UiProxy::consoleCyclicStoped);
+    connect(this, &UiProxy::consoleEchoChanged, terminal, &Terminal::setEchoMode);
+    connect(this, &UiProxy::consoleCyclicChanged, terminal, &Terminal::setCyclicMode);
+    connect(this, &UiProxy::consoleCyclicIntervalChanged, terminal, &Terminal::setCyclicInterval);
+    connect(this, &UiProxy::consoleCyclicDataChanged, terminal, &Terminal::setBindData);
+    connect(this, &UiProxy::consoleStartCycle, terminal, &Terminal::startCyclicSending);
+    connect(this, &UiProxy::consoleStopCycle, terminal, &Terminal::stopCyclicSending);
+    connect(terminal, &Terminal::cyclicStopped, this, &UiProxy::consoleCyclicStoped);
 
-    connect(this, &UiProxy::tableEchoChanged, table, &TableConsole::setEchoMode);
-    connect(this, &UiProxy::tableCyclicChanged, table, &TableConsole::setCyclicMode);
-    connect(this, &UiProxy::tableCyclicIntervalChanged, table, &TableConsole::setCyclicInterval);
-    connect(this, &UiProxy::tableCyclicDataChanged, table, &TableConsole::setBindData);
-    connect(this, &UiProxy::tableStartCycle, table, &TableConsole::startCyclicSending);
-    connect(this, &UiProxy::tableStopCycle, table, &TableConsole::stopCyclicSending);
-    connect(table, &TableConsole::cyclicStopped, this, &UiProxy::tableCyclicStoped);
+    connect(this, &UiProxy::tableEchoChanged, table, &Table::setEchoMode);
+    connect(this, &UiProxy::tableCyclicChanged, table, &Table::setCyclicMode);
+    connect(this, &UiProxy::tableCyclicIntervalChanged, table, &Table::setCyclicInterval);
+    connect(this, &UiProxy::tableCyclicDataChanged, table, &Table::setBindData);
+    connect(this, &UiProxy::tableStartCycle, table, &Table::startCyclicSending);
+    connect(this, &UiProxy::tableStopCycle, table, &Table::stopCyclicSending);
+    connect(table, &Table::cyclicStopped, this, &UiProxy::tableCyclicStoped);
 
     connect(this, &UiProxy::captureTimeChanges, port, &SerialGui::setCaptureTime);
     connect(this, &UiProxy::captureBytesChanges, port, &SerialGui::setCaptureSize);
@@ -79,7 +79,7 @@ UiProxy::~UiProxy(void){
     delete logger;
     delete converter;
     delete table;
-    delete console;
+    delete terminal;
     delete port;
 }
 void UiProxy::createLanguageList(QComboBox *comboBox){
@@ -149,7 +149,7 @@ void UiProxy::setLanguage(int index){
     language.load(langList.at(index));
     qApp->installTranslator(&language);
     port->retranslate();
-    console->retranslate();
+    terminal->retranslate();
     table->retranslate();
     converter->retranslate();
     qDebug() << "\nUiProxy: language changed: " << langList.at(index);

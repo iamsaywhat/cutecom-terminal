@@ -1,18 +1,18 @@
-#include "tableconsole.h"
+#include "table.h"
 #include <QHeaderView>
 #include <QTime>
 #include <QScrollBar>
-#include "converter.h"
+#include "source/converter.h"
 
 #include <QDebug>
 
 
-TableConsole::TableConsole(QObject*           parent,
-                           SerialGui*         serial,
-                           QTableView*        table,
-                           QLineEdit*         input,
-                           QPushButton*       sendButton,
-                           QPushButton*       clearButton) : QObject(parent)
+Table::Table(QObject*           parent,
+             SerialGui*         serial,
+             QTableView*        table,
+             QLineEdit*         input,
+             QPushButton*       sendButton,
+             QPushButton*       clearButton) : QObject(parent)
 {
     /* Берем указатели на элементы gui и рабочий serialport */
     _serial      = serial;           // Указатель на внешний экземпляр com-порта
@@ -37,7 +37,7 @@ TableConsole::TableConsole(QObject*           parent,
                       << tr("Hex")
                       << tr("Ascii");
     model->setHorizontalHeaderLabels(horizontalHeaders);
-    delegate = new TextEditDelegate(this);                 // Создаём делегата отвечающего отрисовку содержимого таблицы
+    delegate = new TableDelegate(this);                    // Создаём делегата отвечающего отрисовку содержимого таблицы
     _table->setModel(model);                               // Помещаем модель в таблицу
     for(int i = 4; i < 5; i++){                            // Назначаем делегат
         _table->setItemDelegateForColumn(i, delegate);
@@ -53,30 +53,30 @@ TableConsole::TableConsole(QObject*           parent,
 
     /* Выполняем необходимые функциональные подключения слотов и сигналов */
     connect(_table->verticalScrollBar(), &QScrollBar::valueChanged,      // Изменение в скроллбаре генерирует сигнал на
-            this, &TableConsole::slotAutoresize);                        // перерисовку видимой части таблицы
+            this, &Table::slotAutoresize);                               // перерисовку видимой части таблицы
     connect(_table->horizontalHeader(),  &QHeaderView::sectionResized,   // Изменение геометрии хидера таблицы генерирует
-            this, &TableConsole::slotAutoresize);                        // сигнал на перерисовку видимой части таблицы
+            this, &Table::slotAutoresize);                               // сигнал на перерисовку видимой части таблицы
     connect(clearButton, &QPushButton::clicked,                          // Клик по clear-кнопке будет инициировать стирание
-            this, &TableConsole::clear);
+            this, &Table::clear);
     connect(sendButton, &QPushButton::clicked,                           // Клик по send-кнопке будет инициировать отправку
-            this, QOverload<>::of(&TableConsole::send));                 // и отображение введенного сообщения
+            this, QOverload<>::of(&Table::send));                        // и отображение введенного сообщения
     connect(_input, &QLineEdit::textChanged,                             // Каждый введенный символ запускает автоустановщик
-            this, &TableConsole::slotTextDelimiter);                     // разделителей между байтами
+            this, &Table::slotTextDelimiter);                            // разделителей между байтами
     connect(serial, &SerialGui::received,                                // QSerialPort будет уведомлять о принятых данных
-            this, &TableConsole::received);                              // и вызывать slot обработки входящих данных
+            this, &Table::received);                                     // и вызывать slot обработки входящих данных
 
     timer = new QTimer;
-    connect(timer, &QTimer::timeout, this, &TableConsole::cyclicTimeout);
+    connect(timer, &QTimer::timeout, this, &Table::cyclicTimeout);
 
     setEchoMode(true);
 }
-TableConsole::~TableConsole(){
+Table::~Table(){
     delete timer;
     delete delegate;
     delete model;
     delete hexMatcher;
 }
-void TableConsole::appendData(DirectionType direction, QString& hex, QString& ascii){
+void Table::appendData(DirectionType direction, QString& hex, QString& ascii){
     QTime systemTime = QTime::currentTime();                                // Получаем системное время
     blockAutoresizeSlot();
     _table->verticalScrollBar()->blockSignals(true);
@@ -110,13 +110,13 @@ void TableConsole::appendData(DirectionType direction, QString& hex, QString& as
     unblockAutoresizeSlot();
 }
 
-int TableConsole::firstVisibleRow (void){
+int Table::firstVisibleRow (void){
     return _firstVisibleRow;
 }
-int TableConsole::lastVisibleRow (void){
+int Table::lastVisibleRow (void){
     return _lastVisibleRow;
 }
-void TableConsole::updateVisibleRows (void){
+void Table::updateVisibleRows (void){
     int viewportHeight = 0;             // Высота viewport
     int viewportWidth = 0;              // Ширина viewport
     int rowCount = 0;                   // Количество строк
@@ -164,13 +164,13 @@ void TableConsole::updateVisibleRows (void){
             _lastVisibleRow = i;
     }
 }
-void TableConsole::resizeVisibleRows (int firstRow, int lastRow){
+void Table::resizeVisibleRows (int firstRow, int lastRow){
     if(firstRow >= 0 && lastRow >= 0){
         for (int i = firstRow; i <= lastRow; i++)
             _table->resizeRowToContents(i);
     }
 }
-void TableConsole::slotAutoresize(void){
+void Table::slotAutoresize(void){
     if(autoresizeIsBlocked())
         return;
     resizeVisibleRows(firstVisibleRow(), lastVisibleRow());
@@ -178,7 +178,7 @@ void TableConsole::slotAutoresize(void){
     //resizeVisibleRows(firstVisibleRow(), lastVisibleRow());
 }
 
-void TableConsole::clear(void){
+void Table::clear(void){
     /* Если мы удалим все содержимое, индексы отображаемой части
      * нужно сделать невалидными */
     _firstVisibleRow = -1;
@@ -197,7 +197,7 @@ void TableConsole::clear(void){
     qDebug() << "\nTableConsole: table is cleared";
 }
 
-void TableConsole::send(void){
+void Table::send(void){
     QString text(_input->text());                                             // Берём текст с поля ввода
     if(text != "" && _serial->getConnectionStatus() != SerialGui::CLOSED) {   // Если в поле ввода не пусто,
         QByteArray data = Converter::hexStringToByteArray(text, ' ');         // и порт открыт, то конвертируем
@@ -206,97 +206,97 @@ void TableConsole::send(void){
         qDebug() << "\nTableConsole: sending data: " << data;
     }
 }
-void TableConsole::send(QString text){
+void Table::send(QString text){
     if(text != "" && _serial->getConnectionStatus() != SerialGui::CLOSED) {   // Если в поле ввода не пусто,
         QByteArray data = Converter::hexStringToByteArray(text, ' ');         // и порт открыт, то конвертируем
         _serial->send(data);                                                  // в байтовый массив и отправляем в порт
         qDebug() << "\nTableConsole: sending cyclic data: " << data;
     }
 }
-void TableConsole::sended(QByteArray data){
+void Table::sended(QByteArray data){
     QString hexString = Converter::byteArrayToHexString(data, ' ');       // Посланные данные нужно сконверировать в текст
     Converter::removeNonPrintedSymbols(data, '.');
     QString asciiString = Converter::byteArrayToAsciiString(data);
-    appendData(TableConsole::OUTGOING, hexString, asciiString);          // А после добавить в таблицу
+    appendData(Table::OUTGOING, hexString, asciiString);          // А после добавить в таблицу
     qDebug() << "\nTableConsole: sended data: " << data;
 }
-void TableConsole::received(QByteArray data){
+void Table::received(QByteArray data){
     QString hexString = Converter::byteArrayToHexString(data, ' ');       // Посланные данные нужно сконверировать в текст
     Converter::removeNonPrintedSymbols(data, '.');
     QString asciiString = Converter::byteArrayToAsciiString(data);
-    appendData(TableConsole::INCOMING, hexString, asciiString);           // А после добавить в таблицу
+    appendData(Table::INCOMING, hexString, asciiString);           // А после добавить в таблицу
     qDebug() << "\nTableConsole: received data: " << data;
 }
 
-void TableConsole::slotTextDelimiter(void){
+void Table::slotTextDelimiter(void){
     QLineEdit *input = static_cast<QLineEdit*>(QObject::sender());   // Определим отправителя
     QString source = input->text();                                  // Берем текст с поля
     Converter::setDelimitersInHexString(source, 2, ' ');             // Группируем символы
     input->setText(source);                                          // Возвращаем в поле ввода
 }
-bool TableConsole::echoMode(void){
+bool Table::echoMode(void){
     return _echo;
 }
-bool TableConsole::cyclicMode(void){
+bool Table::cyclicMode(void){
     return _cyclic;
 }
-int TableConsole::cyclicInterval(void){
+int Table::cyclicInterval(void){
     return _cyclicInterval;
 }
-QString& TableConsole::bindData(void){
+QString& Table::bindData(void){
     return _bindData;
 }
-void TableConsole::setEchoMode(bool state){   
+void Table::setEchoMode(bool state){
     if(state && !_echo)                                                       // Режим эхо, не просто маскирует посылаемые
-        connect(_serial, &SerialGui::send, this, &TableConsole::sended);      // данные, а фактически подписывает/отписывает
+        connect(_serial, &SerialGui::send, this, &Table::sended);      // данные, а фактически подписывает/отписывает
     else if (!state && _echo)                                                 // нас на исходящие данные порта
-        disconnect(_serial, &SerialGui::send, this, &TableConsole::sended);   //
+        disconnect(_serial, &SerialGui::send, this, &Table::sended);   //
     _echo = state;                                                            // Фиксируем состояние
     emit echoModeChanged(state);                                              // Уведомляем о изменении
     qDebug() << "\nTableConsole: echo mode changed: " << state;
 }
-void TableConsole::setCyclicMode(bool mode){
+void Table::setCyclicMode(bool mode){
     _cyclic = mode;
     emit cyclicModeChanged(mode);
     qDebug() << "\nTableConsole: cyclic mode changed: " << mode;
 }
-void TableConsole::setCyclicInterval(int interval){
+void Table::setCyclicInterval(int interval){
     if(interval < 0)
         return;
     _cyclicInterval = interval;
     emit cyclicIntervalChanged(interval);
     qDebug() << "\nTableConsole: cyclic interval changed: " << interval;
 }
-void TableConsole::setBindData(QString text){
+void Table::setBindData(QString text){
     _bindData = text;
     emit bindDataChanged(text);
     qDebug() << "\nTableConsole: cyclic data changed" << text;
 }
-void TableConsole::blockAutoresizeSlot(void){
+void Table::blockAutoresizeSlot(void){
     skipAutoresize = true;
     _table->horizontalHeader()->blockSignals(true);
     _table->verticalScrollBar()->blockSignals(true);
 }
 
-void TableConsole::unblockAutoresizeSlot(void){
+void Table::unblockAutoresizeSlot(void){
     skipAutoresize = false;
     _table->horizontalHeader()->blockSignals(false);
     _table->verticalScrollBar()->blockSignals(false);
 }
-bool TableConsole::autoresizeIsBlocked(void){
+bool Table::autoresizeIsBlocked(void){
     return skipAutoresize;
 }
-void TableConsole::retranslate(void){
+void Table::retranslate(void){
     _sendButton->setText(tr("Send"));
     _clearButton->setText(tr("Clear"));
     horizontalHeaders.clear();
     horizontalHeaders << "#" << tr("Timestamp") << tr("Direction") << tr("Hex") << tr("Ascii");
     model->setHorizontalHeaderLabels(horizontalHeaders);
 }
-void TableConsole::cyclicTimeout(void){
+void Table::cyclicTimeout(void){
    send(_bindData);
 }
-void TableConsole::startCyclicSending(void){
+void Table::startCyclicSending(void){
     send(_bindData);
     if(cyclicMode()) {
         timer->start(cyclicInterval());
@@ -306,7 +306,7 @@ void TableConsole::startCyclicSending(void){
     else
         emit cyclicStopped();
 }
-void TableConsole::stopCyclicSending(void){
+void Table::stopCyclicSending(void){
     timer->stop();
     emit cyclicStopped();
     qDebug() << "\nTableConsole: cyclic sending data stopped!";

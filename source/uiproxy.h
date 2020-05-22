@@ -7,8 +7,8 @@
 #include <QPushButton>
 #include <QTranslator>
 
-#include "consolemode/consolewidget.h"
-#include "hexmode/tableconsole.h"
+#include "terminal.h"
+#include "table.h"
 #include "serialgui.h"
 #include "decorator.h"
 #include "converter.h"
@@ -33,8 +33,8 @@ public:
 
 private:
     SerialGui *port = nullptr;
-    ConsoleWidget *console = nullptr;
-    TableConsole *table = nullptr;
+    Terminal *terminal = nullptr;
+    Table *table = nullptr;
     Converter *converter = nullptr;
     Logger *logger = nullptr;
 

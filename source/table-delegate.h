@@ -1,14 +1,14 @@
-#ifndef DELEGATE_H
-#define DELEGATE_H
+#ifndef TABLE_DELEGATE_H
+#define TABLE_DELEGATE_H
 
 #include <QItemDelegate>
 
-class TextEditDelegate : public QItemDelegate
+class TableDelegate : public QItemDelegate
 {
     Q_OBJECT
 
 public:
-    TextEditDelegate(QObject *parent = nullptr);
+    TableDelegate(QObject *parent = nullptr);
 
     /**
      * @brief createEditor - Виджет редактор
@@ -65,4 +65,4 @@ public:
                       const QModelIndex & index ) const;
 };
 
-#endif
+#endif // TABLE_DELEGATE_H

@@ -1,5 +1,5 @@
-#ifndef CONSOLEWIDGET_H
-#define CONSOLEWIDGET_H
+#ifndef TERMINAL_H
+#define TERMINAL_H
 
 #include <QObject>
 #include <QPlainTextEdit>
@@ -9,7 +9,7 @@
 
 #include "serialgui.h"
 
-class ConsoleWidget : public QObject
+class Terminal : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool echoMode READ echoMode WRITE setEchoMode NOTIFY echoModeChanged)
@@ -18,13 +18,13 @@ class ConsoleWidget : public QObject
     Q_PROPERTY(QString bindData READ bindData WRITE setBindData NOTIFY bindDataChanged)
 
 public:
-    explicit ConsoleWidget(QObject*        parent,
+    explicit Terminal(QObject*        parent,
                            SerialGui*      serial,
                            QPlainTextEdit* console,
                            QLineEdit *     input,
                            QPushButton*    sendButton,
                            QPushButton*    clearButton);
-    ~ConsoleWidget();
+    ~Terminal();
     bool echoMode (void);
     bool cyclicMode(void);
     int  cyclicInterval(void);
@@ -69,4 +69,4 @@ private slots:
     void cyclicTimeout(void);
 };
 
-#endif // CONSOLEWIDGET_H
+#endif // TERMINAL_H

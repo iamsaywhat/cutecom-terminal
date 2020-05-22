@@ -7,8 +7,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 CONFIG += c++11
 
 TARGET = CuteCOM
-#CONFIG += console
-#CONFIG -= app_bundle
 
 TEMPLATE = app
 
@@ -20,34 +18,34 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    consolemode/consolewidget.cpp \
-    converter.cpp \
-    decorator.cpp \
-    framelesswindow.cpp \
-    hexmode/delegate.cpp \
-    hexmode/tableconsole.cpp \
-    logger.cpp \
-    main.cpp \
-    mainwidget.cpp \
-    serial.cpp \
-    serialgui.cpp \
-    uiproxy.cpp
+    source/converter.cpp \
+    source/decorator.cpp \
+    source/framelesswindow.cpp \
+    source/logger.cpp \
+    source/main.cpp \
+    source/mainwidget.cpp \
+    source/serial.cpp \
+    source/serialgui.cpp \
+    source/table-delegate.cpp \
+    source/table.cpp \
+    source/terminal.cpp \
+    source/uiproxy.cpp
 
 HEADERS += \
-    consolemode/consolewidget.h \
-    converter.h \
-    decorator.h \
-    framelesswindow.h \
-    hexmode/delegate.h \
-    hexmode/tableconsole.h \
-    logger.h \
-    mainwidget.h \
-    serial.h \
-    serialgui.h \
-    uiproxy.h
+    source/converter.h \
+    source/decorator.h \
+    source/framelesswindow.h \
+    source/logger.h \
+    source/mainwidget.h \
+    source/serial.h \
+    source/serialgui.h \
+    source/table-delegate.h \
+    source/table.h \
+    source/terminal.h \
+    source/uiproxy.h
 
 FORMS += \
-    mainwidget.ui
+    source/mainwidget.ui
 
 TRANSLATIONS += \
     resources/language/language_ru.ts \

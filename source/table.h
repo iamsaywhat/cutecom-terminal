@@ -1,5 +1,5 @@
-#ifndef TABLECONSOLE_H
-#define TABLECONSOLE_H
+#ifndef TABLE_H
+#define TABLE_H
 
 #include <QObject>
 #include <QTableView>
@@ -10,10 +10,10 @@
 #include <QString>
 #include <QByteArray>
 
-#include "delegate.h"
+#include "table-delegate.h"
 #include "serialgui.h"
 
-class TableConsole : public QObject
+class Table : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool echoMode READ echoMode WRITE setEchoMode NOTIFY echoModeChanged)
@@ -22,13 +22,13 @@ class TableConsole : public QObject
     Q_PROPERTY(QString bindData READ bindData WRITE setBindData NOTIFY bindDataChanged)
 
 public:
-    explicit TableConsole(QObject*           parent,
-                          SerialGui*         serial,
-                          QTableView*        table,
-                          QLineEdit*         input,
-                          QPushButton*       sendButton,
-                          QPushButton*       clearButton);
-    ~TableConsole();
+    explicit Table(QObject*           parent,
+                   SerialGui*         serial,
+                   QTableView*        table,
+                   QLineEdit*         input,
+                   QPushButton*       sendButton,
+                   QPushButton*       clearButton);
+    ~Table();
     bool echoMode(void);
     bool cyclicMode(void);
     int cyclicInterval(void);
@@ -50,7 +50,7 @@ public:
 
 private:
     QRegularExpressionValidator  *hexMatcher;
-    TextEditDelegate*   delegate;     // Делегат для особого отображения содержимого
+    TableDelegate*      delegate;     // Делегат для особого отображения содержимого
     QStandardItemModel* model;        // Модель данных для таблицы
     SerialGui*          _serial;      // Com-порт
     QTableView*         _table;       // Таблица
@@ -113,4 +113,4 @@ public slots:
     void stopCyclicSending(void);
 };
 
-#endif // TABLECONSOLE_H
+#endif // TABLE_H

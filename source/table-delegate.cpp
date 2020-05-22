@@ -1,14 +1,14 @@
-#include "delegate.h"
+#include "table-delegate.h"
 
 #include <QTextEdit>
 #include <QPainter>
 #include <QStyleOptionViewItem>
 
-TextEditDelegate::TextEditDelegate(QObject *parent) : QItemDelegate(parent)
+TableDelegate::TableDelegate(QObject *parent) : QItemDelegate(parent)
 {
 }
 
-QWidget *TextEditDelegate::createEditor(QWidget *parent,
+QWidget *TableDelegate::createEditor(QWidget *parent,
                                         const QStyleOptionViewItem &/* option */,
                                         const QModelIndex &/* index */) const
 {
@@ -17,7 +17,7 @@ QWidget *TextEditDelegate::createEditor(QWidget *parent,
     return editor;
 }
 
-void TextEditDelegate::drawDisplay(QPainter *painter,
+void TableDelegate::drawDisplay(QPainter *painter,
                                    const QStyleOptionViewItem &option,
                                    const QRect &rect,
                                    const QString &text) const
@@ -86,7 +86,7 @@ void TextEditDelegate::drawDisplay(QPainter *painter,
     painter->restore();
 }
 
-QSize TextEditDelegate::sizeHint(const QStyleOptionViewItem &option,
+QSize TableDelegate::sizeHint(const QStyleOptionViewItem &option,
                                  const QModelIndex &index) const
 {
     int width = option.rect.width() - 1;
@@ -129,7 +129,7 @@ QSize TextEditDelegate::sizeHint(const QStyleOptionViewItem &option,
     return option.fontMetrics.size(Qt::TextDontClip, clipString);
 }
 
-void TextEditDelegate::setEditorData(QWidget *editor,
+void TableDelegate::setEditorData(QWidget *editor,
                                     const QModelIndex &index) const
 {
     QTextEdit* textEdit = qobject_cast<QTextEdit*>(editor);
@@ -140,7 +140,7 @@ void TextEditDelegate::setEditorData(QWidget *editor,
     textEdit->setTextCursor(cursor);
 }
 
-void TextEditDelegate::setModelData(QWidget * editor,
+void TableDelegate::setModelData(QWidget * editor,
                                     QAbstractItemModel * model,
                                     const QModelIndex & index ) const
 {
