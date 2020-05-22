@@ -76,13 +76,6 @@ signals:
 
     void captureTimeChanges(int);
     void captureBytesChanges(int);
-
-public slots:
-//    void applyColorScheme(int index);
-//    void setAppTextCodec(int index);
-//    void setAppLanguage(int index);
-//    void consoleCyclicStoped(void);
-//    void tableCyclicStoped(void);
 };
 
 #endif // UIPROXY_H

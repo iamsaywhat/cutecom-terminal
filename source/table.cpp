@@ -248,9 +248,9 @@ QString& Table::bindData(void){
 }
 void Table::setEchoMode(bool state){
     if(state && !_echo)                                                       // Режим эхо, не просто маскирует посылаемые
-        connect(_serial, &SerialGui::send, this, &Table::sended);      // данные, а фактически подписывает/отписывает
+        connect(_serial, &SerialGui::send, this, &Table::sended);             // данные, а фактически подписывает/отписывает
     else if (!state && _echo)                                                 // нас на исходящие данные порта
-        disconnect(_serial, &SerialGui::send, this, &Table::sended);   //
+        disconnect(_serial, &SerialGui::send, this, &Table::sended);          //
     _echo = state;                                                            // Фиксируем состояние
     emit echoModeChanged(state);                                              // Уведомляем о изменении
     qDebug() << "\nTableConsole: echo mode changed: " << state;

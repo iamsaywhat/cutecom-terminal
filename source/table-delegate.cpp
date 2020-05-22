@@ -90,7 +90,7 @@ QSize TableDelegate::sizeHint(const QStyleOptionViewItem &option,
                                  const QModelIndex &index) const
 {
     int width = option.rect.width() - 1;
-    int spW = option.fontMetrics.width(QChar(' '));
+    int spW = option.fontMetrics.horizontalAdvance(QChar(' '));
     QStringList words = index.data().toString().split(QChar(' '));
     int currRow = 0;
     int currCol = 0;
@@ -99,7 +99,7 @@ QSize TableDelegate::sizeHint(const QStyleOptionViewItem &option,
     int wcount = 0;
     for (int i = 0; i < count; ++i)
     {
-        int currW = option.fontMetrics.width(words[i]);
+        int currW = option.fontMetrics.horizontalAdvance(words[i]);
         if (currCol + currW < width)
         {
             currCol += currW + spW;
