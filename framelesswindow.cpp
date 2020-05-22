@@ -8,6 +8,7 @@ FramelessWindow::FramelessWindow(QWidget *parent) : QWidget(parent) {
     layout->addWidget(centralWidget());
     this->setLayout(layout);
     QGraphicsDropShadowEffect *shadowEffect = new QGraphicsDropShadowEffect(this);
+    shadowEffect->setColor(QColor(0, 0, 0, 200));
     shadowEffect->setBlurRadius(10);                    // Устанавливаем радиус размытия
     shadowEffect->setOffset(0);                         // Устанавливаем смещение тени
     centralWidget()->setGraphicsEffect(shadowEffect);   // Устанавливаем эффект тени на окно
