@@ -62,10 +62,10 @@ DISTFILES += \
 RC_ICONS = $$PWD/resources/icons/application.ico
 
 
-VERSION = 1.9.0
-QMAKE_TARGET_COMPANY = ahaha
-QMAKE_TARGET_PRODUCT = CuteCOM
-QMAKE_TARGET_COPYRIGHT = heheh
+VERSION = 0.9.0
+#QMAKE_TARGET_COMPANY = ahaha
+#QMAKE_TARGET_PRODUCT = CuteCOM
+#QMAKE_TARGET_COPYRIGHT = heheh
 
 
 #####################################################
@@ -116,7 +116,7 @@ CONFIG(release, debug|release) {
 #########################################################################
 CONFIG(release, release|debug) { # Собираем инсталяторы только для релизной сборки
 
-    PACKAGE_FILE_XML = $$OUT_PWD/../$$TARGET/deploy/package.xml    # Указываем путь к package.xml
+    PACKAGE_FILE_XML = $$PWD/deploy/package.xml             # Указываем путь к package.xml
     PACKAGE_DATA = $$OUT_PWD/release                        # Задаём путь к собранному приложению со всеми зависимостями
 
     ####################################################################
@@ -135,7 +135,7 @@ CONFIG(release, release|debug) { # Собираем инсталяторы то�
 
     # Собираем инсталяторы
     PACKAGES_PATH = $$OUT_PWD/packages                                  # Путь к установочному пакету
-    CONFIG_FILE_PATH = $$PWD/deploy/config.xml                                 # Путь к конфирурации
+    CONFIG_FILE_PATH = $$PWD/deploy/config.xml                          # Путь к конфирурации
     ONLINE_INSTALLER_PATH = $$OUT_PWD/installers/online-installer       # Путь размещения онлайн инсталятора
     OFFLINE_INSTALLER_PATH = $$OUT_PWD/installers/offline-installer     # Путь размещения оффлайн инсталятора
     mkpath($$ONLINE_INSTALLER_PATH/../)                                 # Если пути не существуют - создаём их

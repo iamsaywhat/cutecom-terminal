@@ -223,7 +223,7 @@ void MainWidget::setTextSettingsMenu(void){
     gui->tableContentButton->setText(tr("Table"));
     gui->logsContentButton->setText(tr("Logs"));
     gui->bindsContentButton->setText(tr("Binds"));
-    gui->infoLabel->setText(tr("version: ") + "0.0.0");
+    gui->infoLabel->setText(tr("version: ") + "0.9.0");
 }
 void MainWidget::setTextSectionConnection(void){
     gui->labelSectionConnection->setText(tr("Connection"));
