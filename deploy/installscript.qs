@@ -12,7 +12,7 @@ Component.prototype.createOperations = function()
             try {
                 var userProfile = installer.environmentVariable("USERPROFILE");
                 installer.setValue("UserProfile", userProfile);
-                component.addOperation("CreateShortcut",
+                    component.addOperation("CreateShortcut",
                                        "@TargetDir@/cutecom.exe",                        // target
                                        "@DesktopDir@/CuteCOM.lnk",                       // link-path
                                        "workingDirectory=@TargetDir@",                   // working-dir

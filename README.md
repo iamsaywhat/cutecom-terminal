@@ -27,3 +27,6 @@ Using the converter, you can convert HEX-codes to ASCII, int,  uint,  doubles et
 ![](https://bitbucket.org/iamsaywhat/cutecom-terminal/downloads/colors.png)
 
 You can choose any color theme you like. 
+
+## Try now
+* [Check for releases](https://github.com/iamsaywhat/cutecome-terminal/releases) 
