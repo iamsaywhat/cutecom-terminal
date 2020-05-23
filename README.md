@@ -13,6 +13,11 @@ In this mode, you can send and read data only in ASCII format.
 This mode is useful for those who work with HEX-format serial port communication. 
 In this mode, you can send data only in the HEX format, but you can read in extended mode: timestamp, HEX-format and ASCII.
 
+## Hotkeys
+
+You can start single and cyclic data sending from the "Console" and "Table" section of the settings, as well as using hot keys. 
+Switch to the “Console” or “Table” mode and press one of the numkeys “1” to “4”.
+
 ## Converter
 ![](https://bitbucket.org/iamsaywhat/cutecom-terminal/downloads/converter.png)
 
