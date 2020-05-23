@@ -6,7 +6,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
 
-TARGET = CuteCOM
+TARGET = cutecom
 
 TEMPLATE = app
 
@@ -16,6 +16,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+
+VERSION = 0.9.0
+QMAKE_TARGET_DESCRIPTION = CuteCOM
+QMAKE_TARGET_PRODUCT = CuteCOM
+
 
 SOURCES += \
     source/converter.cpp \
@@ -60,12 +65,6 @@ DISTFILES += \
     deploy/package.xml
 
 RC_ICONS = $$PWD/resources/icons/application.ico
-
-
-VERSION = 0.9.0
-#QMAKE_TARGET_COMPANY = ahaha
-#QMAKE_TARGET_PRODUCT = CuteCOM
-#QMAKE_TARGET_COPYRIGHT = heheh
 
 
 #####################################################
@@ -128,8 +127,8 @@ CONFIG(release, release|debug) { # Собираем инсталяторы то�
 
     # Задаём пути пакета, которая должна содержать путь к папке с данными
     # Копируем все необходимо с формируем установочный пакет
-    PACKAGE_DATA_PATH = $$OUT_PWD/packages/cutecom/data
-    PACKAGE_META_PATH = $$OUT_PWD/packages/cutecom/meta
+    PACKAGE_DATA_PATH = $$OUT_PWD/packages/ru.iamsaywhat.cutecom/data
+    PACKAGE_META_PATH = $$OUT_PWD/packages/ru.iamsaywhat.cutecom/meta
     copyDirToDestDir($$PACKAGE_DATA, $$PACKAGE_DATA_PATH)
     copyFilesToDir($$PACKAGE_FILE_XML, $$PACKAGE_META_PATH)
 
@@ -144,7 +143,7 @@ CONFIG(release, release|debug) { # Собираем инсталяторы то�
     createOfflineInstaller($$PACKAGES_PATH, $$CONFIG_FILE_PATH, $$OFFLINE_INSTALLER_PATH)
 
     # Создаём установочный репозиторий для размещения где-либо
-    createRepo($$PACKAGES_PATH, cutecom, $$OUT_PWD/repository)
+    createRepo($$PACKAGES_PATH, ru.iamsaywhat.cutecom, $$OUT_PWD/repository)
 
     # Удаляем временную папку установочного пакета
     removeDirRecursive($$PACKAGES_PATH)
