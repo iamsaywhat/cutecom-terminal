@@ -62,7 +62,8 @@ RESOURCES += \
 
 DISTFILES += \
     deploy/config.xml \
-    deploy/package.xml
+    deploy/package.xml \
+    deploy/installscript.qs
 
 RC_ICONS = $$PWD/resources/icons/application.ico
 
@@ -116,6 +117,7 @@ CONFIG(release, debug|release) {
 CONFIG(release, release|debug) { # Собираем инсталяторы только для релизной сборки
 
     PACKAGE_FILE_XML = $$PWD/deploy/package.xml             # Указываем путь к package.xml
+    INSTALL_SCRIPT_FILE = $$PWD/deploy/installscript.qs
     PACKAGE_DATA = $$OUT_PWD/release                        # Задаём путь к собранному приложению со всеми зависимостями
 
     ####################################################################
@@ -131,6 +133,7 @@ CONFIG(release, release|debug) { # Собираем инсталяторы то�
     PACKAGE_META_PATH = $$OUT_PWD/packages/ru.iamsaywhat.cutecom/meta
     copyDirToDestDir($$PACKAGE_DATA, $$PACKAGE_DATA_PATH)
     copyFilesToDir($$PACKAGE_FILE_XML, $$PACKAGE_META_PATH)
+    copyFilesToDir($$INSTALL_SCRIPT_FILE, $$PACKAGE_META_PATH)
 
     # Собираем инсталяторы
     PACKAGES_PATH = $$OUT_PWD/packages                                  # Путь к установочному пакету

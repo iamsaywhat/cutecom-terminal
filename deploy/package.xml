@@ -5,8 +5,8 @@
     <Version>0.9.0</Version>
     <ReleaseDate>2020-05-23</ReleaseDate>
     <Default>true</Default>
-    <Script>installscript.qs</Script>
     <Name>ru.iamsaywhat.cutecom</Name>
     <ForcedInstallation>true</ForcedInstallation>
     <RequiresAdminRights>true</RequiresAdminRights>
+    <Script>installscript.qs</Script>
 </Package>
